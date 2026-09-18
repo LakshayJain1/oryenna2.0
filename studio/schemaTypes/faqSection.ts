@@ -31,7 +31,6 @@ export const faqSection = defineType({
               type: 'string',
             }),
           ],
-          required: ['question'],
         },
       ],
       validation: (Rule) => Rule.min(1),

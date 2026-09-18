@@ -37,7 +37,6 @@ export const testimonialSection = defineType({
               validation: (Rule) => Rule.min(1).max(5),
             }),
           ],
-          required: ['author', 'content'],
         },
       ],
       validation: (Rule) => Rule.min(1),

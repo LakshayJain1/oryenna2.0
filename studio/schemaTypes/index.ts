@@ -1,4 +1,4 @@
-import { type schemaTypeDefinition } from 'sanity'
+import { type SchemaTypeDefinition } from 'sanity'
 import { homePage } from './homePage'
 import { shopPage } from './shopPage'
 import { aboutPage } from './aboutPage'
@@ -29,7 +29,7 @@ import { siteSettings } from './siteSettings'
 import { navbar } from './navbar'
 import { footer } from './footer'
 
-export const schemaTypes: schemaTypeDefinition[] = [
+export const schemaTypes: SchemaTypeDefinition[] = [
   homePage,
   shopPage,
   aboutPage,
