@@ -1,23 +1,8 @@
-"use client";
-
 import Link from "next/link";
 import { Product } from "@/lib/products";
-import { useCartStore } from "@/lib/cart-store";
+import AddToBagButton from "./AddToBagButton";
 
 export default function ProductCard({ product }: { product: Product }) {
-    const { addItem, openCart } = useCartStore();
-
-    const handleAdd = () => {
-        addItem({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            quantity: 1,
-            image: product.image,
-        });
-        openCart();
-    };
-
     return (
         <article className="group relative flex flex-col bg-surface-container-lowest shadow-sm hover:shadow-md transition-shadow duration-500">
             <div className="relative w-full aspect-[3/4] bg-surface-container-high overflow-hidden">
@@ -48,14 +33,12 @@ export default function ProductCard({ product }: { product: Product }) {
                 </button>
 
                 <div className="absolute inset-x-0 bottom-0 p-space-sm translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out bg-gradient-to-t from-primary/80 to-transparent">
-                    <button
-                        onClick={handleAdd}
-                        className="w-full py-3 bg-surface text-primary font-label-lg text-label-lg uppercase tracking-wider hover:bg-primary-fixed transition-colors flex items-center justify-center gap-2"
-                        type="button"
-                    >
-                        <span className="material-symbols-outlined text-[16px]">add</span>{" "}
-                        Add To Vessel Bag
-                    </button>
+                    <AddToBagButton
+                        id={product.id}
+                        name={product.name}
+                        price={product.price}
+                        image={product.image}
+                    />
                 </div>
             </div>
 

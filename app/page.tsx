@@ -202,7 +202,7 @@ export default async function HomePage() {
                     {post.category}
                   </span>
                   <span className="w-1 h-1 rounded-full bg-outline" />
-                  <span className="font-label-sm text-label-sm text-outline">
+                  <span className="font-label-sm text-label-sm text-on-surface-variant">
                     {post.readTime}
                   </span>
                 </div>

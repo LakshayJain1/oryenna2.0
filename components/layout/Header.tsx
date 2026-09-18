@@ -1,12 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCartStore } from "@/lib/cart-store";
 import { ClerkAccountTrigger } from "@/components/auth/ClerkAccountTrigger";
-import { client } from "@/sanity/client";
-import { NAVBAR_QUERY } from "@/sanity/queries_footer_navbar";
 
 const FALLBACK_NAV_LINKS = [
   { label: "Shop", url: "/shop" },
@@ -16,28 +13,15 @@ const FALLBACK_NAV_LINKS = [
   { label: "Concierge", url: "/concierge" },
 ];
 
-export default function Header() {
+type HeaderProps = {
+  navLinks?: Array<{ label: string; url: string }>;
+  announcementText?: string;
+};
+
+export default function Header({ navLinks, announcementText }: HeaderProps) {
   const pathname = usePathname();
   const { count, openCart, setIsAuthOpen } = useCartStore();
-  const [navLinks, setNavLinks] = useState<Array<{ label: string; url: string }>>(FALLBACK_NAV_LINKS);
-  const [announcementText, setAnnouncementText] = useState<string>("");
-
-  useEffect(() => {
-    // Fetch navbar data from Sanity on client mount (falls back to local links)
-    client
-      .fetch(NAVBAR_QUERY)
-      .then((data: any) => {
-        if (data && data.navLinks && data.navLinks.length > 0) {
-          setNavLinks(data.navLinks);
-        }
-        if (data && data.announcementText) {
-          setAnnouncementText(data.announcementText);
-        }
-      })
-      .catch(() => {
-        // keep fallback links
-      });
-  }, []);
+  const links = navLinks && navLinks.length > 0 ? navLinks : FALLBACK_NAV_LINKS;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
@@ -59,7 +43,7 @@ export default function Header() {
         </div>
 
         <nav className="hidden lg:flex items-center gap-space-lg" aria-label="Main Navigation">
-          {navLinks.map((link) => {
+          {links.map((link) => {
             const isActive = pathname === link.url;
             return (
               <Link

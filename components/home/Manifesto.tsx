@@ -63,7 +63,7 @@ export default function Manifesto({
                                     <span className="font-label-md text-label-md text-on-surface-variant tracking-[0.14em] uppercase">
                                         {s.label}
                                     </span>
-                                    <p className="font-body-sm text-body-sm text-outline mt-1">
+                                    <p className="font-body-sm text-body-sm text-on-surface-variant mt-1">
                                         {s.description}
                                     </p>
                                 </div>

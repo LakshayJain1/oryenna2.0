@@ -4,9 +4,10 @@ import { DM_Sans, EB_Garamond } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import CartDrawer from "@/components/layout/CartDrawer";
-import { AuthModal } from "@/components/auth/AuthModal";
+import ClientChrome from "@/components/layout/ClientChrome";
 import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION } from "@/lib/seo";
+import { client } from "@/sanity/client";
+import { NAVBAR_QUERY } from "@/sanity/queries_footer_navbar";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -71,11 +72,23 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.ico" },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Navigation content is fetched server-side so the client bundle
+  // never ships the Sanity client for the header.
+  let navLinks: Array<{ label: string; url: string }> | undefined;
+  let announcementText: string | undefined;
+  try {
+    const data = await client.fetch(NAVBAR_QUERY);
+    if (data?.navLinks?.length > 0) navLinks = data.navLinks;
+    if (data?.announcementText) announcementText = data.announcementText;
+  } catch {
+    // Header falls back to local links.
+  }
+
   return (
     <ClerkProvider>
       <html lang="en" className={`${dmSans.variable} ${garamond.variable}`}>
@@ -92,11 +105,10 @@ export default function RootLayout({
           />
         </head>
         <body className="bg-surface font-body-md text-body-md text-on-surface antialiased">
-          <Header />
+          <Header navLinks={navLinks} announcementText={announcementText} />
           <main className="w-full pt-20 bg-surface min-h-screen">{children}</main>
           <Footer />
-          <CartDrawer />
-          <AuthModal />
+          <ClientChrome />
         </body>
       </html>
     </ClerkProvider>
