@@ -1,6 +1,18 @@
 import Link from "next/link";
 
-export default function Hero() {
+type HeroProps = {
+    eyebrow?: string;
+    headline?: string;
+    tagline?: string;
+    subtext?: string;
+};
+
+export default function Hero({
+    eyebrow = "Atelier de Parfum d'Intérieur",
+    headline = "ORYENNA",
+    tagline = "Light a calmer you.",
+    subtext = "Scents and spaces designed for slower moments. Poured by hand into hand-blown vessels from wild botanicals.",
+}: HeroProps) {
     return (
         <section className="relative w-full overflow-hidden bg-surface-container-low min-h-[92vh] flex items-center justify-center">
             <div className="absolute inset-0 z-0">
@@ -16,20 +28,19 @@ export default function Hero() {
                 <div className="inline-flex items-center gap-space-xs mb-space-md">
                     <span className="w-8 h-[1px] bg-outline-variant" />
                     <span className="font-label-sm text-label-sm uppercase tracking-[0.24em] text-secondary">
-                        Atelier de Parfum d'Intérieur
+                        {eyebrow}
                     </span>
                     <span className="w-8 h-[1px] bg-outline-variant" />
                 </div>
 
                 <h1 className="font-display text-display md:text-[72px] md:leading-[80px] text-primary tracking-[0.14em] uppercase mb-space-sm select-none">
-                    ORYENNA
+                    {headline}
                 </h1>
                 <p className="font-headline-md text-headline-md italic text-on-surface-variant font-serif max-w-xl mb-space-md">
-                    Light a calmer you.
+                    {tagline}
                 </p>
                 <p className="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-space-xl tracking-wide">
-                    Scents and spaces designed for slower moments. Poured by hand into
-                    hand-blown vessels from wild botanicals.
+                    {subtext}
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-space-md w-full sm:w-auto">

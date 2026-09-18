@@ -23,6 +23,12 @@ type CartState = {
     clearCart: () => void;
     subtotal: () => number;
     count: () => number;
+    
+    // Auth modal state
+    isAuthOpen: boolean;
+    setIsAuthOpen: (open: boolean) => void;
+    authTab: "signin" | "register";
+    setAuthTab: (tab: "signin" | "register") => void;
 };
 
 export const useCartStore = create<CartState>((set, get) => ({
@@ -52,4 +58,10 @@ export const useCartStore = create<CartState>((set, get) => ({
     subtotal: () =>
         get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
     count: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
+    
+    // Auth modal state
+    isAuthOpen: false,
+    setIsAuthOpen: (open: boolean) => set({ isAuthOpen: open }),
+    authTab: "signin",
+    setAuthTab: (tab: "signin" | "register") => set({ authTab: tab }),
 }));

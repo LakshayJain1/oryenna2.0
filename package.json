@@ -6,12 +6,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "studio": "npm run dev --prefix studio",
+    "studio:build": "npm run build --prefix studio",
+    "studio:deploy": "npm run deploy --prefix studio",
+    "seed": "npm run seed --prefix studio"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.9.4",
+    "@sanity/image-url": "^2.1.1",
     "next": "^16.3.5",
+    "next-sanity": "^13.3.4",
+    "razorpay": "^2.9.8",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "resend": "^6.28.1",
     "zustand": "^4.5.7"
   },
   "devDependencies": {

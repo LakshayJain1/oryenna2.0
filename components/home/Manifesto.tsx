@@ -1,21 +1,37 @@
-export default function Manifesto() {
-    const stats = [
-        {
-            value: "100%",
-            label: "Botanical Wax Blend",
-            desc: "European rapeseed & clean soy without paraffin.",
-        },
-        {
-            value: "65+ Hrs",
-            label: "Clean Slow Burn",
-            desc: "Double unbleached cotton core wick.",
-        },
-        {
-            value: "Small Batch",
-            label: "Handcrafted Atelier",
-            desc: "Numbered pours made in southern Provence.",
-        },
-    ];
+type ManifestoMetric = { value: string; label: string; description: string };
+
+type ManifestoProps = {
+    eyebrow?: string;
+    headline?: string;
+    quote?: string;
+    metrics?: ManifestoMetric[];
+};
+
+const FALLBACK_METRICS: ManifestoMetric[] = [
+    {
+        value: "100%",
+        label: "Botanical Wax Blend",
+        description: "European rapeseed & clean soy without paraffin.",
+    },
+    {
+        value: "65+ Hrs",
+        label: "Clean Slow Burn",
+        description: "Double unbleached cotton core wick.",
+    },
+    {
+        value: "Small Batch",
+        label: "Handcrafted Atelier",
+        description: "Numbered pours made in southern Provence.",
+    },
+];
+
+export default function Manifesto({
+    eyebrow = "01 / Manifeste",
+    headline = "Beauty in a quieter world.",
+    quote = "Oryenna was founded on the belief that scent is an invisible architecture — shaping the energy, stillness, and emotional landscape of the rooms we inhabit. Hand-poured with pure renewable soy wax and wild botanicals, each vessel is an invitation to pause, exhale, and arrive fully in the present.",
+    metrics = FALLBACK_METRICS,
+}: ManifestoProps) {
+    const stats = metrics && metrics.length > 0 ? metrics : FALLBACK_METRICS;
 
     return (
         <section className="w-full bg-surface py-space-xl px-margin-mobile md:px-margin-tablet lg:px-margin">
@@ -23,20 +39,16 @@ export default function Manifesto() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-space-lg lg:gap-gutter items-start">
                     <div className="lg:col-span-4">
                         <span className="font-label-sm text-label-sm uppercase tracking-[0.22em] text-secondary block mb-space-xs">
-                            01 / Manifeste
+                            {eyebrow}
                         </span>
                         <h2 className="font-headline-lg text-headline-lg text-primary leading-tight uppercase font-serif tracking-wide">
-                            Beauty in a quieter world.
+                            {headline}
                         </h2>
                     </div>
 
                     <div className="lg:col-span-8 flex flex-col gap-space-lg">
                         <p className="font-body-lg text-body-lg text-on-surface-variant font-serif leading-relaxed">
-                            Oryenna was founded on the belief that scent is an invisible
-                            architecture — shaping the energy, stillness, and emotional
-                            landscape of the rooms we inhabit. Hand-poured with pure renewable
-                            soy wax and wild botanicals, each vessel is an invitation to
-                            pause, exhale, and arrive fully in the present.
+                            {quote}
                         </p>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-md">
@@ -52,7 +64,7 @@ export default function Manifesto() {
                                         {s.label}
                                     </span>
                                     <p className="font-body-sm text-body-sm text-outline mt-1">
-                                        {s.desc}
+                                        {s.description}
                                     </p>
                                 </div>
                             ))}

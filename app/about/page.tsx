@@ -1,3 +1,12 @@
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata = pageMetadata({
+  path: "/about",
+  title: "Our Craft & Story",
+  description:
+    "The Oryenna atelier story — wild botanicals, ethical harvests, and hand-poured candle craft from Grasse and Provence.",
+});
+
 export default function AboutPage() {
     return (
         <div className="flex flex-col w-full">

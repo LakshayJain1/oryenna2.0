@@ -1,7 +1,28 @@
-import { products } from "@/lib/products";
+import { products as fallbackProducts } from "@/lib/products";
 import ProductCard from "@/components/shop/ProductCard";
+import { pageMetadata } from "@/lib/seo";
+import { client } from "@/sanity/client";
+import { PRODUCTS_LIST_QUERY } from "@/sanity/queries";
+import { toLibProduct } from "@/lib/sanity-adapters";
 
-export default function ShopPage() {
+export const metadata = pageMetadata({
+  path: "/shop",
+  title: "The Collection — All Vessels & Objects",
+  description:
+    "Slow seasonal botanical candles hand-poured in mouth-blown glass, unglazed stoneware, and Roman travertine. Shop the Oryenna collection.",
+});
+
+export default async function ShopPage() {
+  let products = fallbackProducts;
+  try {
+    const data = await client.fetch(PRODUCTS_LIST_QUERY);
+    if (data && data.length > 0) {
+      products = data.map(toLibProduct);
+    }
+  } catch {
+    // keep hardcoded fallback
+  }
+
     return (
         <div className="flex flex-col w-full">
             <section className="w-full px-margin-mobile md:px-margin-tablet lg:px-margin pt-space-lg pb-space-lg">

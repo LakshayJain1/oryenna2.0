@@ -1,0 +1,29 @@
+{
+  "name": "oryenna-studio",
+  "private": true,
+  "version": "1.0.0",
+  "main": "package.json",
+  "author": "Oryenna",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "deploy-graphql": "sanity graphql deploy",
+    "typegen": "sanity schemas extract --force && sanity typegen generate",
+    "seed": "node scripts/seed.mjs",
+    "migrate": "node scripts/migrate.mjs"
+  },
+  "dependencies": {
+    "@sanity/vision": "^3.77.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sanity": "^3.77.2",
+    "styled-components": "^6.1.15"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.7.0"
+  }
+}

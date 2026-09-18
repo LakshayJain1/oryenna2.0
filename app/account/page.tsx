@@ -1,6 +1,39 @@
+"use client";
+
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
+
+type OrderTuple = [string, string, number, number, string, string];
+
+function memberNo(id?: string): string {
+    if (!id) return "1402";
+    let h = 0;
+    for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 10000;
+    return String(h).padStart(4, "0");
+}
+
+function statusText(status: number): string {
+    return status === 0 ? "Processing" : status === 1 ? "Dispatched" : "Delivered";
+}
 
 export default function AccountPage() {
+    const { user, isLoaded } = useUser();
+
+    // Order archive written by /api/razorpay/verify into Clerk unsafeMetadata
+    // o: [[id, date, status, totalINR, summary, pin], ...]
+    const metadata = (user?.unsafeMetadata || {}) as {
+        o?: OrderTuple[];
+    };
+    const orders = metadata.o || [];
+    const latest = orders[0];
+    const archived = orders.slice(1);
+
+    const displayName = user?.fullName || "Julian Vane";
+    const transitValue =
+        orders.length > 0
+            ? `${String(orders.length).padStart(2, "0")} Active`
+            : "01 Active";
+
     return (
         <div className="flex flex-col w-full">
             {/* Greeting */}
@@ -18,10 +51,10 @@ export default function AccountPage() {
                     <div>
                         <div className="inline-flex items-center gap-space-xs px-space-sm py-1 bg-surface-container rounded-full text-secondary font-label-sm text-label-sm tracking-widest uppercase mb-space-xs">
                             <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
-                            Patron Tier: Lunar Circle • Member No. 1402
+                            Patron Tier: Lunar Circle • Member No. {memberNo(user?.id)}
                         </div>
                         <h1 className="font-headline-lg text-headline-lg text-primary tracking-tight">
-                            Welcome back, Julian Vane
+                            Welcome back, {!isLoaded ? "…" : displayName}
                         </h1>
                         <p className="font-body-md text-body-md text-on-surface-variant mt-1 max-w-xl">
                             Your personal olfactory dossier, artisanal pour allocations, and
@@ -48,7 +81,7 @@ export default function AccountPage() {
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-gutter mt-space-lg">
                     {[
                         { label: "Private Pours", value: "04", icon: "explore_off", sub: "Allocated in Autumn Batch" },
-                        { label: "Transit Status", value: "01 Active", icon: "local_shipping", sub: "Low-Emission Ground Courier" },
+                        { label: "Transit Status", value: transitValue, icon: "local_shipping", sub: "Low-Emission Ground Courier" },
                         { label: "Sanctuary Vault", value: "280 tokens", icon: "token", sub: "Redeemable for Bespoke Extraits" },
                         { label: "Private Session", value: "Oct 24", icon: "history_edu", sub: "Master Perfumer Dialogue" },
                     ].map((s) => (
@@ -92,7 +125,7 @@ export default function AccountPage() {
                                     </h2>
                                 </div>
                                 <span className="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase tracking-wider rounded-full">
-                                    Dispatched
+                                    {latest ? statusText(latest[2]) : "Dispatched"}
                                 </span>
                             </div>
 
@@ -103,7 +136,7 @@ export default function AccountPage() {
                                             Order Reference
                                         </span>
                                         <div className="font-headline-sm text-headline-sm text-primary">
-                                            #ORY-84920
+                                            #{latest ? latest[0] : "ORY-84920"}
                                         </div>
                                     </div>
                                     <div className="text-left sm:text-right">
@@ -111,7 +144,9 @@ export default function AccountPage() {
                                             Vessel Pour Date
                                         </span>
                                         <div className="font-body-md text-body-md text-primary font-medium">
-                                            October 12, 2025 • Kyoto Kiln Batch 09
+                                            {latest
+                                                ? `${latest[1]} • Atelier Dispatch ${latest[5]}`
+                                                : "October 12, 2025 • Kyoto Kiln Batch 09"}
                                         </div>
                                     </div>
                                 </div>
@@ -155,26 +190,36 @@ export default function AccountPage() {
                                 </h2>
                             </div>
                             <div className="bg-surface-container-low p-space-md md:p-space-lg shadow-sm space-y-space-md">
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-space-sm gap-2">
-                                    <div>
-                                        <div className="flex items-center gap-2">
-                                            <span className="font-headline-sm text-headline-sm text-primary">
-                                                #ORY-72104
-                                            </span>
-                                            <span className="px-2.5 py-0.5 bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider rounded-full">
-                                                Delivered
+                                {(archived.length > 0
+                                    ? archived
+                                    : [["ORY-72104", "August 28, 2025", 2, 240, "Solstice Pour Cycle", ""] as OrderTuple]
+                                ).map(([id, date, status, total, summary]) => (
+                                    <div
+                                        key={id}
+                                        className="flex flex-col sm:flex-row sm:items-center justify-between pb-space-sm gap-2"
+                                    >
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-headline-sm text-headline-sm text-primary">
+                                                    #{id}
+                                                </span>
+                                                <span className="px-2.5 py-0.5 bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider rounded-full">
+                                                    {archived.length > 0 ? statusText(status) : "Delivered"}
+                                                </span>
+                                            </div>
+                                            <span className="font-body-sm text-body-sm text-on-surface-variant">
+                                                {summary} • {archived.length > 0 ? `Ordered ${date}` : `Delivered ${date}`}
                                             </span>
                                         </div>
-                                        <span className="font-body-sm text-body-sm text-on-surface-variant">
-                                            Solstice Pour Cycle • Delivered August 28, 2025
-                                        </span>
+                                        <div className="text-left sm:text-right">
+                                            <span className="font-title text-title text-primary">
+                                                {archived.length > 0
+                                                    ? `₹${total.toLocaleString("en-IN")}`
+                                                    : "$240.00"}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="text-left sm:text-right">
-                                        <span className="font-title text-title text-primary">
-                                            $240.00
-                                        </span>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
                         </div>
                     </div>

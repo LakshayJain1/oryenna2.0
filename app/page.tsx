@@ -1,15 +1,56 @@
 import Hero from "@/components/home/Hero";
 import Manifesto from "@/components/home/Manifesto";
 import Link from "next/link";
-import { products } from "@/lib/products";
-import { journalPosts } from "@/lib/journal";
+import { products as fallbackProducts } from "@/lib/products";
+import { journalPosts as fallbackPosts } from "@/lib/journal";
 import ProductCard from "@/components/shop/ProductCard";
+import { pageMetadata } from "@/lib/seo";
+import { client } from "@/sanity/client";
+import {
+  SITE_SETTINGS_QUERY,
+  PRODUCTS_LIST_QUERY,
+  JOURNAL_ARTICLES_QUERY,
+} from "@/sanity/queries";
+import { toLibProduct, toJournalPost } from "@/lib/sanity-adapters";
 
-export default function HomePage() {
+export const metadata = pageMetadata({
+  path: "/",
+  title: "ORYENNA — Fine Fragrance & Slow Living",
+  description:
+    "Hand-poured botanical candles and slow living objects from Grasse and Provence. Curated releases, atelier craft, and essays on slow living.",
+});
+
+export default async function HomePage() {
+  let settings: any = null;
+  let products = fallbackProducts;
+  let journalPosts = fallbackPosts;
+  try {
+    const [s, p, j] = await Promise.all([
+      client.fetch(SITE_SETTINGS_QUERY),
+      client.fetch(PRODUCTS_LIST_QUERY),
+      client.fetch(JOURNAL_ARTICLES_QUERY),
+    ]);
+    if (s) settings = s;
+    if (p && p.length > 0) products = p.map(toLibProduct);
+    if (j && j.length > 0) journalPosts = j.map(toJournalPost);
+  } catch {
+    // keep hardcoded fallbacks
+  }
+
   return (
     <div className="flex flex-col w-full">
-      <Hero />
-      <Manifesto />
+      <Hero
+        eyebrow={settings?.heroEyebrow}
+        headline={settings?.heroHeadline}
+        tagline={settings?.heroTagline}
+        subtext={settings?.heroSubtext}
+      />
+      <Manifesto
+        eyebrow={settings?.manifestoEyebrow}
+        headline={settings?.manifestoHeadline}
+        quote={settings?.manifestoQuote}
+        metrics={settings?.manifestoMetrics}
+      />
 
       {/* Featured Collection */}
       <section className="w-full bg-surface-container-low py-space-xl px-margin-mobile md:px-margin-tablet lg:px-margin">

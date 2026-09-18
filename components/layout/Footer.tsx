@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { client } from "@/sanity/client";
+import { FOOTER_QUERY } from "@/sanity/queries_footer_navbar";
+import { toFooterColumns } from "@/lib/sanity-adapters";
 
-const footerColumns = [
+const FALLBACK_FOOTER_COLUMNS = [
     {
         title: "Collections",
         links: [
@@ -31,7 +34,19 @@ const footerColumns = [
     },
 ];
 
-export default function Footer() {
+export default async function Footer() {
+    let footerColumns = FALLBACK_FOOTER_COLUMNS;
+    let copyrightText =
+        "© 2025 ORYENNA Parfums & Bougies. Crafted for contemplative spaces.";
+    try {
+        const data = await client.fetch(FOOTER_QUERY);
+        const mapped = toFooterColumns(data?.footerColumns);
+        if (mapped) footerColumns = mapped;
+        if (data?.copyrightText) copyrightText = data.copyrightText;
+    } catch {
+        // keep hardcoded fallback
+    }
+
     return (
         <footer className="w-full bg-surface-container-low">
             <div className="w-full px-margin-mobile md:px-margin-tablet lg:px-margin pt-space-xl pb-space-lg">
@@ -88,8 +103,7 @@ export default function Footer() {
 
                 <div className="flex flex-col md:flex-row items-center justify-between pt-space-lg gap-space-md text-on-surface-variant">
                     <div className="font-body-sm text-body-sm">
-                        © 2025 ORYENNA Parfums & Bougies. Crafted for contemplative
-                        spaces.
+                        {copyrightText}
                     </div>
                     <div className="flex items-center gap-space-md font-label-sm text-label-sm uppercase tracking-wider">
                         <Link

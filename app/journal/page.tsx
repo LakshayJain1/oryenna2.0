@@ -1,7 +1,28 @@
 import Link from "next/link";
-import { journalPosts } from "@/lib/journal";
+import { journalPosts as fallbackPosts } from "@/lib/journal";
+import { pageMetadata } from "@/lib/seo";
+import { client } from "@/sanity/client";
+import { JOURNAL_ARTICLES_QUERY } from "@/sanity/queries";
+import { toJournalPost } from "@/lib/sanity-adapters";
 
-export default function JournalPage() {
+export const metadata = pageMetadata({
+  path: "/journal",
+  title: "The Journal · Essays on Slow Living",
+  description:
+    "Essays on slow living, olfactory architecture, and atelier craft. Dispatches from the Oryenna journal.",
+});
+
+export default async function JournalPage() {
+    let journalPosts = fallbackPosts;
+    try {
+      const data = await client.fetch(JOURNAL_ARTICLES_QUERY);
+      if (data && data.length > 0) {
+        journalPosts = data.map(toJournalPost);
+      }
+    } catch {
+      // keep hardcoded fallback
+    }
+
     const featured = journalPosts[0];
     const rest = journalPosts.slice(1);
 
