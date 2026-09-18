@@ -23,6 +23,7 @@ export default function Hero({
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3zyjgjfRUXUwV4h73FZ3cw6_qOKqZuxz7eFeNKhk49R8CSlpe1K0TV1DDMMfXnxRhH6OMM5Y45XUKSNTcR0j8rutnpO7UM7R6BTw3l6YIl7XVEhKESWc5yzhlv2pxI1B8pIUhzAbaw09Cy0b9SJSz31eqArxHzujVtrARWIa9i80D_3wc7XOPhJBvWqvLHw4xfx7UtRzRR3R2z8M9t_MiyLkE_4RhkpDNV7shMnRYtKrZeam1fc9pog"
                     fill
                     priority
+                    fetchPriority="high"
                     sizes="100vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-surface/80 via-surface/40 to-surface/90 backdrop-blur-[1px]" />
