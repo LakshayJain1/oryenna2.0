@@ -20,6 +20,7 @@ type SanityListProduct = {
   burnTime?: string;
   image?: { _id: string; url: string } | null;
   imageAlt?: string;
+  seo?: { title?: string; description?: string };
 };
 
 /** Map a Sanity product (list or detail query) onto the local Product shape. */
@@ -37,6 +38,7 @@ export function toLibProduct(p: SanityListProduct): Product {
     category: "botanical",
     burnTime: p.burnTime ?? "",
     weight: p.weight ?? "",
+    seo: p.seo,
   };
 }
 
@@ -48,6 +50,7 @@ type SanityJournalArticle = {
   readTime?: string;
   summary?: string;
   coverImage?: { _id: string; url: string } | null;
+  seo?: { title?: string; description?: string };
 };
 
 /** Map a Sanity journal article onto the local JournalPost shape. */
@@ -59,6 +62,7 @@ export function toJournalPost(a: SanityJournalArticle): JournalPost {
     readTime: a.readTime ?? "",
     excerpt: a.summary ?? "",
     image: a.coverImage?.url ?? "",
+    seo: a.seo,
   };
 }
 

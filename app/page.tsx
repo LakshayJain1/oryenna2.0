@@ -11,6 +11,7 @@ import {
   PRODUCTS_LIST_QUERY,
   JOURNAL_ARTICLES_QUERY,
 } from "@/sanity/queries";
+import { fetchHomePageDoc, sectionOf } from "@/sanity/page-data";
 import { toLibProduct, toJournalPost } from "@/lib/sanity-adapters";
 
 export const metadata = pageMetadata({
@@ -28,32 +29,39 @@ export default async function HomePage() {
   let settings: any = null;
   let products = fallbackProducts;
   let journalPosts = fallbackPosts;
+  let homeDoc = null;
   try {
-    const [s, p, j] = await Promise.all([
+    const [s, p, j, h] = await Promise.all([
       client.fetch(SITE_SETTINGS_QUERY),
       client.fetch(PRODUCTS_LIST_QUERY),
       client.fetch(JOURNAL_ARTICLES_QUERY),
+      fetchHomePageDoc(),
     ]);
     if (s) settings = s;
     if (p && p.length > 0) products = p.map(toLibProduct);
     if (j && j.length > 0) journalPosts = j.map(toJournalPost);
+    homeDoc = h;
   } catch {
     // keep hardcoded fallbacks
   }
 
+  // Unified `page` document wins when present; legacy site settings next.
+  const heroSection = sectionOf(homeDoc, "hero");
+  const manifestoSection = sectionOf(homeDoc, "manifesto");
+
   return (
     <div className="flex flex-col w-full">
       <Hero
-        eyebrow={settings?.heroEyebrow}
-        headline={settings?.heroHeadline}
-        tagline={settings?.heroTagline}
-        subtext={settings?.heroSubtext}
+        eyebrow={heroSection?.eyebrow ?? settings?.heroEyebrow}
+        headline={heroSection?.headline ?? settings?.heroHeadline}
+        tagline={heroSection?.tagline ?? settings?.heroTagline}
+        subtext={heroSection?.subtext ?? settings?.heroSubtext}
       />
       <Manifesto
-        eyebrow={settings?.manifestoEyebrow}
-        headline={settings?.manifestoHeadline}
-        quote={settings?.manifestoQuote}
-        metrics={settings?.manifestoMetrics}
+        eyebrow={manifestoSection?.eyebrow ?? settings?.manifestoEyebrow}
+        headline={manifestoSection?.headline ?? settings?.manifestoHeadline}
+        quote={manifestoSection?.quote ?? settings?.manifestoQuote}
+        metrics={manifestoSection?.metrics ?? settings?.manifestoMetrics}
       />
 
       {/* Featured Collection */}

@@ -72,6 +72,22 @@ export const journalArticle = defineType({
       type: 'number',
       initialValue: 1,
     }),
+    defineField({
+      name: 'featured',
+      title: 'Featured Article',
+      type: 'boolean',
+      description: 'Surface in featured placements.',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'object',
+      fields: [
+        defineField({ name: 'title', title: 'SEO Title', type: 'string' }),
+        defineField({ name: 'description', title: 'SEO Description', type: 'text', rows: 2 }),
+      ],
+    }),
   ],
   preview: {
     select: {

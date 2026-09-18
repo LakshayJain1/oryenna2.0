@@ -6,6 +6,10 @@ export type JournalPost = {
     excerpt: string;
     image: string;
     volume?: string;
+    seo?: {
+        title?: string;
+        description?: string;
+    };
 };
 
 export const journalPosts: JournalPost[] = [

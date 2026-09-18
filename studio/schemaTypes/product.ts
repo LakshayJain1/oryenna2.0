@@ -31,6 +31,13 @@ export const product = defineType({
       validation: (Rule) => Rule.required().positive(),
     }),
     defineField({
+      name: 'comparePrice',
+      title: 'Compare-At Price (USD $)',
+      type: 'number',
+      description: 'Optional strikethrough price for sales.',
+      validation: (Rule) => Rule.positive(),
+    }),
+    defineField({
       name: 'badge',
       title: 'Badge / Tag',
       type: 'string',
@@ -59,6 +66,23 @@ export const product = defineType({
       title: 'Vessel Weight / Size',
       type: 'string',
       initialValue: '290G / 10.2 OZ',
+    }),
+    defineField({
+      name: 'size',
+      title: 'Size Label',
+      type: 'string',
+      description: 'e.g. 290G Standard, 500G Grande',
+    }),
+    defineField({
+      name: 'sku',
+      title: 'SKU',
+      type: 'string',
+    }),
+    defineField({
+      name: 'ingredients',
+      title: 'Ingredients',
+      type: 'array',
+      of: [{ type: 'string' }],
     }),
     defineField({
       name: 'burnTime',
@@ -112,6 +136,37 @@ export const product = defineType({
       title: 'In Stock',
       type: 'boolean',
       initialValue: true,
+    }),
+    defineField({
+      name: 'featured',
+      title: 'Featured Product',
+      type: 'boolean',
+      description: 'Surface in featured placements.',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'gallery',
+      title: 'Gallery Images',
+      type: 'array',
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({ name: 'alt', title: 'Alternative Text', type: 'string' }),
+            defineField({ name: 'caption', title: 'Caption', type: 'string' }),
+          ],
+        },
+      ],
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'object',
+      fields: [
+        defineField({ name: 'title', title: 'SEO Title', type: 'string' }),
+        defineField({ name: 'description', title: 'SEO Description', type: 'text', rows: 2 }),
+      ],
     }),
     defineField({
       name: 'orderRank',

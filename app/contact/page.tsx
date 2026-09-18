@@ -1,6 +1,7 @@
 import { client } from "@/sanity/client";
 import { CONTACT_PAGE_QUERY } from "@/sanity/queries";
 import type { SanityContactPage } from "@/sanity/types";
+import { fetchPageBySlug } from "@/sanity/page-data";
 import { SectionRenderer } from "@/components/section-renderer";
 
 export const revalidate = 60;
@@ -17,12 +18,22 @@ export const metadata = pageMetadata({
 const CONTACT_SLUG = "contact";
 
 export default async function ContactPage() {
-  const page: SanityContactPage | null = await client.fetch<SanityContactPage>(
-    CONTACT_PAGE_QUERY,
-    { slug: CONTACT_SLUG }
-  );
+  // New model first: unified `page` doc with inline sections.
+  const pageDoc = await fetchPageBySlug(CONTACT_SLUG);
+  const legacyPage: SanityContactPage | null =
+    pageDoc && pageDoc.sections && pageDoc.sections.length > 0
+      ? null
+      : await client
+          .fetch<SanityContactPage>(CONTACT_PAGE_QUERY, { slug: CONTACT_SLUG })
+          .catch(() => null);
 
-  if (!page) {
+  const sections = (
+    pageDoc?.sections ??
+    legacyPage?.sections ??
+    []
+  ).sort((a, b) => ((a as any).orderRank || 0) - ((b as any).orderRank || 0));
+
+  if (sections.length === 0) {
     return (
       <div className="min-h-screen bg-surface p-8 flex items-center justify-center">
         <div className="text-center">
@@ -34,9 +45,6 @@ export default async function ContactPage() {
       </div>
     );
   }
-
-  const sections = page.sections
-    ?.sort((a, b) => (a.orderRank || 0) - (b.orderRank || 0)) || [];
 
   return (
     <main className="flex-1">

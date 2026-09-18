@@ -14,6 +14,21 @@ const razorpay = new Razorpay({
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Idempotency guard: a retried handler call for the same Razorpay payment
+// must not archive twice or resend emails. Per-instance memory (same
+// caveat as the rate limiter); signed-in users get a second layer via
+// their archive below. For cross-instance guarantees, persist processed
+// payment ids (e.g. a Sanity doc or KV store).
+const PROCESSED_TTL_MS = 60 * 60 * 1000;
+const processedPayments = new Map<string, number>();
+
+function pruneProcessed(now: number) {
+  for (const [key, seen] of processedPayments) {
+    if (now - seen > PROCESSED_TTL_MS) processedPayments.delete(key);
+  }
+  if (processedPayments.size > 5000) pruneProcessed(now);
+}
+
 const fail = (message: string, status: number) =>
   NextResponse.json({ success: false, message }, { status });
 
@@ -125,6 +140,12 @@ export async function POST(request: Request) {
     return fail("Paid amount does not match the order total.", 422);
   }
 
+  const now = Date.now();
+  const seenAt = processedPayments.get(paymentId);
+  if (seenAt !== undefined && now - seenAt < PROCESSED_TTL_MS) {
+    return NextResponse.json({ success: true, deduped: true });
+  }
+
   const payload =
     orderPayload && typeof orderPayload === "object"
       ? (orderPayload as Record<string, unknown>)
@@ -142,6 +163,17 @@ export async function POST(request: Request) {
 
       const existingOrders = unsafeMeta.o || [];
       const existingAddresses = unsafeMeta.a || [];
+
+      // Second idempotency layer: this payment already archived.
+      // Archive rows store the ORY reference (payload.id) with the
+      // Razorpay orderId as fallback, so match against both.
+      const ref = typeof payload.id === "string" ? payload.id : "";
+      if (
+        existingOrders.some((o) => o[0] === orderId || (ref !== "" && o[0] === ref))
+      ) {
+        processedPayments.set(paymentId, now);
+        return NextResponse.json({ success: true, deduped: true });
+      }
 
       const str = (v: unknown) => (typeof v === "string" ? v : "");
       const newOrder: [string, string, number, number, string, string] = [
@@ -249,6 +281,9 @@ export async function POST(request: Request) {
       console.error("Resend email dispatch error:", emailErr);
     }
   }
+
+  processedPayments.set(paymentId, now);
+  if (processedPayments.size > 5000) pruneProcessed(now);
 
   return NextResponse.json({
     success: true,

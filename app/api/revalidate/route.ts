@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     return Response.json({ message: "Invalid signature" }, { status: 401 });
   }
 
-  let payload: { _type?: string; slug?: unknown };
+  let payload: { _type?: string; slug?: unknown; pageType?: unknown };
   try {
     payload = JSON.parse(body);
   } catch {
@@ -84,6 +84,14 @@ export async function POST(request: Request) {
     touch("/concierge");
   } else if (type === "complimentarySample") {
     touch("/checkout");
+  } else if (type === "page") {
+    // Unified page model: route derives from slug (home resolves to /).
+    const pageType = typeof payload.pageType === "string" ? payload.pageType : "";
+    if (pageType === "home" || slug === "home" || slug === "/") {
+      touch("/");
+    } else if (slug) {
+      touch(`/${slug}`);
+    }
   }
 
   return Response.json({ revalidated });

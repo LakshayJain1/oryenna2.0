@@ -1,32 +1,29 @@
 import { defineField, defineType } from 'sanity'
 
-export const faqPage = defineType({
-  name: 'faqPage',
-  title: 'FAQ Page',
-  type: 'document',
+export const faqList = defineType({
+  name: 'faqList',
+  title: 'FAQ List',
+  type: 'object',
   fields: [
     defineField({
-      name: 'title',
-      title: 'Page Title',
+      name: 'eyebrow',
+      title: 'Eyebrow',
+      type: 'string',
+    }),
+    defineField({
+      name: 'headline',
+      title: 'Headline',
       type: 'string',
       initialValue: 'Frequently Asked Questions',
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      options: { source: 'title', maxLength: 96 },
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'faqs',
-      title: 'FAQ Items',
+      name: 'items',
+      title: 'Questions & Answers',
       type: 'array',
       of: [
         {
           type: 'object',
-          name: 'faq',
+          name: 'faqItem',
           fields: [
             defineField({
               name: 'question',
@@ -42,18 +39,16 @@ export const faqPage = defineType({
               validation: (Rule) => Rule.required(),
             }),
           ],
-          preview: {
-            select: {
-              title: 'question',
-            },
-          },
+          preview: { select: { title: 'question' } },
         },
       ],
+      validation: (Rule) => Rule.min(1),
     }),
   ],
   preview: {
-    select: {
-      title: 'title',
+    select: { title: 'headline' },
+    prepare({ title }) {
+      return { title: title ? `FAQ List — ${title}` : 'FAQ List' }
     },
   },
 })

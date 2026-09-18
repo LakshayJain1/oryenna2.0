@@ -1,6 +1,7 @@
 import { client } from "@/sanity/client";
 import { TERMS_PAGE_QUERY } from "@/sanity/queries";
 import type { SanityTermsPage } from "@/sanity/types";
+import { fetchPageBySlug, contentSectionOf } from "@/sanity/page-data";
 import { PortableTextRenderer } from "@/components/portable-text-renderer";
 
 export const revalidate = 60;
@@ -16,12 +17,19 @@ export const metadata = pageMetadata({
 const SLUG = "terms";
 
 export default async function TermsPage() {
-  const page: SanityTermsPage | null = await client.fetch<SanityTermsPage>(
-    TERMS_PAGE_QUERY,
-    { slug: SLUG }
-  );
+  const pageDoc = await fetchPageBySlug(SLUG);
+  const richText = contentSectionOf(pageDoc);
+  const legacyPage: SanityTermsPage | null =
+    richText?.content && richText.content.length > 0
+      ? null
+      : await client
+          .fetch<SanityTermsPage>(TERMS_PAGE_QUERY, { slug: SLUG })
+          .catch(() => null);
 
-  if (!page) {
+  const title = pageDoc?.title ?? legacyPage?.title;
+  const content = richText?.content ?? legacyPage?.content;
+
+  if (!title || !content) {
     return (
       <div className="min-h-screen bg-surface p-8 flex items-center justify-center">
         <div className="text-center max-w-2xl">
@@ -38,9 +46,9 @@ export default async function TermsPage() {
     <main className="flex-1 py-16 md:py-24 px-4 md:px-16">
       <div className="max-w-[800px] mx-auto">
         <h1 className="font-headline-lg text-headline-lg text-on-surface uppercase tracking-[0.02em] mb-8">
-          {page.title}
+          {title}
         </h1>
-        {page.content && <PortableTextRenderer content={page.content} />}
+        <PortableTextRenderer content={content} />
       </div>
     </main>
   );

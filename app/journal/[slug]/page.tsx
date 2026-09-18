@@ -32,8 +32,8 @@ export async function generateMetadata({
   const { post } = article;
   return pageMetadata({
     path: `/journal/${post.slug}`,
-    title: post.title,
-    description: post.excerpt,
+    title: post.seo?.title || post.title,
+    description: post.seo?.description || post.excerpt,
     image: post.image,
   });
 }

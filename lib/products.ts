@@ -11,6 +11,10 @@ export type Product = {
     category: "botanical" | "archival" | "objects";
     burnTime: string;
     weight: string;
+    seo?: {
+        title?: string;
+        description?: string;
+    };
 };
 
 export const products: Product[] = [

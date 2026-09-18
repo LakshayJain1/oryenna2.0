@@ -27,8 +27,8 @@ export async function generateMetadata({
   if (!product) return {};
   return pageMetadata({
     path: `/product/${product.slug}`,
-    title: `${product.name} — ${product.scentNumber || "Signature Pour"}`,
-    description: product.description,
+    title: product.seo?.title || `${product.name} — ${product.scentNumber || "Signature Pour"}`,
+    description: product.seo?.description || product.description,
     image: product.image,
   });
 }

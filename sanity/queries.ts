@@ -1,5 +1,89 @@
 import { groq } from 'next-sanity'
 
+// ---------------------------------------------------------------------------
+// New page model: one `page` document per route, sections embedded inline.
+// Legacy per-route page queries below are kept as transition fallbacks.
+// ---------------------------------------------------------------------------
+
+const INLINE_PRODUCT_FRAGMENT = groq`
+  _id,
+  name,
+  slug,
+  price,
+  priceINR,
+  badge,
+  notes,
+  description,
+  weight,
+  burnTime,
+  inStock,
+  "image": image.asset-> {
+    _id,
+    url
+  },
+  "imageAlt": image.alt
+`;
+
+const PAGE_SECTIONS_NEW = groq`
+  "sections": sections[] {
+    ...,
+    _type,
+    _key,
+    "backgroundImageUrl": backgroundImage.asset->url,
+    "imageUrl": image.asset->url,
+    "imageAlt": coalesce(image.alt, backgroundImage.alt),
+    "products": products[]-> {
+      ${INLINE_PRODUCT_FRAGMENT}
+    },
+    "articles": articles[]-> {
+      _id,
+      title,
+      slug,
+      category,
+      readTime,
+      publishedAt,
+      summary,
+      author,
+      coverImage
+    },
+    "collections": collections[]-> {
+      _id,
+      name,
+      slug,
+      description,
+      image
+    },
+    "collection": collection-> {
+      _id,
+      name,
+      slug,
+      "products": products[]-> {
+        ${INLINE_PRODUCT_FRAGMENT}
+      }
+    }
+  }
+`;
+
+export const PAGE_BY_SLUG_QUERY = groq`
+  *[_type == "page" && slug.current == $slug][0] {
+    _id,
+    title,
+    slug,
+    pageType,
+    ${PAGE_SECTIONS_NEW}
+  }
+`;
+
+export const HOME_PAGE_DOC_QUERY = groq`
+  *[_type == "page" && pageType == "home"][0] {
+    _id,
+    title,
+    slug,
+    pageType,
+    ${PAGE_SECTIONS_NEW}
+  }
+`;
+
 const SECTION_PRODUCT_FRAGMENT = groq`
   collection -> {
     _id,
@@ -179,18 +263,34 @@ export const PRODUCT_BY_SLUG_QUERY = groq`
     slug,
     price,
     priceINR,
+    comparePrice,
     badge,
     notes,
     description,
     longDescription,
     weight,
+    size,
+    sku,
     burnTime,
     accentNotes[],
     topNotes,
     heartNotes,
     baseNotes,
+    ingredients[],
     inStock,
+    featured,
     orderRank,
+    gallery[] {
+      asset-> {
+        _id,
+        url
+      },
+      caption
+    },
+    seo {
+      title,
+      description
+    },
     "image": image.asset-> {
       _id,
       url
@@ -293,6 +393,11 @@ export const JOURNAL_ARTICLE_BY_SLUG_QUERY = groq`
     summary,
     content[],
     author,
+    featured,
+    seo {
+      title,
+      description
+    },
     "coverImage": coverImage.asset-> {
       _id,
       url

@@ -16,6 +16,31 @@ export interface SectionBlock {
   [key: string]: any
 }
 
+/** Unified page document (new model). Sections are embedded inline. */
+export interface PageSection {
+  _type: string
+  _key?: string
+  [key: string]: any
+}
+
+export interface PageDoc {
+  _id: string
+  title: string
+  slug: string | { current: string }
+  pageType:
+    | 'home'
+    | 'shop'
+    | 'journal'
+    | 'about'
+    | 'contact'
+    | 'faq'
+    | 'privacy'
+    | 'terms'
+    | 'shipping'
+    | 'returns'
+  sections?: PageSection[]
+}
+
 export interface SanityHomePage {
   title: string
   slug: string
@@ -90,7 +115,23 @@ export interface SanityProduct {
   heartNotes?: string
   baseNotes?: string
   inStock?: boolean
+  featured?: boolean
   orderRank?: number
+  comparePrice?: number
+  size?: string
+  sku?: string
+  ingredients?: string[]
+  gallery?: Array<{
+    asset: {
+      _id: string
+      url: string
+    }
+    caption?: string
+  }>
+  seo?: {
+    title?: string
+    description?: string
+  }
   collection?: {
     name: string
     slug: string
@@ -158,6 +199,11 @@ export interface SanityJournalArticle {
   summary: string
   content: any[]
   author: string
+  featured?: boolean
+  seo?: {
+    title?: string
+    description?: string
+  }
   coverImage: {
     asset: SanityAsset
     url: string

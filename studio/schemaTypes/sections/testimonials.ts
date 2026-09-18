@@ -1,13 +1,18 @@
 import { defineField, defineType } from 'sanity'
 
-export const testimonialSection = defineType({
-  name: 'testimonialSection',
-  title: 'Testimonial Section',
-  type: 'document',
+export const testimonials = defineType({
+  name: 'testimonials',
+  title: 'Testimonials',
+  type: 'object',
   fields: [
     defineField({
-      name: 'title',
-      title: 'Section Headline',
+      name: 'eyebrow',
+      title: 'Eyebrow',
+      type: 'string',
+    }),
+    defineField({
+      name: 'headline',
+      title: 'Headline',
       type: 'string',
       initialValue: 'Atelier Voices',
     }),
@@ -18,12 +23,9 @@ export const testimonialSection = defineType({
       of: [
         {
           type: 'object',
+          name: 'testimonial',
           fields: [
-            defineField({
-              name: 'author',
-              title: 'Author',
-              type: 'string',
-            }),
+            defineField({ name: 'author', title: 'Author', type: 'string' }),
             defineField({
               name: 'content',
               title: 'Testimonial Text',
@@ -37,25 +39,16 @@ export const testimonialSection = defineType({
               validation: (Rule) => Rule.min(1).max(5),
             }),
           ],
+          preview: { select: { title: 'author' } },
         },
       ],
       validation: (Rule) => Rule.min(1),
     }),
-    defineField({
-      name: 'showNames',
-      title: 'Show Author Names',
-      type: 'boolean',
-      initialValue: true,
-    }),
   ],
   preview: {
-    select: {
-      title: 'title',
-    },
+    select: { title: 'headline' },
     prepare({ title }) {
-      return {
-        title: title || 'Testimonial Section',
-      }
+      return { title: title ? `Testimonials — ${title}` : 'Testimonials' }
     },
   },
 })
