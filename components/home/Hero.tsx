@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 type HeroProps = {
@@ -16,10 +17,13 @@ export default function Hero({
     return (
         <section className="relative w-full overflow-hidden bg-surface-container-low min-h-[92vh] flex items-center justify-center">
             <div className="absolute inset-0 z-0">
-                <img
+                <Image
                     alt="Oryenna signature candle seen from directly above surrounded by rippling raw linen and dry olive botanical leaves"
-                    className="w-full h-full object-cover object-center scale-105"
+                    className="object-cover object-center scale-105"
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3zyjgjfRUXUwV4h73FZ3cw6_qOKqZuxz7eFeNKhk49R8CSlpe1K0TV1DDMMfXnxRhH6OMM5Y45XUKSNTcR0j8rutnpO7UM7R6BTw3l6YIl7XVEhKESWc5yzhlv2pxI1B8pIUhzAbaw09Cy0b9SJSz31eqArxHzujVtrARWIa9i80D_3wc7XOPhJBvWqvLHw4xfx7UtRzRR3R2z8M9t_MiyLkE_4RhkpDNV7shMnRYtKrZeam1fc9pog"
+                    fill
+                    priority
+                    sizes="100vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-surface/80 via-surface/40 to-surface/90 backdrop-blur-[1px]" />
             </div>
