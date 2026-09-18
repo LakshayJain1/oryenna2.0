@@ -23,6 +23,7 @@ export default function CheckoutPage() {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [orderComplete, setOrderComplete] = useState(false);
+    const [checkoutError, setCheckoutError] = useState("");
 
     useEffect(() => {
         const script = document.createElement("script");
@@ -40,21 +41,26 @@ export default function CheckoutPage() {
     const handleCompleteOrder = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setCheckoutError("");
+
+        // Only item references leave the browser — the payable total is
+        // recomputed server-side from the trusted catalogue.
+        const lines = items.map((i) => ({
+            id: i.id,
+            qty: i.quantity,
+            gift: !!i.giftWrap,
+        }));
 
         try {
             const res = await fetch("/api/razorpay/create-order", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    amount: totalINR,
-                    currency: "INR",
-                    receipt: "rcpt_" + Math.floor(100000 + Math.random() * 900000),
-                }),
+                body: JSON.stringify({ lines, giftWrap, shipping }),
             });
 
             const orderData = await res.json();
             if (!orderData.success) {
-                throw new Error("Failed to initiate Razorpay order");
+                throw new Error(orderData.message || "Failed to initiate Razorpay order");
             }
 
             const options = {
@@ -78,7 +84,6 @@ export default function CheckoutPage() {
                                 orderPayload: {
                                     id: "ORY-" + Math.floor(100000 + Math.random() * 900000),
                                     date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-                                    total: totalINR,
                                     summary: items.map((i) => `${i.name} (x${i.quantity})`).join(", "),
                                     pin: zip,
                                     address,
@@ -86,6 +91,9 @@ export default function CheckoutPage() {
                                     saveAddress,
                                 },
                                 customerEmail: email,
+                                lines,
+                                giftWrap,
+                                shipping,
                             }),
                         });
                         const verifyData = await verifyRes.json();
@@ -93,12 +101,13 @@ export default function CheckoutPage() {
                             setIsSubmitting(false);
                             setOrderComplete(true);
                         } else {
-                            alert("Payment verification failed. Please contact support.");
+                            setCheckoutError(verifyData.message || "Payment verification failed. Please contact support.");
                             setIsSubmitting(false);
                         }
                     } catch (err) {
+                        console.error(err);
+                        setCheckoutError("Could not confirm payment. Please contact support with your payment reference.");
                         setIsSubmitting(false);
-                        setOrderComplete(true);
                     }
                 },
                 prefill: {
@@ -113,7 +122,7 @@ export default function CheckoutPage() {
 
             const rzp = new (window as any).Razorpay(options);
             rzp.on("payment.failed", function (response: any) {
-                alert(response.error.description || "Payment failed. Please try again.");
+                setCheckoutError(response?.error?.description || "Payment failed. Please try again.");
                 setIsSubmitting(false);
             });
             rzp.open();
@@ -121,7 +130,7 @@ export default function CheckoutPage() {
         } catch (err) {
             console.error(err);
             setIsSubmitting(false);
-            alert("Unable to connect to Razorpay. Please try again.");
+            setCheckoutError(err instanceof Error && err.message ? err.message : "Unable to connect to Razorpay. Please try again.");
         }
     };
 
@@ -386,6 +395,12 @@ export default function CheckoutPage() {
                                     </span>
                                 </div>
                             </div>
+
+                            {checkoutError && (
+                                <div className="p-3 bg-error/10 border border-error/30 text-error font-body-sm text-body-sm">
+                                    {checkoutError}
+                                </div>
+                            )}
 
                             <button
                                 disabled={isSubmitting || items.length === 0}
