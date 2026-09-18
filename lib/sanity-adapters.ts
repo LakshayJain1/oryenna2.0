@@ -49,6 +49,7 @@ type SanityJournalArticle = {
   category?: string;
   readTime?: string;
   summary?: string;
+  content?: any[];
   coverImage?: { _id: string; url: string } | null;
   seo?: { title?: string; description?: string };
 };
@@ -63,6 +64,7 @@ export function toJournalPost(a: SanityJournalArticle): JournalPost {
     excerpt: a.summary ?? "",
     image: a.coverImage?.url ?? "",
     seo: a.seo,
+    content: a.content,
   };
 }
 

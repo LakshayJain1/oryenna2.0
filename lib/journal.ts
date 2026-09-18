@@ -5,6 +5,7 @@ export type JournalPost = {
     readTime: string;
     excerpt: string;
     image: string;
+    content?: any[];
     volume?: string;
     seo?: {
         title?: string;
