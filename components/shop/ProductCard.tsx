@@ -11,6 +11,8 @@ export default function ProductCard({ product }: { product: Product }) {
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                         src={product.image}
+                        loading="lazy"
+                        decoding="async"
                     />
                 </Link>
 

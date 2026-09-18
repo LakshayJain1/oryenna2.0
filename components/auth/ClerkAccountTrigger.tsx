@@ -1,6 +1,14 @@
 'use client';
 
-import { useAuth, UserButton } from '@clerk/nextjs';
+import dynamic from 'next/dynamic';
+import { useAuth } from '@clerk/nextjs';
+
+// UserButton pulls Clerk's prebuilt UI chunks — load it only for the
+// signed-in branch so signed-out visitors never download it.
+const UserButton = dynamic(
+  () => import('@clerk/nextjs').then((m) => m.UserButton),
+  { ssr: false }
+);
 
 export function ClerkAccountTrigger({ onOpenAuth }: { onOpenAuth: () => void }) {
   const { isSignedIn } = useAuth();
