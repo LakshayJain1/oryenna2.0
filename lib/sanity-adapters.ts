@@ -42,7 +42,7 @@ export function toLibProduct(p: SanityListProduct): Product {
   };
 }
 
-type SanityJournalArticle = {
+export type SanityJournalArticle = {
   _id: string;
   title: string;
   slug: SanitySlug;

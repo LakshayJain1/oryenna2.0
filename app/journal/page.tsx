@@ -1,18 +1,31 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import type { JournalPost } from "@/lib/journal";
 import { pageMetadata } from "@/lib/seo";
 import { client } from "@/sanity/client";
 import { JOURNAL_PAGE_QUERY } from "@/sanity/queries";
-import { toJournalPost } from "@/lib/sanity-adapters";
+import { toJournalPost, type SanityJournalArticle } from "@/lib/sanity-adapters";
 
 export const revalidate = 60;
 
-async function getJournalPage() {
-  const data = await client.fetch(JOURNAL_PAGE_QUERY);
-  const articles = (data?.articles ?? []).filter(Boolean).map(toJournalPost);
+type JournalPageDoc = {
+  title?: string;
+  tagline?: string;
+  articles?: Array<SanityJournalArticle | null>;
+};
+
+async function getJournalPage(): Promise<{
+  title?: string;
+  tagline?: string;
+  articles: JournalPost[];
+}> {
+  const data = await client.fetch<JournalPageDoc | null>(JOURNAL_PAGE_QUERY);
+  const articles = (data?.articles ?? [])
+    .filter((article): article is NonNullable<typeof article> => Boolean(article))
+    .map(toJournalPost);
   return {
-    title: data?.title as string | undefined,
-    tagline: data?.tagline as string | undefined,
+    title: data?.title,
+    tagline: data?.tagline,
     articles,
   };
 }
