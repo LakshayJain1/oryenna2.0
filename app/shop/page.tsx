@@ -12,6 +12,8 @@ export const metadata = pageMetadata({
     "Slow seasonal botanical candles hand-poured in mouth-blown glass, unglazed stoneware, and Roman travertine. Shop the Oryenna collection.",
 });
 
+export const revalidate = 60;
+
 export default async function ShopPage() {
   let products = fallbackProducts;
   try {

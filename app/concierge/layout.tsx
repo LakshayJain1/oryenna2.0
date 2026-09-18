@@ -7,6 +7,8 @@ export const metadata = pageMetadata({
     "Personal scent guidance from the Oryenna atelier — find the pour that matches your mood and space.",
 });
 
+export const revalidate = 60;
+
 export default function ConciergeLayout({
   children,
 }: {

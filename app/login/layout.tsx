@@ -7,6 +7,8 @@ export const metadata = pageMetadata({
   noindex: true,
 });
 
+export const revalidate = 60;
+
 export default function LoginLayout({
   children,
 }: {

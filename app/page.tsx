@@ -20,6 +20,10 @@ export const metadata = pageMetadata({
     "Hand-poured botanical candles and slow living objects from Grasse and Provence. Curated releases, atelier craft, and essays on slow living.",
 });
 
+// Safety net so Sanity edits land without a rebuild
+// (publishes also trigger instant updates via /api/revalidate).
+export const revalidate = 60;
+
 export default async function HomePage() {
   let settings: any = null;
   let products = fallbackProducts;

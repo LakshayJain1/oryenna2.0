@@ -12,6 +12,8 @@ export const metadata = pageMetadata({
     "Essays on slow living, olfactory architecture, and atelier craft. Dispatches from the Oryenna journal.",
 });
 
+export const revalidate = 60;
+
 export default async function JournalPage() {
     let journalPosts = fallbackPosts;
     try {

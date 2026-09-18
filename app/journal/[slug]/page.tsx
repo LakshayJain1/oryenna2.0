@@ -6,6 +6,8 @@ import { client } from "@/sanity/client";
 import { JOURNAL_ARTICLE_BY_SLUG_QUERY } from "@/sanity/queries";
 import { toJournalPost } from "@/lib/sanity-adapters";
 
+export const revalidate = 60;
+
 async function getArticle(slug: string) {
   try {
     const data = await client.fetch(JOURNAL_ARTICLE_BY_SLUG_QUERY, { slug });

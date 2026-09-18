@@ -7,6 +7,8 @@ export const metadata = pageMetadata({
     "The Oryenna atelier story — wild botanicals, ethical harvests, and hand-poured candle craft from Grasse and Provence.",
 });
 
+export const revalidate = 60;
+
 export default function AboutPage() {
     return (
         <div className="flex flex-col w-full">
