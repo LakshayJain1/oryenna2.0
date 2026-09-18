@@ -46,25 +46,38 @@ type SanityJournalArticle = {
   _id: string;
   title: string;
   slug: SanitySlug;
-  category?: string;
-  readTime?: string;
   summary?: string;
+  publishedAt?: string;
+  publishedBy?: string;
   content?: any[];
+  closingNote?: string;
   coverImage?: { _id: string; url: string } | null;
-  seo?: { title?: string; description?: string };
 };
 
-/** Map a Sanity journal article onto the local JournalPost shape. */
+function formatPublishDate(value?: string): string {
+  if (!value) return "";
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return value;
+  return parsed.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+/** Map a Sanity journal insider article onto the local JournalPost shape. */
 export function toJournalPost(a: SanityJournalArticle): JournalPost {
   return {
     slug: slugOf(a.slug),
     title: a.title,
-    category: a.category ?? "Journal",
-    readTime: a.readTime ?? "",
+    category: a.publishedBy ?? "",
+    readTime: formatPublishDate(a.publishedAt),
     excerpt: a.summary ?? "",
     image: a.coverImage?.url ?? "",
-    seo: a.seo,
     content: a.content,
+    closingNote: a.closingNote,
+    publishedAt: a.publishedAt,
+    publishedBy: a.publishedBy,
   };
 }
 

@@ -55,8 +55,12 @@ export async function POST(request: Request) {
     if (slug) touch(`/collections/${slug}`);
     touch("/shop");
   } else if (type === "journalArticle") {
+    touch("/journal");
+    touch("/");
+  } else if (type === "journalInsider") {
     if (slug) touch(`/journal/${slug}`);
     touch("/journal");
+    touch("/");
   } else if (
     type === "homePage" ||
     type === "siteSettings" ||

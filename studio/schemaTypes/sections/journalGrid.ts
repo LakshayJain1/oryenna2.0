@@ -26,7 +26,7 @@ export const journalGrid = defineType({
       name: 'articles',
       title: 'Articles',
       type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'journalArticle' }] }],
+      of: [{ type: 'reference', to: [{ type: 'journalInsider' }] }],
       validation: (Rule) => Rule.min(1).max(6),
     }),
     defineField({

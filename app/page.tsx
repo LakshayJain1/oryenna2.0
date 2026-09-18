@@ -2,14 +2,13 @@ import Hero from "@/components/home/Hero";
 import Manifesto from "@/components/home/Manifesto";
 import Link from "next/link";
 import { products as fallbackProducts } from "@/lib/products";
-import { journalPosts as fallbackPosts } from "@/lib/journal";
 import ProductCard from "@/components/shop/ProductCard";
 import { pageMetadata } from "@/lib/seo";
 import { client } from "@/sanity/client";
 import {
   SITE_SETTINGS_QUERY,
   PRODUCTS_LIST_QUERY,
-  JOURNAL_ARTICLES_QUERY,
+  JOURNAL_PAGE_QUERY,
 } from "@/sanity/queries";
 import { fetchHomePageDoc, sectionOf } from "@/sanity/page-data";
 import { toLibProduct, toJournalPost } from "@/lib/sanity-adapters";
@@ -28,18 +27,20 @@ export const revalidate = 60;
 export default async function HomePage() {
   let settings: any = null;
   let products = fallbackProducts;
-  let journalPosts = fallbackPosts;
+  let journalTitle: string | undefined;
+  let journalPosts: ReturnType<typeof toJournalPost>[] = [];
   let homeDoc = null;
   try {
-    const [s, p, j, h] = await Promise.all([
+    const [s, p, journalPage, h] = await Promise.all([
       client.fetch(SITE_SETTINGS_QUERY),
       client.fetch(PRODUCTS_LIST_QUERY),
-      client.fetch(JOURNAL_ARTICLES_QUERY),
+      client.fetch(JOURNAL_PAGE_QUERY),
       fetchHomePageDoc(),
     ]);
     if (s) settings = s;
     if (p && p.length > 0) products = p.map(toLibProduct);
-    if (j && j.length > 0) journalPosts = j.map(toJournalPost);
+    journalTitle = journalPage?.title;
+    journalPosts = (journalPage?.articles ?? []).filter(Boolean).map(toJournalPost);
     homeDoc = h;
   } catch {
     // keep hardcoded fallbacks
@@ -160,17 +161,16 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Journal Preview */}
+      {journalPosts.length > 0 ? (
       <section className="w-full bg-surface py-space-xl px-margin-mobile md:px-margin-tablet lg:px-margin">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-space-xl gap-space-md">
             <div>
-              <span className="font-label-sm text-label-sm uppercase tracking-[0.2em] text-secondary mb-space-xs block">
-                06 / Words & Musings
-              </span>
+              {journalTitle ? (
               <h2 className="font-headline-lg text-headline-lg text-primary uppercase font-serif tracking-wider">
-                The Journal · Essays on Slow Living
+                {journalTitle}
               </h2>
+              ) : null}
             </div>
             <Link
               href="/journal"
@@ -191,32 +191,45 @@ export default async function HomePage() {
                 className="group flex flex-col"
               >
                 <div className="aspect-[16/11] bg-surface-container overflow-hidden mb-space-sm">
+                  {post.image ? (
                   <img
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                     src={post.image}
                     alt={post.title}
                   />
+                  ) : null}
                 </div>
+                {(post.category || post.readTime) ? (
                 <div className="flex items-center gap-2 mb-1">
+                  {post.category ? (
                   <span className="font-label-sm text-label-sm uppercase tracking-[0.16em] text-secondary">
                     {post.category}
                   </span>
+                  ) : null}
+                  {post.category && post.readTime ? (
                   <span className="w-1 h-1 rounded-full bg-outline" />
+                  ) : null}
+                  {post.readTime ? (
                   <span className="font-label-sm text-label-sm text-on-surface-variant">
                     {post.readTime}
                   </span>
+                  ) : null}
                 </div>
+                ) : null}
                 <h3 className="font-headline-sm text-headline-sm text-primary font-serif uppercase tracking-wide group-hover:text-secondary transition-colors mb-2">
                   {post.title}
                 </h3>
+                {post.excerpt ? (
                 <p className="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
                   {post.excerpt}
                 </p>
+                ) : null}
               </Link>
             ))}
           </div>
         </div>
       </section>
+      ) : null}
     </div>
   );
 }

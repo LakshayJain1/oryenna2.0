@@ -39,11 +39,9 @@ const PAGE_SECTIONS_NEW = groq`
       _id,
       title,
       slug,
-      category,
-      readTime,
       publishedAt,
-      summary,
-      author,
+      "summary": coalesce(summary, description),
+      "publishedBy": coalesce(publishedBy, author),
       coverImage
     },
     "collections": collections[]-> {
@@ -364,40 +362,43 @@ export const MOOD_RECOMMENDATIONS_QUERY = groq`
   }
 `
 
-export const JOURNAL_ARTICLES_QUERY = groq`
-  *[_type == "journalArticle"] | order(publishedAt desc, _createdAt desc) {
+const JOURNAL_INSIDER_LIST_FRAGMENT = groq`
+  _id,
+  title,
+  slug,
+  publishedAt,
+  "summary": coalesce(summary, description),
+  "publishedBy": coalesce(publishedBy, author),
+  "coverImage": coverImage.asset-> {
     _id,
-    title,
-    slug,
-    category,
-    readTime,
-    publishedAt,
-    summary,
-    "coverImage": coverImage.asset-> {
-      _id,
-      url
-    },
-    content[],
-    author
+    url
   }
 `
 
-export const JOURNAL_ARTICLE_BY_SLUG_QUERY = groq`
-  *[_type == "journalArticle" && slug.current == $slug][0] {
+export const JOURNAL_PAGE_QUERY = groq`
+  *[_type == "journalArticle"][0] {
+    title,
+    tagline,
+    "articles": articles[]-> {
+      ${JOURNAL_INSIDER_LIST_FRAGMENT}
+    }
+  }
+`
+
+export const JOURNAL_INSIDER_SLUGS_QUERY = groq`
+  *[_type == "journalInsider" && defined(slug.current)]{ "slug": slug.current }
+`
+
+export const JOURNAL_INSIDER_BY_SLUG_QUERY = groq`
+  *[_type == "journalInsider" && slug.current == $slug][0] {
     _id,
     title,
     slug,
-    category,
-    readTime,
     publishedAt,
-    summary,
+    "summary": coalesce(summary, description),
+    "publishedBy": coalesce(publishedBy, author),
     content[],
-    author,
-    featured,
-    seo {
-      title,
-      description
-    },
+    "closingNote": coalesce(closingNote, curatorNote),
     "coverImage": coverImage.asset-> {
       _id,
       url

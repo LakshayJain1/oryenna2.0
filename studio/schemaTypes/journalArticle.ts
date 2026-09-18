@@ -2,100 +2,37 @@ import { defineField, defineType } from 'sanity'
 
 export const journalArticle = defineType({
   name: 'journalArticle',
-  title: 'Journal Article',
+  title: 'Journal Page',
   type: 'document',
+  description:
+    'The Journal listing page. Create one document: page title, tagline, and the ordered list of insider articles.',
   fields: [
     defineField({
       name: 'title',
-      title: 'Article Title',
+      title: 'Page Title',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      options: { source: 'title', maxLength: 96 },
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'category',
-      title: 'Category / Tag',
-      type: 'string',
-      description: 'e.g. OLFACTORY STUDY, PROVENCE RITUALS, ARCHIVE',
-    }),
-    defineField({
-      name: 'readTime',
-      title: 'Estimated Read Time',
-      type: 'string',
-      initialValue: '4 MIN READ',
-    }),
-    defineField({
-      name: 'publishedAt',
-      title: 'Published Date',
-      type: 'date',
-    }),
-    defineField({
-      name: 'summary',
-      title: 'Summary / Excerpt',
+      name: 'tagline',
+      title: 'Tagline',
       type: 'text',
       rows: 3,
     }),
     defineField({
-      name: 'coverImage',
-      title: 'Cover Image',
-      type: 'image',
-      options: { hotspot: true },
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'content',
-      title: 'Full Article Content',
+      name: 'articles',
+      title: 'Articles',
       type: 'array',
-      of: [{ type: 'block', styles: [{ title: 'Normal', value: 'normal' }], lists: [] }],
-    }),
-    defineField({
-      name: 'author',
-      title: 'Author / Curator',
-      type: 'string',
-      initialValue: 'Atelier Curators, Grasse',
-    }),
-    defineField({
-      name: 'insiderArticle',
-      title: 'Journal Insider Article (Deep Dive)',
-      type: 'reference',
-      to: [{ type: 'journalInsider' }],
-    }),
-    defineField({
-      name: 'orderRank',
-      title: 'Display Order',
-      type: 'number',
-      initialValue: 1,
-    }),
-    defineField({
-      name: 'featured',
-      title: 'Featured Article',
-      type: 'boolean',
-      description: 'Surface in featured placements.',
-      initialValue: false,
-    }),
-    defineField({
-      name: 'seo',
-      title: 'SEO',
-      type: 'object',
-      fields: [
-        defineField({ name: 'title', title: 'SEO Title', type: 'string' }),
-        defineField({ name: 'description', title: 'SEO Description', type: 'text', rows: 2 }),
-      ],
+      description: 'Ordered list of Journal Insider (deep dive) articles shown on the listing page.',
+      of: [{ type: 'reference', to: [{ type: 'journalInsider' }] }],
     }),
   ],
   preview: {
-    select: {
-      title: 'title',
-    },
+    select: { title: 'title' },
     prepare({ title }) {
       return {
-        title: title || 'Journal Article',
+        title: title || 'Journal Page',
+        subtitle: 'Journal listing',
       }
     },
   },

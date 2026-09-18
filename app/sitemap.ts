@@ -35,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }>(groq`{
       "products": *[_type == "product" && defined(slug.current)]{ "slug": slug.current, _updatedAt },
       "collections": *[_type == "collection" && defined(slug.current)]{ "slug": slug.current, _updatedAt },
-      "articles": *[_type == "journalArticle" && defined(slug.current)]{ "slug": slug.current, _updatedAt }
+      "articles": *[_type == "journalInsider" && defined(slug.current)]{ "slug": slug.current, _updatedAt }
     }`);
 
     const productUrls = (data?.products || []).map((p) => ({
