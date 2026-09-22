@@ -1,3 +1,22 @@
+// Canonical frontend Product shape. Core commerce fields are required;
+// everything else mirrors the Sanity `product` schema and is optional so
+// legacy/offline fallback entries (lib/products.ts) keep working while
+// Sanity remains the source of truth.
+export type ProductGalleryImage = {
+    url: string;
+    alt?: string;
+    caption?: string;
+};
+
+export type ProductInsiderInfo = {
+    title?: string;
+    provenanceStory?: string;
+    topNotes?: string;
+    heartNotes?: string;
+    baseNotes?: string;
+    ingredientsList?: string[];
+};
+
 export type Product = {
     id: string;
     slug: string;
@@ -6,17 +25,38 @@ export type Product = {
     notes: string;
     description: string;
     price: number;
+    priceINR?: number;
+    comparePrice?: number;
     image: string;
+    imageAlt?: string;
     badge?: string;
     category: "botanical" | "archival" | "objects";
     burnTime: string;
     weight: string;
+    size?: string;
+    sku?: string;
+    accentNotes?: string[];
+    topNotes?: string;
+    heartNotes?: string;
+    baseNotes?: string;
+    ingredients?: string[];
+    longDescription?: any[];
+    gallery?: ProductGalleryImage[];
+    inStock?: boolean;
+    featured?: boolean;
+    collection?: { name?: string; slug?: string };
+    insiderInfo?: ProductInsiderInfo | null;
     seo?: {
         title?: string;
         description?: string;
     };
 };
 
+// EMERGENCY/OFFLINE FALLBACK ONLY — Sanity (`product` documents via
+// PRODUCTS_LIST_QUERY / PRODUCT_BY_SLUG_QUERY) is the source of truth.
+// This array renders only when Sanity is unreachable or returns zero
+// products. Do not add new catalogue content here; create `product`
+// documents in Studio instead.
 export const products: Product[] = [
     {
         id: "ember",

@@ -8,23 +8,75 @@ function slugOf(slug: SanitySlug | undefined): string {
   return typeof slug === "string" ? slug : slug.current;
 }
 
+type SanityImageRef = { _id?: string; url?: string } | null | undefined;
+
 type SanityListProduct = {
   _id: string;
   name: string;
   slug: SanitySlug;
   price: number;
+  priceINR?: number;
+  comparePrice?: number;
   badge?: string;
   notes?: string;
   description?: string;
+  longDescription?: any[];
   weight?: string;
+  size?: string;
+  sku?: string;
   burnTime?: string;
-  image?: { _id: string; url: string } | null;
+  accentNotes?: string[];
+  topNotes?: string;
+  heartNotes?: string;
+  baseNotes?: string;
+  ingredients?: string[];
+  inStock?: boolean;
+  featured?: boolean;
+  orderRank?: number;
+  gallery?: Array<{ asset?: { _id: string; url: string }; url?: string; alt?: string; caption?: string }>;
+  image?: SanityImageRef;
   imageAlt?: string;
+  collection?: { name?: string; slug?: SanitySlug } | null;
+  insiderInfo?: {
+    title?: string;
+    provenanceStory?: string;
+    topNotes?: string;
+    heartNotes?: string;
+    baseNotes?: string;
+    ingredientsList?: string[];
+  } | null;
   seo?: { title?: string; description?: string };
 };
 
-/** Map a Sanity product (list or detail query) onto the local Product shape. */
+function imageUrlOf(image: SanityImageRef): string {
+  if (!image || typeof image !== "object") return "";
+  return (image as { url?: string }).url ?? "";
+}
+
+function galleryOf(
+  gallery: SanityListProduct["gallery"]
+): Product["gallery"] {
+  if (!Array.isArray(gallery)) return undefined;
+  const mapped = gallery
+    .map((g: any) => {
+      const url =
+        g?.asset?.url ?? (typeof g?.url === "string" ? g.url : undefined);
+      if (!url) return null;
+      return {
+        url,
+        alt: g?.alt,
+        caption: g?.caption,
+      };
+    })
+    .filter((g): g is NonNullable<typeof g> => g !== null);
+  return mapped.length > 0 ? mapped : undefined;
+}
+
+/** Map a Sanity product (list or detail query) onto the local Product shape.
+ *  Preserves every field the PDP needs — price, gallery, pyramid notes,
+ *  ingredients, insider info, collection — instead of discarding them. */
 export function toLibProduct(p: SanityListProduct): Product {
+  const insider = p.insiderInfo ?? null;
   return {
     id: p._id,
     slug: slugOf(p.slug),
@@ -33,11 +85,41 @@ export function toLibProduct(p: SanityListProduct): Product {
     notes: p.notes ?? "",
     description: p.description ?? "",
     price: p.price,
-    image: p.image?.url ?? "",
+    priceINR: p.priceINR,
+    comparePrice: p.comparePrice,
+    image: imageUrlOf(p.image),
+    imageAlt: p.imageAlt,
     badge: p.badge,
     category: "botanical",
     burnTime: p.burnTime ?? "",
     weight: p.weight ?? "",
+    size: p.size,
+    sku: p.sku,
+    accentNotes: p.accentNotes,
+    topNotes: p.topNotes ?? insider?.topNotes,
+    heartNotes: p.heartNotes ?? insider?.heartNotes,
+    baseNotes: p.baseNotes ?? insider?.baseNotes,
+    ingredients: p.ingredients ?? insider?.ingredientsList,
+    longDescription: p.longDescription,
+    gallery: galleryOf(p.gallery),
+    inStock: p.inStock,
+    featured: p.featured,
+    collection: p.collection
+      ? {
+          name: p.collection.name,
+          slug: p.collection.slug ? slugOf(p.collection.slug) : undefined,
+        }
+      : undefined,
+    insiderInfo: insider
+      ? {
+          title: insider.title,
+          provenanceStory: insider.provenanceStory,
+          topNotes: insider.topNotes,
+          heartNotes: insider.heartNotes,
+          baseNotes: insider.baseNotes,
+          ingredientsList: insider.ingredientsList,
+        }
+      : null,
     seo: p.seo,
   };
 }

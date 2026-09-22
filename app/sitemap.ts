@@ -1,11 +1,12 @@
 import { MetadataRoute } from "next";
 import { client } from "@/sanity/client";
 import { groq } from "next-sanity";
+import { SITE_URL } from "@/lib/seo";
 
 export const revalidate = 3600; // revalidate sitemap hourly
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://oryennaweb.vercel.app";
+  const baseUrl = SITE_URL;
 
   // Static pages
   const staticPages = [
@@ -26,7 +27,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route === "" ? 1.0 : 0.8,
   }));
 
-  // Fetch dynamic slugs from Sanity
+  // Fetch dynamic slugs from Sanity (live schema types only).
+  // Collections resolve to the shop listing filtered by collection slug —
+  // there is no standalone /collections/[slug] route.
   try {
     const data = await client.fetch<{
       products: Array<{ slug: string; _updatedAt?: string }>;
@@ -46,7 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
 
     const collectionUrls = (data?.collections || []).map((c) => ({
-      url: `${baseUrl}/collections/${c.slug}`,
+      url: `${baseUrl}/shop?collection=${c.slug}`,
       lastModified: c._updatedAt ? new Date(c._updatedAt) : new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.8,

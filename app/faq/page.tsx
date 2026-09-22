@@ -1,6 +1,3 @@
-import { client } from "@/sanity/client";
-import { FAQ_PAGE_QUERY } from "@/sanity/queries";
-import type { SanityFaqPage } from "@/sanity/types";
 import { fetchPageBySlug, faqSectionOf } from "@/sanity/page-data";
 
 export const revalidate = 60;
@@ -17,17 +14,12 @@ export const metadata = pageMetadata({
 const SLUG = "faq";
 
 export default async function FAQPage() {
-  // New model first: `page` doc with an inline faqList section.
+  // Single source of truth: `page` doc with an inline faqList section.
   const pageDoc = await fetchPageBySlug(SLUG);
   const faqSection = faqSectionOf(pageDoc);
-  const legacyPage: SanityFaqPage | null = faqSection
-    ? null
-    : await client
-        .fetch<SanityFaqPage>(FAQ_PAGE_QUERY, { slug: SLUG })
-        .catch(() => null);
 
-  const title = pageDoc?.title ?? legacyPage?.title;
-  const faqs = faqSection?.items ?? legacyPage?.faqs;
+  const title = pageDoc?.title;
+  const faqs = faqSection?.items;
 
   if (!title || !faqs || faqs.length === 0) {
     return (
@@ -51,7 +43,7 @@ export default async function FAQPage() {
         <div className="space-y-4">
           {faqs.map((faq: any, i: number) => (
             <details
-              key={i}
+              key={faq._key || i}
               className="group bg-surface-container rounded-none border border-on-surface-variant/10 overflow-hidden"
             >
               <summary className="flex items-center justify-between p-6 cursor-pointer list-none">

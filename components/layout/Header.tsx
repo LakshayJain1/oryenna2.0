@@ -5,9 +5,12 @@ import { usePathname } from "next/navigation";
 import { useCartStore } from "@/lib/cart-store";
 import { ClerkAccountTrigger } from "@/components/auth/ClerkAccountTrigger";
 
+// Offline fallback only — live links come from the Sanity `navbar` doc
+// (see app/layout.tsx). Discover points at /about because the homepage
+// has no #discover anchor.
 const FALLBACK_NAV_LINKS = [
   { label: "Shop", url: "/shop" },
-  { label: "Discover", url: "/#discover" },
+  { label: "Discover", url: "/about" },
   { label: "About", url: "/about" },
   { label: "Journal", url: "/journal" },
   { label: "Concierge", url: "/concierge" },
@@ -62,13 +65,13 @@ export default function Header({ navLinks, announcementText }: HeaderProps) {
         </nav>
 
         <div className="flex items-center gap-space-md">
-          <button
-            aria-label="Search"
+          <Link
+            aria-label="Search the collection"
+            href="/shop"
             className="p-space-xs text-on-surface-variant hover:text-on-surface transition-colors duration-300 flex items-center"
-            type="button"
           >
             <span className="material-symbols-outlined text-[20px]">search</span>
-          </button>
+          </Link>
           <button
             aria-label="Bag"
             onClick={openCart}

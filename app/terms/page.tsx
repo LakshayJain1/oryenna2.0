@@ -1,6 +1,3 @@
-import { client } from "@/sanity/client";
-import { TERMS_PAGE_QUERY } from "@/sanity/queries";
-import type { SanityTermsPage } from "@/sanity/types";
 import { fetchPageBySlug, contentSectionOf } from "@/sanity/page-data";
 import { PortableTextRenderer } from "@/components/portable-text-renderer";
 
@@ -17,17 +14,12 @@ export const metadata = pageMetadata({
 const SLUG = "terms";
 
 export default async function TermsPage() {
+  // Single source of truth: unified `page` doc with an inline richText section.
   const pageDoc = await fetchPageBySlug(SLUG);
   const richText = contentSectionOf(pageDoc);
-  const legacyPage: SanityTermsPage | null =
-    richText?.content && richText.content.length > 0
-      ? null
-      : await client
-          .fetch<SanityTermsPage>(TERMS_PAGE_QUERY, { slug: SLUG })
-          .catch(() => null);
 
-  const title = pageDoc?.title ?? legacyPage?.title;
-  const content = richText?.content ?? legacyPage?.content;
+  const title = pageDoc?.title;
+  const content = richText?.content;
 
   if (!title || !content) {
     return (

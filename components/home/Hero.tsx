@@ -6,21 +6,34 @@ type HeroProps = {
     headline?: string;
     tagline?: string;
     subtext?: string;
+    // Sanity hero.backgroundImageUrl — falls back to the offline default
+    // image below when the page doc has no background image.
+    imageUrl?: string;
+    imageAlt?: string;
 };
+
+// Offline fallback background only — Sanity hero.backgroundImage wins.
+const FALLBACK_HERO_IMAGE =
+    "https://lh3.googleusercontent.com/aida-public/AB6AXuD3zyjgjfRUXUwV4h73FZ3cw6_qOKqZuxz7eFeNKhk49R8CSlpe1K0TV1DDMMfXnxRhH6OMM5Y45XUKSNTcR0j8rutnpO7UM7R6BTw3l6YIl7XVEhKESWc5yzhlv2pxI1B8pIUhzAbaw09Cy0b9SJSz31eqArxHzujVtrARWIa9i80D_3wc7XOPhJBvWqvLHw4xfx7UtRzRR3R2z8M9t_MiyLkE_4RhkpDNV7shMnRYtKrZeam1fc9pog";
 
 export default function Hero({
     eyebrow = "Atelier de Parfum d'Intérieur",
     headline = "ORYENNA",
     tagline = "Light a calmer you.",
     subtext = "Scents and spaces designed for slower moments. Poured by hand into hand-blown vessels from wild botanicals.",
+    imageUrl,
+    imageAlt,
 }: HeroProps) {
     return (
         <section className="relative w-full overflow-hidden bg-surface-container-low min-h-[92vh] flex items-center justify-center">
             <div className="absolute inset-0 z-0">
                 <Image
-                    alt="Oryenna signature candle seen from directly above surrounded by rippling raw linen and dry olive botanical leaves"
+                    alt={
+                        imageAlt ||
+                        "Oryenna signature candle seen from directly above surrounded by rippling raw linen and dry olive botanical leaves"
+                    }
                     className="object-cover object-center scale-105"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3zyjgjfRUXUwV4h73FZ3cw6_qOKqZuxz7eFeNKhk49R8CSlpe1K0TV1DDMMfXnxRhH6OMM5Y45XUKSNTcR0j8rutnpO7UM7R6BTw3l6YIl7XVEhKESWc5yzhlv2pxI1B8pIUhzAbaw09Cy0b9SJSz31eqArxHzujVtrARWIa9i80D_3wc7XOPhJBvWqvLHw4xfx7UtRzRR3R2z8M9t_MiyLkE_4RhkpDNV7shMnRYtKrZeam1fc9pog"
+                    src={imageUrl || FALLBACK_HERO_IMAGE}
                     fill
                     priority
                     fetchPriority="high"

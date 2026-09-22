@@ -1,36 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { notFound } from "next/navigation";
 import { getProductBySlug, type Product } from "@/lib/products";
+import {
+  VESSELS,
+  ITEM_GIFT_WRAP_FEE,
+  type VesselId,
+} from "@/lib/pricing";
 import { useCartStore } from "@/lib/cart-store";
+import { PortableTextRenderer } from "@/components/portable-text-renderer";
 import Accordion from "@/components/ui/Accordion";
 
-const vesselOptions = [
-    {
-        id: "standard",
-        name: "Standard Mouth-Blown Glass",
-        desc: "290g / 10.2 oz · Heavy-base soda lime glassware",
-        price: 78,
-        spec: "65 Hr Slow Burn",
-        badge: "Atelier Favorite",
-    },
-    {
-        id: "grand",
-        name: "Grand Hand-Poured Stoneware",
-        desc: "450g / 15.8 oz · Textured porous ceramic",
-        price: 118,
-        spec: "100 Hr Double-Wick Burn",
-    },
-    {
-        id: "refill",
-        name: "Botanical Wax Drop-In Refill",
-        desc: "290g pillar wrapped in unbleached seed paper",
-        price: 52,
-        spec: "65 Hr Drop-in Burn",
-        badge: "Zero-Waste",
-    },
-];
+// Vessel presentation labels are intentional static UI configuration.
+// Prices always come from lib/pricing VESSELS (single source of truth),
+// never from hardcoded numbers here.
+const VESSEL_META: Record<
+  VesselId,
+  { name: string; desc: string; spec: string; badge?: string }
+> = {
+  standard: {
+    name: "Standard Mouth-Blown Glass",
+    desc: "290g / 10.2 oz · Heavy-base soda lime glassware",
+    spec: "65 Hr Slow Burn",
+    badge: "Atelier Favorite",
+  },
+  grand: {
+    name: "Grand Hand-Poured Stoneware",
+    desc: "450g / 15.8 oz · Textured porous ceramic",
+    spec: "100 Hr Double-Wick Burn",
+  },
+  refill: {
+    name: "Botanical Wax Drop-In Refill",
+    desc: "290g pillar wrapped in unbleached seed paper",
+    spec: "65 Hr Drop-in Burn",
+    badge: "Zero-Waste",
+  },
+};
+
+const VESSEL_ORDER: VesselId[] = ["standard", "grand", "refill"];
 
 export default function ProductView({
   slug,
@@ -42,13 +50,40 @@ export default function ProductView({
     const product = initialProduct ?? getProductBySlug(slug);
     if (!product) notFound();
 
-    const [vessel, setVessel] = useState(vesselOptions[0]);
+    const [vesselId, setVesselId] = useState<VesselId>("standard");
     const [quantity, setQuantity] = useState(1);
     const [gifting, setGifting] = useState(false);
     const { addItem, openCart } = useCartStore();
 
-    const unitPrice = vessel.price + (gifting ? 14 : 0);
+    const vesselOptions = useMemo(
+      () =>
+        VESSEL_ORDER.map((id) => ({
+          id,
+          ...VESSEL_META[id],
+          price: VESSELS[id],
+        })),
+      []
+    );
+    const vessel =
+      vesselOptions.find((v) => v.id === vesselId) ?? vesselOptions[0];
+
+    const unitPrice = vessel.price + (gifting ? ITEM_GIFT_WRAP_FEE : 0);
     const total = unitPrice * quantity;
+
+    // Olfactory pyramid comes from Sanity (product fields, with insider
+    // fallback already merged by toLibProduct). No hardcoded notes.
+    const pyramid = [
+      { tier: "Head", notes: product.topNotes },
+      { tier: "Heart", notes: product.heartNotes },
+      { tier: "Base", notes: product.baseNotes },
+    ].filter((n) => n.notes && n.notes.length > 0);
+
+    const gallery =
+      product.gallery && product.gallery.length > 0
+        ? product.gallery
+        : product.image
+          ? [{ url: product.image, alt: product.imageAlt || product.name }]
+          : [];
 
     const handleAdd = () => {
         addItem({
@@ -66,27 +101,41 @@ export default function ProductView({
     return (
         <section className="w-full px-margin-mobile md:px-margin-tablet lg:px-margin py-space-xl">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter lg:gap-space-xl items-start">
-                {/* Gallery */}
+                {/* Gallery — Sanity gallery[] with primary image fallback */}
                 <div className="lg:col-span-7 flex flex-col gap-space-md">
-                    <div className="relative w-full aspect-[4/5] bg-surface-container overflow-hidden rounded-sm">
+                    {gallery.map((img, i) => (
+                      <div
+                        key={`${img.url}-${i}`}
+                        className="relative w-full aspect-[4/5] bg-surface-container overflow-hidden rounded-sm"
+                      >
                         <img
-                            alt={product.name}
-                            className="w-full h-full object-cover"
-                            src={product.image}
+                          alt={img.alt || product.name}
+                          className="w-full h-full object-cover"
+                          src={img.url}
                         />
-                        <div className="absolute top-space-md left-space-md bg-surface/85 backdrop-blur-md px-space-md py-space-xs rounded-sm">
+                        {i === 0 && product.badge ? (
+                          <div className="absolute top-space-md left-space-md bg-surface/85 backdrop-blur-md px-space-md py-space-xs rounded-sm">
                             <span className="font-label-sm text-label-sm text-primary uppercase tracking-widest">
-                                Atelier Batch 14 — Hand-Poured
+                              {product.badge}
                             </span>
-                        </div>
-                    </div>
+                          </div>
+                        ) : null}
+                        {img.caption ? (
+                          <div className="absolute bottom-space-md left-space-md right-space-md">
+                            <p className="font-body-sm text-body-sm bg-surface/85 backdrop-blur-md px-space-md py-space-xs rounded-sm text-primary">
+                              {img.caption}
+                            </p>
+                          </div>
+                        ) : null}
+                      </div>
+                    ))}
                 </div>
 
                 {/* Product Info */}
                 <div className="lg:col-span-5 flex flex-col gap-space-lg lg:sticky lg:top-24">
                     <div className="space-y-space-xs">
                         <span className="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold">
-                            Signature Composition
+                            {product.collection?.name || "Signature Composition"}
                         </span>
                         <h1 className="font-headline-lg text-headline-lg text-primary">
                             {product.name}
@@ -98,22 +147,32 @@ export default function ProductView({
                             <span className="font-display-mobile text-display-mobile text-primary font-normal">
                                 ${vessel.price}
                             </span>
+                            {product.comparePrice && product.comparePrice > vessel.price ? (
+                              <span className="font-body-md text-body-md text-on-surface-variant line-through">
+                                ${product.comparePrice}
+                              </span>
+                            ) : null}
                             <span className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">
                                 USD / {product.weight}
                             </span>
                         </div>
+                        {product.sku || product.size ? (
+                          <p className="font-label-sm text-[11px] text-on-surface-variant/80 uppercase tracking-wider">
+                            {[product.sku, product.size].filter(Boolean).join(" · ")}
+                          </p>
+                        ) : null}
                     </div>
 
-                    {/* Vessel Selection */}
+                    {/* Vessel Selection — prices from lib/pricing */}
                     <div className="space-y-space-sm pt-space-xs">
                         <label className="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold">
-                            Select Medium & Vessel Form
+                            Select Medium &amp; Vessel Form
                         </label>
                         <div className="grid grid-cols-1 gap-space-xs">
                             {vesselOptions.map((opt) => (
                                 <button
                                     key={opt.id}
-                                    onClick={() => setVessel(opt)}
+                                    onClick={() => setVesselId(opt.id)}
                                     className={`w-full p-space-md text-left flex items-center justify-between transition-all duration-300 ${vessel.id === opt.id
                                         ? "ring-1 ring-primary bg-surface-container"
                                         : "bg-surface-container-low hover:bg-surface-container"
@@ -134,6 +193,9 @@ export default function ProductView({
                                         <p className="font-body-sm text-body-sm text-on-surface-variant">
                                             {opt.desc}
                                         </p>
+                                        <p className="font-label-sm text-[11px] text-on-surface-variant/80">
+                                            {opt.spec}
+                                        </p>
                                     </div>
                                     <span className="font-label-lg text-label-lg text-primary font-bold ml-space-md shrink-0">
                                         ${opt.price}
@@ -143,29 +205,14 @@ export default function ProductView({
                         </div>
                     </div>
 
-                    {/* Olfactory Pyramid */}
+                    {/* Olfactory Pyramid — Sanity only, hidden when empty */}
+                    {pyramid.length > 0 ? (
                     <div className="space-y-space-sm bg-surface-container-low p-space-md rounded-sm">
                         <span className="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold">
                             Olfactory Note Architecture
                         </span>
                         <div className="space-y-space-sm pt-space-xs">
-                            {[
-                                {
-                                    tier: "Head",
-                                    notes: "Silver Birch Leaf, Wild Cade Smoke, Bergamot Rind",
-                                    time: "First 15–20 minutes",
-                                },
-                                {
-                                    tier: "Heart",
-                                    notes: "Charred Atlas Cedarwood, Labdanum Resin, Clove Stem",
-                                    time: "Unfolds 2 to 4 hours",
-                                },
-                                {
-                                    tier: "Base",
-                                    notes: "Rich Balsamic Amber, Aged Bourbon Vanilla",
-                                    time: "Lingers for days",
-                                },
-                            ].map((note) => (
+                            {pyramid.map((note) => (
                                 <div key={note.tier} className="flex items-start gap-space-md">
                                     <div className="w-16 shrink-0 font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">
                                         {note.tier}
@@ -174,14 +221,25 @@ export default function ProductView({
                                         <p className="font-body-sm text-body-sm text-primary font-medium">
                                             {note.notes}
                                         </p>
-                                        <p className="font-label-sm text-[11px] text-on-surface-variant/80">
-                                            {note.time}
-                                        </p>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     </div>
+                    ) : null}
+
+                    {product.accentNotes && product.accentNotes.length > 0 ? (
+                      <div className="flex flex-wrap gap-space-xs">
+                        {product.accentNotes.map((note) => (
+                          <span
+                            key={note}
+                            className="bg-surface-container-low px-space-sm py-space-xs font-label-sm text-label-sm uppercase tracking-wider text-primary"
+                          >
+                            {note}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
 
                     {/* Purchasing */}
                     <div className="space-y-space-md pt-space-xs">
@@ -205,7 +263,7 @@ export default function ProductView({
                                         Slow Living Presentation Packaging
                                     </span>
                                     <span className="font-label-sm text-[11px] text-on-surface-variant">
-                                        Linen gift box, wax seal, hand-pressed herb card (+ $14)
+                                        Linen gift box, wax seal, hand-pressed herb card (+ ${ITEM_GIFT_WRAP_FEE})
                                     </span>
                                 </div>
                             </div>
@@ -247,24 +305,39 @@ export default function ProductView({
                         </div>
                     </div>
 
-                    {/* Accordions */}
+                    {/* Accordions — Sanity longDescription + insider story */}
                     <div className="space-y-space-xs pt-space-md">
                         <Accordion title="Sensory Profile & Atmosphere" defaultOpen>
                             <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
                                 {product.description}
                             </p>
+                            {product.longDescription && product.longDescription.length > 0 ? (
+                              <div className="mt-space-sm">
+                                <PortableTextRenderer content={product.longDescription} />
+                              </div>
+                            ) : null}
                         </Accordion>
-                        <Accordion title="Botanical Wax & Vessel Craft">
+                        {product.ingredients && product.ingredients.length > 0 ? (
+                        <Accordion title="Botanical Ingredients">
+                            <ul className="list-disc pl-6 space-y-1 font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                                {product.ingredients.map((ing) => (
+                                  <li key={ing}>{ing}</li>
+                                ))}
+                            </ul>
+                        </Accordion>
+                        ) : null}
+                        {product.insiderInfo?.provenanceStory ? (
+                        <Accordion title="Provenance & Craft">
                             <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                                Hand-poured in micro-batches of twelve. Our wax matrix combines
-                                cold-pressed Scandinavian rapeseed wax with wild beeswax for a
-                                sootless, slow burn.
+                                {product.insiderInfo.provenanceStory}
                             </p>
                         </Accordion>
+                        ) : null}
                         <Accordion title="The Art of the Burn & Vessel Care">
                             <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
                                 Allow the wax to liquefy to the glass rim during the
                                 foundational first burn to ensure uniform memory depth.
+                                Trim the wick to 5mm before each lighting.
                             </p>
                         </Accordion>
                     </div>

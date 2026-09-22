@@ -38,13 +38,15 @@ export default async function Footer() {
     let footerColumns = FALLBACK_FOOTER_COLUMNS;
     let copyrightText =
         "© 2025 ORYENNA Parfums & Bougies. Crafted for contemplative spaces.";
+    let brandTagline: string | undefined;
     try {
         const data = await client.fetch(FOOTER_QUERY);
         const mapped = toFooterColumns(data?.footerColumns);
         if (mapped) footerColumns = mapped;
         if (data?.copyrightText) copyrightText = data.copyrightText;
+        if (data?.brandTagline) brandTagline = data.brandTagline;
     } catch {
-        // keep hardcoded fallback
+        // keep offline fallback
     }
 
     return (
@@ -59,22 +61,24 @@ export default async function Footer() {
                             An Invitation to Slow Down
                         </h3>
                         <p className="font-body-md text-body-md text-on-surface-variant max-w-md">
-                            Receive sensory vignettes, private atelier batch release notices,
-                            and quiet reflections on spatial fragrance architecture.
+                            {brandTagline ??
+                                "Receive sensory vignettes, private atelier batch release notices, and quiet reflections on spatial fragrance architecture."}
                         </p>
-                        <form className="flex flex-col sm:flex-row gap-space-sm pt-space-xs max-w-md">
-                            <input
-                                className="flex-1 bg-surface-container px-space-md py-space-sm font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none focus:bg-surface-container-high transition-colors duration-300"
-                                placeholder="Your email address"
-                                type="email"
-                            />
-                            <button
-                                className="h-[52px] px-space-lg bg-primary-container text-surface font-label-lg text-label-lg uppercase tracking-wider hover:bg-primary transition-colors duration-300 flex items-center justify-center"
-                                type="button"
+                        {/* Newsletter provider is not connected yet — link to
+                            Contact instead of faking a signup. */}
+                        <div className="flex flex-col gap-space-xs pt-space-xs max-w-md">
+                            <Link
+                                href="/contact"
+                                className="h-[52px] px-space-lg bg-primary-container text-surface font-label-lg text-label-lg uppercase tracking-wider hover:bg-primary transition-colors duration-300 inline-flex items-center justify-center"
                             >
-                                Subscribe
-                            </button>
-                        </form>
+                                Request the Gazette via Contact
+                            </Link>
+                            <p className="font-body-sm text-body-sm text-on-surface-variant/80">
+                                Gazette subscriptions are handled through the
+                                atelier until the newsletter provider is
+                                connected.
+                            </p>
+                        </div>
                     </div>
 
                     {footerColumns.map((col) => (
@@ -107,24 +111,38 @@ export default async function Footer() {
                     </div>
                     <div className="flex items-center gap-space-md font-label-sm text-label-sm uppercase tracking-wider">
                         <Link
-                            href="/concierge"
+                            href="/terms"
                             className="text-on-surface-variant hover:text-on-surface transition-colors duration-300"
                         >
-                            House Terms & Privacy
+                            Terms
                         </Link>
                         <span className="text-on-surface-variant/40">•</span>
                         <Link
-                            href="/concierge"
+                            href="/privacy-policy"
                             className="text-on-surface-variant hover:text-on-surface transition-colors duration-300"
                         >
-                            Shipping Rituals
+                            Privacy
                         </Link>
                         <span className="text-on-surface-variant/40">•</span>
                         <Link
-                            href="/concierge"
+                            href="/shipping"
                             className="text-on-surface-variant hover:text-on-surface transition-colors duration-300"
                         >
-                            Direct Dialogue
+                            Shipping
+                        </Link>
+                        <span className="text-on-surface-variant/40">•</span>
+                        <Link
+                            href="/returns"
+                            className="text-on-surface-variant hover:text-on-surface transition-colors duration-300"
+                        >
+                            Returns
+                        </Link>
+                        <span className="text-on-surface-variant/40">•</span>
+                        <Link
+                            href="/contact"
+                            className="text-on-surface-variant hover:text-on-surface transition-colors duration-300"
+                        >
+                            Contact
                         </Link>
                     </div>
                 </div>

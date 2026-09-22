@@ -48,11 +48,14 @@ export async function POST(request: Request) {
   touch("/", "layout");
   touch("/");
 
+  // Live schema types only. Obsolete per-route page types (homePage,
+  // shopPage, aboutPage, ...) and `siteSettings` were removed — the
+  // unified `page` doc below is the source of truth. Collections resolve
+  // to /shop?collection= so only /shop needs revalidation.
   if (type === "product") {
     if (slug) touch(`/product/${slug}`);
     touch("/shop");
   } else if (type === "collection") {
-    if (slug) touch(`/collections/${slug}`);
     touch("/shop");
   } else if (type === "journalArticle") {
     touch("/journal");
@@ -61,33 +64,8 @@ export async function POST(request: Request) {
     if (slug) touch(`/journal/${slug}`);
     touch("/journal");
     touch("/");
-  } else if (
-    type === "homePage" ||
-    type === "siteSettings" ||
-    type === "navbar" ||
-    type === "footer"
-  ) {
+  } else if (type === "navbar" || type === "footer") {
     // Covered by the layout + homepage touches above.
-  } else if (type === "shopPage") {
-    touch("/shop");
-  } else if (type === "aboutPage") {
-    touch("/about");
-  } else if (type === "contactPage") {
-    touch("/contact");
-  } else if (type === "faqPage") {
-    touch("/faq");
-  } else if (type === "shippingPage") {
-    touch("/shipping");
-  } else if (type === "returnsPage") {
-    touch("/returns");
-  } else if (type === "privacyPolicyPage") {
-    touch("/privacy-policy");
-  } else if (type === "termsPage") {
-    touch("/terms");
-  } else if (type === "moodRecommendation") {
-    touch("/concierge");
-  } else if (type === "complimentarySample") {
-    touch("/checkout");
   } else if (type === "page") {
     // Unified page model: route derives from slug (home resolves to /).
     const pageType = typeof payload.pageType === "string" ? payload.pageType : "";

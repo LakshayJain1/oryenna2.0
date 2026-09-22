@@ -41,62 +41,10 @@ export interface PageDoc {
   sections?: PageSection[]
 }
 
-export interface SanityHomePage {
-  title: string
-  slug: string
-  sections: SectionBlock[]
-}
-
-export interface SanityShopPage {
-  title: string
-  slug: string
-  sections: SectionBlock[]
-}
-
-export interface SanityAboutPage {
-  title: string
-  slug: string
-  sections: SectionBlock[]
-}
-
-export interface SanityContactPage {
-  title: string
-  slug: string
-  sections: SectionBlock[]
-}
-
-export interface SanityFaqPage {
-  title: string
-  slug: string
-  faqs?: Array<{
-    question: string
-    answer: string
-  }>
-}
-
-export interface SanityPrivacyPolicyPage {
-  title: string
-  slug: string
-  content?: any[]
-}
-
-export interface SanityTermsPage {
-  title: string
-  slug: string
-  content?: any[]
-}
-
-export interface SanityShippingPage {
-  title: string
-  slug: string
-  content?: any[]
-}
-
-export interface SanityReturnsPage {
-  title: string
-  slug: string
-  content?: any[]
-}
+// NOTE: legacy per-route page interfaces (homePage, shopPage, aboutPage,
+// contactPage, faqPage, privacyPolicyPage, termsPage, shippingPage,
+// returnsPage) and the unschematized siteSettings interface were removed.
+// The unified `PageDoc` above is the single source of truth for pages.
 
 export interface SanityProduct {
   _id: string
@@ -236,38 +184,6 @@ export interface SanityComplimentarySample {
   volume: string
   description: string
   orderRank?: number
-}
-
-export interface SanitySiteSettings {
-  title?: string
-  description?: string
-  announcementBar?: string
-  heroEyebrow?: string
-  heroHeadline?: string
-  heroTagline?: string
-  heroSubtext?: string
-  manifestoEyebrow?: string
-  manifestoHeadline?: string
-  manifestoQuote?: string
-  manifestoMetrics?: Array<{
-    value: string
-    label: string
-    description: string
-  }>
-  craftHeadline?: string
-  craftQuote?: string
-  craftQuoteAuthor?: string
-  craftQuoteLocation?: string
-  craftStory?: string
-  craftSpecs?: Array<{
-    title: string
-    subtitle: string
-    desc: string
-  }>
-  sanctuaryHeadline?: string
-  sanctuaryQuote?: string
-  sanctuaryText?: string
-  sanctuaryCaption?: string
 }
 
 export interface SanityNavbar {

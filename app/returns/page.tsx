@@ -1,6 +1,3 @@
-import { client } from "@/sanity/client";
-import { RETURNS_PAGE_QUERY } from "@/sanity/queries";
-import type { SanityReturnsPage } from "@/sanity/types";
 import { fetchPageBySlug, contentSectionOf } from "@/sanity/page-data";
 import { PortableTextRenderer } from "@/components/portable-text-renderer";
 
@@ -19,15 +16,9 @@ const SLUG = "returns";
 export default async function ReturnsPage() {
   const pageDoc = await fetchPageBySlug(SLUG);
   const richText = contentSectionOf(pageDoc);
-  const legacyPage: SanityReturnsPage | null =
-    richText?.content && richText.content.length > 0
-      ? null
-      : await client
-          .fetch<SanityReturnsPage>(RETURNS_PAGE_QUERY, { slug: SLUG })
-          .catch(() => null);
 
-  const title = pageDoc?.title ?? legacyPage?.title;
-  const content = richText?.content ?? legacyPage?.content;
+  const title = pageDoc?.title;
+  const content = richText?.content;
 
   if (!title || !content) {
     return (

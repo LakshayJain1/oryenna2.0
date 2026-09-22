@@ -99,8 +99,6 @@ function SectionComponent({ section, index }: { section: any; index: number }) {
       return <FaqListSection section={section} />;
     case "textBlock":
       return <TextBlockSection section={section} />;
-    case "moodRecommendations":
-      return <MoodRecommendationsSection section={section} />;
     case "divider":
       return <DividerSection section={section} />;
     default:
@@ -265,8 +263,16 @@ function CollectionCard({ collection }: { collection: any }) {
     asString(collection.imageUrl) ||
     (collection.image ? urlForImage(collection.image)?.width(600).height(600).url() : undefined);
 
+  // Collections resolve to the shop listing filtered by collection slug.
+  // There is no standalone /collections/[slug] route; /shop?collection=
+  // is the single source of truth for collection browsing.
+  const collectionSlug =
+    collection.slug?.current || collection.slug || "";
   return (
-    <Link href={`/collections/${collection.slug?.current || collection.slug}`} className="group block">
+    <Link
+      href={collectionSlug ? `/shop?collection=${collectionSlug}` : "/shop"}
+      className="group block"
+    >
       <div className="relative aspect-[4/5] overflow-hidden bg-surface-container mb-3">
         {imageUrl && (
           <Image
@@ -410,69 +416,6 @@ function EditorialImageSection({ section }: { section: any }) {
         )}
       </div>
     </section>
-  );
-}
-
-function MoodRecommendationsSection({ section }: { section: any }) {
-  const recommendations = section.recommendations || [];
-
-  return (
-    <section className="py-16 md:py-24 px-4 md:px-16 bg-surface">
-      {asString(section.eyebrow) && (
-        <p className="text-[11px] uppercase tracking-[0.3em] text-primary text-center mb-2">
-          {section.eyebrow}
-        </p>
-      )}
-      {headlineOf(section) && (
-        <h2 className="font-headline-md text-headline-md text-on-surface uppercase tracking-[0.02em] text-center mb-12">
-          {headlineOf(section)}
-        </h2>
-      )}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-[1280px] mx-auto">
-        {recommendations.map((rec: any, i: number) => (
-          <MoodCard key={rec._id || i} recommendation={rec} />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function MoodCard({ recommendation }: { recommendation: any }) {
-  const product = recommendation.product;
-  const imageUrl = product && urlForImage(product.image)?.width(400).height(400).url();
-
-  return (
-    <Link
-      href={product ? `/product/${product.slug?.current || product.slug}` : "#"}
-      className="group block"
-    >
-      <div className="relative aspect-square overflow-hidden bg-surface-container mb-3">
-        {imageUrl && (
-          <Image
-            src={imageUrl}
-            alt={product?.name || ""}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        )}
-      </div>
-      <p className="text-[10px] uppercase tracking-[0.2em] text-primary mb-1">
-        {recommendation.mood}
-      </p>
-      <h3 className="font-title text-title text-on-surface mb-1 group-hover:text-primary transition-colors">
-        {recommendation.label}
-      </h3>
-      {recommendation.tagline && (
-        <p className="font-body-sm text-body-sm text-on-surface-variant mb-2">
-          {recommendation.tagline}
-        </p>
-      )}
-      {product && (
-        <p className="font-label-md text-label-md text-primary">
-          ${product.price?.toFixed(2) || product.price}
-        </p>
-      )}
-    </Link>
   );
 }
 
@@ -629,24 +572,33 @@ function NewsletterSection({ section }: { section: any }) {
             {descOf(section)}
           </p>
         )}
+        {/* Newsletter backend is not connected yet — the form is
+            intentionally disabled so it never fakes a signup. Editors:
+            connect a provider and replace this block; shoppers: use
+            Contact for Gazette requests. */}
         <form
-          className="flex flex-col sm:flex-row gap-3"
+          className="flex flex-col sm:flex-row gap-3 opacity-90"
           onSubmit={(e) => e.preventDefault()}
         >
           <input
             type="email"
             required
-            placeholder="Your email address"
-            aria-label="Email address"
-            className="flex-1 bg-surface px-4 py-3 font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none"
+            disabled
+            placeholder="Gazette signups via Contact for now"
+            aria-label="Email address (newsletter not yet connected)"
+            className="flex-1 bg-surface px-4 py-3 font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none disabled:opacity-70"
           />
-          <button
-            type="submit"
-            className="h-[52px] px-8 bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-[0.14em] hover:bg-primary-container transition-colors"
+          <Link
+            href="/contact"
+            className="h-[52px] px-8 inline-flex items-center justify-center bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-[0.14em] hover:bg-primary-container transition-colors"
           >
-            {asString(section.ctaLabel) || "Subscribe"}
-          </button>
+            {asString(section.ctaLabel) || "Contact Atelier"}
+          </Link>
         </form>
+        <p className="font-body-sm text-body-sm text-on-surface-variant mt-3">
+          Gazette subscriptions are handled through the atelier until the
+          newsletter provider is connected.
+        </p>
       </div>
     </section>
   );

@@ -4,9 +4,12 @@ import type { JournalPost } from "@/lib/journal";
 import { pageMetadata } from "@/lib/seo";
 import { client } from "@/sanity/client";
 import { JOURNAL_PAGE_QUERY } from "@/sanity/queries";
+import { fetchPageBySlug, sectionOf } from "@/sanity/page-data";
 import { toJournalPost, type SanityJournalArticle } from "@/lib/sanity-adapters";
 
 export const revalidate = 60;
+
+const SLUG = "journal";
 
 type JournalPageDoc = {
   title?: string;
@@ -19,6 +22,24 @@ async function getJournalPage(): Promise<{
   tagline?: string;
   articles: JournalPost[];
 }> {
+  // New model first: `page` doc with an inline journalGrid section.
+  const pageDoc = await fetchPageBySlug(SLUG);
+  const journalSection = sectionOf(pageDoc, "journalGrid");
+  const heroSection = sectionOf(pageDoc, "hero");
+  if (journalSection || heroSection) {
+    const articles = ((journalSection as any)?.articles ?? [])
+      .filter((article: any) => Boolean(article))
+      .map(toJournalPost);
+    return {
+      title:
+        (heroSection as any)?.headline ??
+        (heroSection as any)?.title ??
+        pageDoc?.title,
+      tagline: (heroSection as any)?.tagline ?? undefined,
+      articles,
+    };
+  }
+  // Fallback: legacy `journalArticle` listing document (still a live schema).
   const data = await client.fetch<JournalPageDoc | null>(JOURNAL_PAGE_QUERY);
   const articles = (data?.articles ?? [])
     .filter((article): article is NonNullable<typeof article> => Boolean(article))
@@ -34,8 +55,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await getJournalPage();
   return pageMetadata({
     path: "/journal",
-    title: page.title || "",
-    description: page.tagline,
+    title: page.title || "Journal — Dispatches on Slow Living",
+    description:
+      page.tagline ||
+      "Essays and dispatches on slow living, botanical craft, and contemplative spaces.",
   });
 }
 
@@ -43,6 +66,21 @@ export default async function JournalPage() {
     const { title, tagline, articles } = await getJournalPage();
     const featured = articles[0];
     const rest = articles.slice(1);
+
+    if (articles.length === 0) {
+      return (
+        <div className="min-h-screen bg-surface p-8 flex items-center justify-center">
+          <div className="text-center max-w-2xl">
+            <h1 className="font-headline-lg text-headline-lg text-on-surface">
+              {title || "Journal"}
+            </h1>
+            <p className="font-body-md text-body-md text-on-surface-variant mt-4">
+              This page has not been configured in Sanity.
+            </p>
+          </div>
+        </div>
+      );
+    }
 
     return (
         <div className="flex flex-col w-full">

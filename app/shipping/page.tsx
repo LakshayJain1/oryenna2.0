@@ -1,6 +1,3 @@
-import { client } from "@/sanity/client";
-import { SHIPPING_PAGE_QUERY } from "@/sanity/queries";
-import type { SanityShippingPage } from "@/sanity/types";
 import { fetchPageBySlug, contentSectionOf } from "@/sanity/page-data";
 import { PortableTextRenderer } from "@/components/portable-text-renderer";
 
@@ -19,15 +16,9 @@ const SLUG = "shipping";
 export default async function ShippingPage() {
   const pageDoc = await fetchPageBySlug(SLUG);
   const richText = contentSectionOf(pageDoc);
-  const legacyPage: SanityShippingPage | null =
-    richText?.content && richText.content.length > 0
-      ? null
-      : await client
-          .fetch<SanityShippingPage>(SHIPPING_PAGE_QUERY, { slug: SLUG })
-          .catch(() => null);
 
-  const title = pageDoc?.title ?? legacyPage?.title;
-  const content = richText?.content ?? legacyPage?.content;
+  const title = pageDoc?.title;
+  const content = richText?.content;
 
   if (!title || !content) {
     return (

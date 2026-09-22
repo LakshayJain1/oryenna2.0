@@ -1,6 +1,3 @@
-import { client } from "@/sanity/client";
-import { PRIVACY_POLICY_PAGE_QUERY } from "@/sanity/queries";
-import type { SanityPrivacyPolicyPage } from "@/sanity/types";
 import { fetchPageBySlug, contentSectionOf } from "@/sanity/page-data";
 import { PortableTextRenderer } from "@/components/portable-text-renderer";
 
@@ -17,18 +14,12 @@ export const metadata = pageMetadata({
 const SLUG = "privacy-policy";
 
 export default async function PrivacyPolicyPage() {
-  // New model first: unified `page` doc with an inline richText section.
+  // Single source of truth: unified `page` doc with an inline richText section.
   const pageDoc = await fetchPageBySlug(SLUG);
   const richText = contentSectionOf(pageDoc);
-  const legacyPage: SanityPrivacyPolicyPage | null =
-    richText?.content && richText.content.length > 0
-      ? null
-      : await client
-          .fetch<SanityPrivacyPolicyPage>(PRIVACY_POLICY_PAGE_QUERY, { slug: SLUG })
-          .catch(() => null);
 
-  const title = pageDoc?.title ?? legacyPage?.title;
-  const content = richText?.content ?? legacyPage?.content;
+  const title = pageDoc?.title;
+  const content = richText?.content;
 
   if (!title || !content) {
     return (
