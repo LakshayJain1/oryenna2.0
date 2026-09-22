@@ -10,13 +10,8 @@ export const productInsider = defineType({
       title: 'Insider Info Title',
       type: 'string',
       validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'productReference',
-      title: 'Associated Product',
-      type: 'reference',
-      to: [{ type: 'product' }],
-      validation: (Rule) => Rule.required(),
+      description:
+        'Owned by exactly one product: open that product and link it here via "Insider Information". Do not link from both sides.',
     }),
     defineField({
       name: 'provenanceStory',

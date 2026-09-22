@@ -60,16 +60,12 @@ export interface SanityProduct {
   weight: string
   burnTime?: string
   accentNotes?: string[]
-  topNotes?: string
-  heartNotes?: string
-  baseNotes?: string
   inStock?: boolean
   featured?: boolean
   orderRank?: number
   comparePrice?: number
   size?: string
   sku?: string
-  ingredients?: string[]
   gallery?: Array<{
     asset: {
       _id: string

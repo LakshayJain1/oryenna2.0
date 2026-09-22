@@ -79,12 +79,6 @@ export const product = defineType({
       type: 'string',
     }),
     defineField({
-      name: 'ingredients',
-      title: 'Ingredients',
-      type: 'array',
-      of: [{ type: 'string' }],
-    }),
-    defineField({
       name: 'burnTime',
       title: 'Burn Time / Longevity',
       type: 'string',
@@ -95,24 +89,8 @@ export const product = defineType({
       title: 'Accent Notes',
       type: 'array',
       of: [{ type: 'string' }],
-    }),
-    defineField({
-      name: 'topNotes',
-      title: 'Olfactory Pyramid — Top Notes',
-      type: 'string',
-      description: 'e.g. Bergamot, Pink Peppercorn, Wild Mint',
-    }),
-    defineField({
-      name: 'heartNotes',
-      title: 'Olfactory Pyramid — Heart Notes',
-      type: 'string',
-      description: 'e.g. Labdanum, Damask Rose, Orris Root',
-    }),
-    defineField({
-      name: 'baseNotes',
-      title: 'Olfactory Pyramid — Base Notes',
-      type: 'string',
-      description: 'e.g. Smoked Cedar, White Amber, Benzoin Resin',
+      description:
+        'Short shelf-level accents only. The full pyramid and ingredients live on the linked Insider page.',
     }),
     defineField({
       name: 'image',
@@ -126,10 +104,11 @@ export const product = defineType({
     }),
     defineField({
       name: 'insiderInfo',
-      title: 'Insider Information',
+      title: 'Insider Page (1 per product)',
       type: 'reference',
       to: [{ type: 'productInsider' }],
-      description: 'Link to detailed product craftsmanship, provenance, and olfactory pyramid.',
+      description:
+        'This product\u2019s own insider page: pyramid, ingredients, provenance story, craftsmanship gallery. The single source of truth for the link — link here only, never from the insider side.',
     }),
     defineField({
       name: 'inStock',
@@ -146,7 +125,9 @@ export const product = defineType({
     }),
     defineField({
       name: 'gallery',
-      title: 'Gallery Images',
+      title: 'Product Gallery — Vessel / PDP Carousel',
+      description:
+        'Vessel and product shots for the product page carousel. Craftsmanship/process shots belong on the linked Insider page gallery.',
       type: 'array',
       of: [
         {

@@ -205,9 +205,6 @@ export type Product = {
   weight?: string;
   burnTime?: string;
   accentNotes?: Array<string>;
-  topNotes?: string;
-  heartNotes?: string;
-  baseNotes?: string;
   image?: {
     asset?: {
       _ref: string;
@@ -244,12 +241,6 @@ export type ProductInsider = {
   _updatedAt: string;
   _rev: string;
   title?: string;
-  productReference?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "product";
-  };
   provenanceStory?: string;
   topNotes?: string;
   heartNotes?: string;

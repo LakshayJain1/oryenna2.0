@@ -10,6 +10,16 @@ function slugOf(slug: SanitySlug | undefined): string {
 
 type SanityImageRef = { _id?: string; url?: string } | null | undefined;
 
+type SanityGalleryImage = {
+  asset?: { _id: string; url: string };
+  url?: string;
+  alt?: string;
+  caption?: string;
+};
+
+// Single-direction model: the product owns exactly one insider page via
+// `insiderInfo`. The pyramid, ingredients, and craftsmanship gallery live
+// ONLY on the insider — the product carries commerce/shelf fields.
 type SanityListProduct = {
   _id: string;
   name: string;
@@ -26,14 +36,10 @@ type SanityListProduct = {
   sku?: string;
   burnTime?: string;
   accentNotes?: string[];
-  topNotes?: string;
-  heartNotes?: string;
-  baseNotes?: string;
-  ingredients?: string[];
   inStock?: boolean;
   featured?: boolean;
   orderRank?: number;
-  gallery?: Array<{ asset?: { _id: string; url: string }; url?: string; alt?: string; caption?: string }>;
+  gallery?: SanityGalleryImage[];
   image?: SanityImageRef;
   imageAlt?: string;
   collection?: { name?: string; slug?: SanitySlug } | null;
@@ -44,6 +50,7 @@ type SanityListProduct = {
     heartNotes?: string;
     baseNotes?: string;
     ingredientsList?: string[];
+    gallery?: SanityGalleryImage[];
   } | null;
   seo?: { title?: string; description?: string };
 };
@@ -73,10 +80,15 @@ function galleryOf(
 }
 
 /** Map a Sanity product (list or detail query) onto the local Product shape.
- *  Preserves every field the PDP needs — price, gallery, pyramid notes,
- *  ingredients, insider info, collection — instead of discarding them. */
+ *  Pyramid + ingredients come ONLY from the linked insider page; the PDP
+ *  gallery stacks the product vessel shots first, then the insider
+ *  craftsmanship shots. */
 export function toLibProduct(p: SanityListProduct): Product {
   const insider = p.insiderInfo ?? null;
+  const gallery = [
+    ...(galleryOf(p.gallery) ?? []),
+    ...(galleryOf(insider?.gallery) ?? []),
+  ];
   return {
     id: p._id,
     slug: slugOf(p.slug),
@@ -96,12 +108,12 @@ export function toLibProduct(p: SanityListProduct): Product {
     size: p.size,
     sku: p.sku,
     accentNotes: p.accentNotes,
-    topNotes: p.topNotes ?? insider?.topNotes,
-    heartNotes: p.heartNotes ?? insider?.heartNotes,
-    baseNotes: p.baseNotes ?? insider?.baseNotes,
-    ingredients: p.ingredients ?? insider?.ingredientsList,
+    topNotes: insider?.topNotes,
+    heartNotes: insider?.heartNotes,
+    baseNotes: insider?.baseNotes,
+    ingredients: insider?.ingredientsList,
     longDescription: p.longDescription,
-    gallery: galleryOf(p.gallery),
+    gallery: gallery.length > 0 ? gallery : undefined,
     inStock: p.inStock,
     featured: p.featured,
     collection: p.collection
