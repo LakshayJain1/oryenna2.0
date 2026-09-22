@@ -34,6 +34,7 @@ export interface PageDoc {
     | 'about'
     | 'contact'
     | 'faq'
+    | 'concierge'
     | 'privacy'
     | 'terms'
     | 'shipping'
@@ -113,30 +114,6 @@ export interface SanityCollection {
   orderRank?: number
 }
 
-export interface SanityMoodRecommendation {
-  _id: string
-  mood: 'quiet' | 'grounded' | 'uplifted' | 'warm'
-  label: string
-  tagline: string
-  description: string
-  bestFor: string
-  warmth: number
-  intensity: number
-  clarity: number
-  product: {
-    _id: string
-    name: string
-    slug: string
-    price: number
-    priceINR: number
-    badge?: string
-    notes: string
-    weight: string
-    image: SanityImage
-    inStock?: boolean
-  }
-}
-
 export interface SanityJournalArticle {
   _id: string
   title: string
@@ -175,15 +152,6 @@ export interface SanityJournalInsider {
     }
   }>
   curatorNote?: string
-}
-
-export interface SanityComplimentarySample {
-  _id: string
-  name: string
-  notes: string
-  volume: string
-  description: string
-  orderRank?: number
 }
 
 export interface SanityNavbar {

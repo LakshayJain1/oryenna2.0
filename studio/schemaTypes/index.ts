@@ -26,8 +26,6 @@ import { collection } from './collection'
 import { journalArticle } from './journalArticle'
 import { productInsider } from './productInsider'
 import { journalInsider } from './journalInsider'
-import { moodRecommendation } from './moodRecommendation'
-import { complimentarySample } from './complimentarySample'
 import { navbar } from './navbar'
 import { footer } from './footer'
 
@@ -54,8 +52,6 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   journalArticle,
   productInsider,
   journalInsider,
-  moodRecommendation,
-  complimentarySample,
   navbar,
   footer,
 ]

@@ -762,5 +762,17 @@ function PortableTextSpan({ span }: { span: any }) {
   let style: React.CSSProperties = {};
   if (span.marks?.includes("strong")) style = { ...style, fontWeight: 700 };
   if (span.marks?.includes("em")) style = { ...style, fontStyle: "italic" };
-  return <span style={style}>{span.text}</span>;
+  // Honor Studio soft breaks (Shift+Enter stores "\n" in the span text).
+  const parts: string[] =
+    typeof span.text === "string" ? span.text.split("\n") : [];
+  return (
+    <span style={style}>
+      {parts.map((part, i) => (
+        <span key={i}>
+          {i > 0 && <br />}
+          {part}
+        </span>
+      ))}
+    </span>
+  );
 }

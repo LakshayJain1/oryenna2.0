@@ -243,7 +243,6 @@ export const COLLECTION_BY_SLUG_QUERY = groq`
   }
 `
 
-// NOTE: moodRecommendation + complimentarySample schemas remain registered in
-// Studio for future merchandising use, but no frontend surface consumes them
-// yet — so no queries are exported for them (avoids dead code). Add a query
-// here only together with a renderer + route that uses it.
+// NOTE: the business does not offer mood recommendations or complimentary
+// samples, so those schemas were deleted from Studio and no queries exist
+// for them. Do not re-add without a real frontend surface + route.

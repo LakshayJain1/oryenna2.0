@@ -145,7 +145,21 @@ function PortableTextSpans({
         if (!child || typeof child !== "object") return null;
         if (child._type !== "span") return null;
         const marks: string[] = Array.isArray(child.marks) ? child.marks : [];
-        let node: React.ReactNode = <>{child.text}</>;
+        // Shift+Enter in Studio stores a soft break as "\n" inside the span
+        // text. HTML collapses it, so split and render real <br/> breaks —
+        // otherwise whole articles read as one joined paragraph.
+        const textParts: string[] =
+          typeof child.text === "string" ? child.text.split("\n") : [];
+        let node: React.ReactNode = (
+          <>
+            {textParts.map((part, j) => (
+              <span key={j}>
+                {j > 0 && <br />}
+                {part}
+              </span>
+            ))}
+          </>
+        );
         const strong = marks.includes("strong");
         const em = marks.includes("em");
         const underline = marks.includes("underline");

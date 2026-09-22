@@ -63,42 +63,9 @@ export type SiteSettings = {
   heroSubtext?: string;
 };
 
-export type ComplimentarySample = {
-  _id: string;
-  _type: "complimentarySample";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name?: string;
-  slug?: Slug;
-  notes?: string;
-  volume?: string;
-  description?: string;
-  orderRank?: number;
-};
-
-export type MoodRecommendation = {
-  _id: string;
-  _type: "moodRecommendation";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  mood?: "quiet" | "grounded" | "uplifted" | "warm";
-  label?: string;
-  tagline?: string;
-  description?: string;
-  product?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "product";
-  };
-  bestFor?: string;
-  warmth?: number;
-  intensity?: number;
-  clarity?: number;
-  orderRank?: number;
-};
+// NOTE (manual edit — regenerate with `sanity typegen generate` when the
+// Studio has network access): ComplimentarySample + MoodRecommendation were
+// removed because the business does not offer them.
 
 export type JournalArticle = {
   _id: string;
@@ -1000,5 +967,5 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = Footer | Navbar | SiteSettings | ComplimentarySample | MoodRecommendation | JournalArticle | JournalInsider | Product | ProductInsider | CtaSection | RichTextSection | NewsletterSection | TestimonialSection | EditorialSection | ImageText | CollectionGrid | Collection | ProductGrid | HeroSection | FaqSection | FaqPage | ReturnsPage | ShippingPage | TermsPage | PrivacyPolicyPage | ContactPage | AboutPage | ShopPage | HomePage | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = Footer | Navbar | SiteSettings | JournalArticle | JournalInsider | Product | ProductInsider | CtaSection | RichTextSection | NewsletterSection | TestimonialSection | EditorialSection | ImageText | CollectionGrid | Collection | ProductGrid | HeroSection | FaqSection | FaqPage | ReturnsPage | ShippingPage | TermsPage | PrivacyPolicyPage | ContactPage | AboutPage | ShopPage | HomePage | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
