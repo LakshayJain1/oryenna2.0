@@ -11,7 +11,7 @@
     "build": "sanity build",
     "deploy": "sanity deploy",
     "deploy-graphql": "sanity graphql deploy",
-    "typegen": "sanity schemas extract --force && sanity typegen generate",
+    "typegen": "sanity schema extract --force && sanity typegen generate",
     "seed": "node scripts/seed.mjs",
     "migrate": "node scripts/migrate.mjs",
     "migrate:pages": "node scripts/migrate-to-pages.mjs"
