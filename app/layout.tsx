@@ -77,7 +77,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider prefetchUI={false}>
+    <ClerkProvider>
       <html lang="en" className={`${dmSans.variable} ${garamond.variable}`}>
         <head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
