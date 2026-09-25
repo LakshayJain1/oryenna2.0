@@ -400,10 +400,10 @@ export default function AuthPage() {
                             <div className="mt-8 pt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between text-body-sm text-on-surface-variant gap-2">
                                 <span>Need guidance with your account?</span>
                                 <Link
-                                    href="/concierge"
+                                    href="/contact"
                                     className="text-primary font-label-md text-label-md uppercase tracking-wider hover:text-secondary underline underline-offset-4"
                                 >
-                                    Inquire with Concierge
+                                    Contact the Atelier
                                 </Link>
                             </div>
                         </div>

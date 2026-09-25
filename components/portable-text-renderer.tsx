@@ -2,18 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { urlForImage } from "@/sanity/image";
 
 interface PortableTextRendererProps {
   content: any[];
 }
 
-// Shared Portable Text renderer used by legal pages (/terms,
-// /privacy-policy, /shipping, /returns) and journal articles.
+// Shared Portable Text renderer for journal articles.
 // Supports: h1/h2/h3, normal, blockquote, bullet + number lists,
 // marks (strong, em, underline, code, link annotations) and
-// inline `image` blocks via urlForImage. Unknown blocks render null
-// so a single bad block can never break the whole page.
+// inline `image` blocks with a plain `imageUrl` string. Unknown blocks
+// render null so a single bad block can never break the whole page.
 export function PortableTextRenderer({ content }: PortableTextRendererProps) {
   if (!Array.isArray(content) || content.length === 0) return null;
 
@@ -103,7 +101,7 @@ function PortableTextBlock({ block }: { block: any }) {
       );
     }
     case "image": {
-      const url = urlForImage(block)?.width(1400).url();
+      const url = typeof block.imageUrl === "string" ? block.imageUrl : undefined;
       if (!url) return null;
       return (
         <figure className="my-8">

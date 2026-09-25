@@ -11,6 +11,7 @@ import {
 import { useCartStore } from "@/lib/cart-store";
 import { PortableTextRenderer } from "@/components/portable-text-renderer";
 import Accordion from "@/components/ui/Accordion";
+import { Reveal } from "@/components/ui/Reveal";
 
 // Vessel presentation labels are intentional static UI configuration.
 // Prices always come from lib/pricing VESSELS (single source of truth),
@@ -70,8 +71,7 @@ export default function ProductView({
     const unitPrice = vessel.price + (gifting ? ITEM_GIFT_WRAP_FEE : 0);
     const total = unitPrice * quantity;
 
-    // Olfactory pyramid comes from Sanity (product fields, with insider
-    // fallback already merged by toLibProduct). No hardcoded notes.
+    // Olfactory pyramid comes from the product catalogue entry.
     const pyramid = [
       { tier: "Head", notes: product.topNotes },
       { tier: "Heart", notes: product.heartNotes },
@@ -101,11 +101,11 @@ export default function ProductView({
     return (
         <section className="w-full px-margin-mobile md:px-margin-tablet lg:px-margin py-space-xl">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter lg:gap-space-xl items-start">
-                {/* Gallery — Sanity gallery[] with primary image fallback */}
+                {/* Gallery */}
                 <div className="lg:col-span-7 flex flex-col gap-space-md">
                     {gallery.map((img, i) => (
+                      <Reveal key={`${img.url}-${i}`} variant="up" distance={32}>
                       <div
-                        key={`${img.url}-${i}`}
                         className="relative w-full aspect-[4/5] bg-surface-container overflow-hidden rounded-sm"
                       >
                         <img
@@ -128,11 +128,13 @@ export default function ProductView({
                           </div>
                         ) : null}
                       </div>
+                      </Reveal>
                     ))}
                 </div>
 
                 {/* Product Info */}
                 <div className="lg:col-span-5 flex flex-col gap-space-lg lg:sticky lg:top-24">
+                    <Reveal variant="up">
                     <div className="space-y-space-xs">
                         <span className="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold">
                             {product.collection?.name || "Signature Composition"}
@@ -162,8 +164,10 @@ export default function ProductView({
                           </p>
                         ) : null}
                     </div>
+                    </Reveal>
 
                     {/* Vessel Selection — prices from lib/pricing */}
+                    <Reveal variant="up" delay={80}>
                     <div className="space-y-space-sm pt-space-xs">
                         <label className="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold">
                             Select Medium &amp; Vessel Form
@@ -204,9 +208,11 @@ export default function ProductView({
                             ))}
                         </div>
                     </div>
+                    </Reveal>
 
-                    {/* Olfactory Pyramid — Sanity only, hidden when empty */}
+                    {/* Olfactory Pyramid — hidden when empty */}
                     {pyramid.length > 0 ? (
+                    <Reveal variant="up">
                     <div className="space-y-space-sm bg-surface-container-low p-space-md rounded-sm">
                         <span className="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold">
                             Olfactory Note Architecture
@@ -226,6 +232,7 @@ export default function ProductView({
                             ))}
                         </div>
                     </div>
+                    </Reveal>
                     ) : null}
 
                     {product.accentNotes && product.accentNotes.length > 0 ? (
@@ -305,7 +312,7 @@ export default function ProductView({
                         </div>
                     </div>
 
-                    {/* Accordions — Sanity longDescription + insider story */}
+                    {/* Accordions — longDescription + insider story */}
                     <div className="space-y-space-xs pt-space-md">
                         <Accordion title="Sensory Profile & Atmosphere" defaultOpen>
                             <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">

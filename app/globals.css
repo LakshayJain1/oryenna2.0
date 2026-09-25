@@ -217,3 +217,95 @@ html {
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+
+/* ============================================================
+   Scroll-reveal system (see components/ui/Reveal.tsx)
+   GPU-friendly: opacity + transform only.
+   ============================================================ */
+
+[data-reveal] {
+  opacity: 0;
+  transition:
+    opacity var(--reveal-duration, 800ms) ease,
+    transform var(--reveal-duration, 800ms) cubic-bezier(0.22, 0.61, 0.21, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+[data-reveal="up"] {
+  transform: translate3d(0, var(--reveal-distance, 28px), 0);
+}
+
+[data-reveal="down"] {
+  transform: translate3d(0, calc(var(--reveal-distance, 28px) * -1), 0);
+}
+
+[data-reveal="left"] {
+  transform: translate3d(var(--reveal-distance, 28px), 0, 0);
+}
+
+[data-reveal="right"] {
+  transform: translate3d(calc(var(--reveal-distance, 28px) * -1), 0, 0);
+}
+
+[data-reveal="fade"],
+[data-reveal="none"] {
+  transform: none;
+}
+
+[data-reveal="scale"] {
+  transform: scale(0.96);
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger wrappers disappear into the grid; opt into equal-height
+   cards with "stagger-fill" on the Stagger container. */
+.stagger-item {
+  min-width: 0;
+  min-height: 0;
+}
+
+.stagger-fill>.stagger-item>* {
+  height: 100%;
+}
+
+/* ============================================================
+   Hero entrance (plays on load, pure CSS so it works in the
+   server-rendered hero with zero JS cost).
+   ============================================================ */
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-enter {
+  opacity: 0;
+  animation: hero-rise 900ms cubic-bezier(0.22, 0.61, 0.21, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .hero-enter {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

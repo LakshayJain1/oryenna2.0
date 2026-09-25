@@ -1,12 +1,8 @@
 // Server-only order pricing. Resolves client-supplied cart lines against
-// the trusted catalogue (Sanity first, local fallback — same priority the
-// storefront UI uses) and recomputes the chargeable total. Never trusts
-// client-supplied prices or totals.
+// the trusted local catalogue and recomputes the chargeable total.
+// Never trusts client-supplied prices or totals.
 
-import { client } from "@/sanity/client";
-import { PRODUCTS_LIST_QUERY } from "@/sanity/queries";
-import { toLibProduct } from "@/lib/sanity-adapters";
-import { products as fallbackProducts, type Product } from "@/lib/products";
+import { products, type Product } from "@/lib/products";
 import {
   VESSELS,
   VESSEL_IDS,
@@ -32,13 +28,7 @@ function isRecord(v: unknown): v is Record<string, unknown> {
 }
 
 async function loadCatalogue(): Promise<Product[]> {
-  try {
-    const data = await client.fetch(PRODUCTS_LIST_QUERY);
-    if (data && data.length > 0) return data.map(toLibProduct);
-  } catch {
-    // fall through to local catalogue
-  }
-  return fallbackProducts;
+  return products;
 }
 
 function resolveUnitUsd(

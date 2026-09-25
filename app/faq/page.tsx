@@ -1,68 +1,81 @@
-import { fetchPageBySlug, faqSectionOf } from "@/sanity/page-data";
-
-export const revalidate = 60;
-
+import ConciergeView from "@/components/concierge/concierge-view";
+import { Reveal } from "@/components/ui/Reveal";
 import { pageMetadata } from "@/lib/seo";
+import { FAQ_GROUPS } from "@/lib/faq-groups";
 
 export const metadata = pageMetadata({
   path: "/faq",
   title: "Frequently Asked Questions",
   description:
-    "Answers on burn care, shipping, returns, and the Oryenna slow living ritual.",
+    "Answers on burn care, botanical wax, vessels, transit, and the Oryenna slow living ritual.",
 });
 
-const SLUG = "faq";
+const QUICK_ANSWERS = [
+  {
+    question: "How long does shipping take?",
+    answer:
+      "Orders leave the atelier within 2 working days and travel by climate-controlled ground transit: 3–5 days in Europe, 5–9 days worldwide. Every parcel is tracked and packed in biodegradable materials with linen cord.",
+  },
+  {
+    question: "What is your returns policy?",
+    answer:
+      "Unburned vessels may be returned within 30 days for a full refund. If a vessel arrives damaged, send a photograph within 7 days and a replacement leaves the atelier immediately — no return shipping needed.",
+  },
+  {
+    question: "Do you offer gifting and handwritten notes?",
+    answer:
+      "Yes — select Slow Living Presentation Packaging at checkout for a linen gift box, wax seal, and herb card. Add an Atelier Scribe Note and our archivist will hand-inscribe your dedication in oak gall ink.",
+  },
+  {
+    question: "How can I reach the atelier directly?",
+    answer:
+      "Write to care@oryenna.com for orders, atelier@oryenna.com for bespoke work, or use the contact desk — every message is read by a human at the workbench.",
+  },
+];
 
-export default async function FAQPage() {
-  // Single source of truth: `page` doc with an inline faqList section.
-  const pageDoc = await fetchPageBySlug(SLUG);
-  const faqSection = faqSectionOf(pageDoc);
-
-  const title = pageDoc?.title;
-  const faqs = faqSection?.items;
-
-  if (!title || !faqs || faqs.length === 0) {
-    return (
-      <div className="min-h-screen bg-surface p-8 flex items-center justify-center">
-        <div className="text-center max-w-2xl">
-          <h1 className="font-headline-lg text-headline-lg text-on-surface">Frequently Asked Questions</h1>
-          <p className="font-body-md text-body-md text-on-surface-variant mt-4">
-            This page has not been configured in Sanity.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
+export default function FAQPage() {
   return (
-    <main className="flex-1 py-16 md:py-24 px-4 md:px-16">
-      <div className="max-w-[800px] mx-auto">
-        <h1 className="font-headline-lg text-headline-lg text-on-surface uppercase tracking-[0.02em] mb-12">
-          {title}
-        </h1>
-        <div className="space-y-4">
-          {faqs.map((faq: any, i: number) => (
-            <details
-              key={faq._key || i}
-              className="group bg-surface-container rounded-none border border-on-surface-variant/10 overflow-hidden"
-            >
-              <summary className="flex items-center justify-between p-6 cursor-pointer list-none">
-                <span className="font-title text-title text-on-surface pr-8">
-                  {faq.question}
-                </span>
-                <span className="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180">
-                  expand_more
-                </span>
-              </summary>
-              <div className="px-6 pb-6 border-t border-on-surface-variant/10">
-                <p className="font-body-md text-body-md text-on-surface-variant">
-                  {faq.answer}
-                </p>
-              </div>
-            </details>
-          ))}
+    <div className="flex flex-col w-full">
+      <ConciergeView
+        eyebrow="Questions / Ritual Knowledge"
+        title="Wax, Wick & Ritual Care"
+        tagline="A contemplative guide to botanical flame stewardship, clean burning rituals, and slow sensory transit. Search, or wander by discipline."
+        groups={FAQ_GROUPS}
+      />
+
+      <section className="w-full bg-surface-container-low py-space-xl px-margin-mobile md:px-margin-tablet lg:px-margin">
+        <div className="max-w-[800px] mx-auto">
+          <Reveal variant="up">
+            <span className="font-label-sm text-label-sm uppercase tracking-[0.22em] text-secondary block mb-2">
+              Quick Answers
+            </span>
+            <h2 className="font-headline-lg text-headline-lg text-primary uppercase tracking-wide mb-8">
+              Orders, shipping & the atelier
+            </h2>
+          </Reveal>
+          <div className="space-y-4">
+            {QUICK_ANSWERS.map((faq, i) => (
+              <Reveal key={i} variant="up" delay={Math.min(i * 60, 300)}>
+                <details className="group bg-surface rounded-none border border-on-surface-variant/10 overflow-hidden">
+                  <summary className="flex items-center justify-between p-6 cursor-pointer list-none">
+                    <span className="font-title text-title text-on-surface pr-8">
+                      {faq.question}
+                    </span>
+                    <span className="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180">
+                      expand_more
+                    </span>
+                  </summary>
+                  <div className="px-6 pb-6 border-t border-on-surface-variant/10">
+                    <p className="font-body-md text-body-md text-on-surface-variant">
+                      {faq.answer}
+                    </p>
+                  </div>
+                </details>
+              </Reveal>
+            ))}
+          </div>
         </div>
-      </div>
-    </main>
+      </section>
+    </div>
   );
 }

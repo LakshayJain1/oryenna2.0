@@ -1,3 +1,5 @@
+import { Reveal, Stagger } from "@/components/ui/Reveal";
+
 type ManifestoMetric = { value: string; label: string; description: string };
 
 type ManifestoProps = {
@@ -38,24 +40,30 @@ export default function Manifesto({
             <div className="max-w-6xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-space-lg lg:gap-gutter items-start">
                     <div className="lg:col-span-4">
-                        <span className="font-label-sm text-label-sm uppercase tracking-[0.22em] text-secondary block mb-space-xs">
-                            {eyebrow}
-                        </span>
-                        <h2 className="font-headline-lg text-headline-lg text-primary leading-tight uppercase font-serif tracking-wide">
-                            {headline}
-                        </h2>
+                        <Reveal variant="up">
+                            <span className="font-label-sm text-label-sm uppercase tracking-[0.22em] text-secondary block mb-space-xs">
+                                {eyebrow}
+                            </span>
+                        </Reveal>
+                        <Reveal variant="up" delay={100}>
+                            <h2 className="font-headline-lg text-headline-lg text-primary leading-tight uppercase font-serif tracking-wide">
+                                {headline}
+                            </h2>
+                        </Reveal>
                     </div>
 
                     <div className="lg:col-span-8 flex flex-col gap-space-lg">
-                        <p className="font-body-lg text-body-lg text-on-surface-variant font-serif leading-relaxed">
-                            {quote}
-                        </p>
+                        <Reveal variant="up" delay={150}>
+                            <p className="font-body-lg text-body-lg text-on-surface-variant font-serif leading-relaxed">
+                                {quote}
+                            </p>
+                        </Reveal>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-md">
+                        <Stagger className="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-md stagger-fill" step={110}>
                             {stats.map((s) => (
                                 <div
                                     key={s.label}
-                                    className="bg-surface-container-low p-space-md rounded-DEFAULT"
+                                    className="bg-surface-container-low p-space-md rounded-DEFAULT h-full"
                                 >
                                     <span className="font-headline-sm text-headline-sm text-primary block mb-1">
                                         {s.value}
@@ -68,7 +76,7 @@ export default function Manifesto({
                                     </p>
                                 </div>
                             ))}
-                        </div>
+                        </Stagger>
                     </div>
                 </div>
             </div>

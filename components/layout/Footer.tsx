@@ -1,53 +1,8 @@
 import Link from "next/link";
-import { client } from "@/sanity/client";
-import { FOOTER_QUERY } from "@/sanity/queries_footer_navbar";
-import { toFooterColumns } from "@/lib/sanity-adapters";
+import { FOOTER_COLUMNS, COPYRIGHT_TEXT, BRAND_TAGLINE } from "@/lib/site";
 
-const FALLBACK_FOOTER_COLUMNS = [
-    {
-        title: "Collections",
-        links: [
-            { label: "Scented Vessels", href: "/shop" },
-            { label: "Atmospheric Mists", href: "/shop" },
-            { label: "Raw Botanical Extrait", href: "/shop" },
-            { label: "Brass Wick Cutters", href: "/shop" },
-            { label: "Ceramic Trays", href: "/shop" },
-        ],
-    },
-    {
-        title: "Living Rituals",
-        links: [
-            { label: "Wax & Wick Care", href: "/concierge" },
-            { label: "The Art of the Burn", href: "/journal/the-art-of-slowing-down" },
-            { label: "Vessel Repurposing", href: "/journal" },
-            { label: "Member Sanctuary", href: "/account" },
-        ],
-    },
-    {
-        title: "Atelier",
-        links: [
-            { label: "Grasse & Kyoto Origin", href: "/about" },
-            { label: "Atelier Inquiries", href: "/concierge" },
-            { label: "Concierge Support", href: "/concierge" },
-            { label: "Care & Sustainability", href: "/about" },
-        ],
-    },
-];
-
-export default async function Footer() {
-    let footerColumns = FALLBACK_FOOTER_COLUMNS;
-    let copyrightText =
-        "© 2025 ORYENNA Parfums & Bougies. Crafted for contemplative spaces.";
-    let brandTagline: string | undefined;
-    try {
-        const data = await client.fetch(FOOTER_QUERY);
-        const mapped = toFooterColumns(data?.footerColumns);
-        if (mapped) footerColumns = mapped;
-        if (data?.copyrightText) copyrightText = data.copyrightText;
-        if (data?.brandTagline) brandTagline = data.brandTagline;
-    } catch {
-        // keep offline fallback
-    }
+export default function Footer() {
+    const footerColumns = FOOTER_COLUMNS;
 
     return (
         <footer className="w-full bg-surface-container-low">
@@ -61,8 +16,7 @@ export default async function Footer() {
                             An Invitation to Slow Down
                         </h3>
                         <p className="font-body-md text-body-md text-on-surface-variant max-w-md">
-                            {brandTagline ??
-                                "Receive sensory vignettes, private atelier batch release notices, and quiet reflections on spatial fragrance architecture."}
+                            {BRAND_TAGLINE}
                         </p>
                         {/* Newsletter provider is not connected yet — link to
                             Contact instead of faking a signup. */}
@@ -107,7 +61,7 @@ export default async function Footer() {
 
                 <div className="flex flex-col md:flex-row items-center justify-between pt-space-lg gap-space-md text-on-surface-variant">
                     <div className="font-body-sm text-body-sm">
-                        {copyrightText}
+                        {COPYRIGHT_TEXT}
                     </div>
                     <div className="flex items-center gap-space-md font-label-sm text-label-sm uppercase tracking-wider">
                         <Link

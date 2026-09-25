@@ -18,7 +18,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // must not archive twice or resend emails. Per-instance memory (same
 // caveat as the rate limiter); signed-in users get a second layer via
 // their archive below. For cross-instance guarantees, persist processed
-// payment ids (e.g. a Sanity doc or KV store).
+// payment ids (e.g. a KV store).
 const PROCESSED_TTL_MS = 60 * 60 * 1000;
 const processedPayments = new Map<string, number>();
 

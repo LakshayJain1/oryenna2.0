@@ -1,17 +1,11 @@
-import Hero from "@/components/home/Hero";
-import Manifesto from "@/components/home/Manifesto";
+import HomeWaxExperience from "@/components/home/HomeWaxExperience";
+import { Reveal, Stagger } from "@/components/ui/Reveal";
 import Link from "next/link";
-import { products as fallbackProducts } from "@/lib/products";
+import { products } from "@/lib/products";
+import { journalPosts } from "@/lib/journal-posts";
+import { JOURNAL_TITLE } from "@/lib/site";
 import ProductCard from "@/components/shop/ProductCard";
-import { SectionRenderer } from "@/components/section-renderer";
 import { pageMetadata } from "@/lib/seo";
-import { client } from "@/sanity/client";
-import {
-  PRODUCTS_LIST_QUERY,
-  JOURNAL_PAGE_QUERY,
-} from "@/sanity/queries";
-import { fetchHomePageDoc, sectionOf } from "@/sanity/page-data";
-import { toLibProduct, toJournalPost } from "@/lib/sanity-adapters";
 
 export const metadata = pageMetadata({
   path: "/",
@@ -20,66 +14,18 @@ export const metadata = pageMetadata({
     "Hand-poured botanical candles and slow living objects from Grasse and Provence. Curated releases, atelier craft, and essays on slow living.",
 });
 
-// Safety net so Sanity edits land without a rebuild
-// (publishes also trigger instant updates via /api/revalidate).
-export const revalidate = 60;
-
-export default async function HomePage() {
-  // Emergency/offline fallback only — Sanity is the source of truth.
-  let products = fallbackProducts;
-  let journalTitle: string | undefined;
-  let journalPosts: ReturnType<typeof toJournalPost>[] = [];
-  let homeDoc = null;
-  try {
-    const [p, journalPage, h] = await Promise.all([
-      client.fetch(PRODUCTS_LIST_QUERY),
-      client.fetch(JOURNAL_PAGE_QUERY),
-      fetchHomePageDoc(),
-    ]);
-    if (p && p.length > 0) products = p.map(toLibProduct);
-    journalTitle = journalPage?.title;
-    journalPosts = (journalPage?.articles ?? []).filter(Boolean).map(toJournalPost);
-    homeDoc = h;
-  } catch {
-    // keep emergency offline fallbacks
-  }
-
-  // Unified `page` document wins when present.
-  const heroSection = sectionOf(homeDoc, "hero");
-  const manifestoSection = sectionOf(homeDoc, "manifesto");
-  // Remaining page sections (imageText, editorialImage, quote,
-  // journalGrid, testimonials, newsletter, cta, ...) render through the
-  // shared SectionRenderer so editors fully control homepage storytelling.
-  // Hero + manifesto are rendered above via dedicated components.
-  const renderedKeys = new Set(
-    [heroSection, manifestoSection].filter(Boolean).map((s: any) => s._key)
-  );
-  const extraSections = (homeDoc?.sections ?? []).filter(
-    (s: any) => !renderedKeys.has(s._key)
-  );
+export default function HomePage() {
+  const featured = products.slice(0, 4);
 
   return (
     <div className="flex flex-col w-full">
-      <Hero
-        eyebrow={heroSection?.eyebrow}
-        headline={heroSection?.headline}
-        tagline={heroSection?.tagline}
-        subtext={heroSection?.subtext}
-        imageUrl={(heroSection as any)?.backgroundImageUrl}
-        imageAlt={(heroSection as any)?.imageAlt}
-      />
-      <Manifesto
-        eyebrow={manifestoSection?.eyebrow}
-        headline={manifestoSection?.headline}
-        quote={manifestoSection?.quote}
-        metrics={manifestoSection?.metrics}
-      />
+      <HomeWaxExperience />
 
-      {/* Featured Collection — Sanity products, offline fallback only */}
+      {/* Featured Collection */}
       <section className="w-full bg-surface-container-low py-space-xl px-margin-mobile md:px-margin-tablet lg:px-margin">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-space-xl gap-space-md">
-            <div>
+            <Reveal variant="up">
               <span className="font-label-sm text-label-sm uppercase tracking-[0.2em] text-secondary mb-space-xs block">
                 02 / Signature Pours
               </span>
@@ -90,7 +36,7 @@ export default async function HomePage() {
                 Four distinct olfactory landscapes poured into mouth-blown
                 glass vessels.
               </p>
-            </div>
+            </Reveal>
             <div className="flex items-center gap-space-sm text-on-surface-variant font-label-md text-label-md uppercase tracking-[0.18em]">
               <span>Archive Vol. 04</span>
               <span className="w-6 h-[1px] bg-outline-variant" />
@@ -98,30 +44,45 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
-            {products.slice(0, 4).map((p) => (
+          <Stagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter stagger-fill">
+            {featured.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
-          </div>
+          </Stagger>
         </div>
       </section>
 
-      {/* Editor-controlled storytelling sections from the home `page` doc. */}
-      {extraSections.length > 0 ? (
-        <SectionRenderer sections={extraSections} />
-      ) : null}
+      {/* Atelier interlude */}
+      <section className="w-full bg-primary py-space-xl px-margin-mobile md:px-margin-tablet lg:px-margin">
+        <div className="max-w-[800px] mx-auto text-center">
+          <Reveal variant="up">
+            <div className="w-8 h-[2px] bg-secondary mx-auto mb-6" />
+            <blockquote className="font-headline-md text-headline-md text-on-primary italic leading-snug">
+              &ldquo;Scent is an invisible architecture — shaping the energy,
+              stillness, and emotional landscape of the rooms we inhabit.&rdquo;
+            </blockquote>
+            <p className="mt-4 text-[11px] uppercase tracking-[0.2em] text-on-primary/70">
+              The Oryenna Atelier · Grasse & Provence
+            </p>
+            <Link
+              href="/about"
+              className="inline-flex items-center justify-center mt-8 h-[52px] px-8 bg-on-primary text-primary font-label-lg text-label-lg uppercase tracking-[0.14em] hover:bg-on-primary/90 transition-colors"
+            >
+              Our Craft & Story
+            </Link>
+          </Reveal>
+        </div>
+      </section>
 
-      {journalPosts.length > 0 ? (
+      {/* Journal */}
       <section className="w-full bg-surface py-space-xl px-margin-mobile md:px-margin-tablet lg:px-margin">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-space-xl gap-space-md">
-            <div>
-              {journalTitle ? (
+            <Reveal variant="up">
               <h2 className="font-headline-lg text-headline-lg text-primary uppercase font-serif tracking-wider">
-                {journalTitle}
+                {JOURNAL_TITLE}
               </h2>
-              ) : null}
-            </div>
+            </Reveal>
             <Link
               href="/journal"
               className="font-label-md text-label-md uppercase tracking-[0.16em] text-primary hover:text-secondary transition-colors inline-flex items-center gap-1"
@@ -133,12 +94,12 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+          <Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter stagger-fill">
             {journalPosts.map((post) => (
               <Link
                 key={post.slug}
                 href={`/journal/${post.slug}`}
-                className="group flex flex-col"
+                className="group flex flex-col h-full"
               >
                 <div className="aspect-[16/11] bg-surface-container overflow-hidden mb-space-sm">
                   {post.image ? (
@@ -176,10 +137,9 @@ export default async function HomePage() {
                 ) : null}
               </Link>
             ))}
-          </div>
+          </Stagger>
         </div>
       </section>
-      ) : null}
     </div>
   );
 }

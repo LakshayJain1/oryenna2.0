@@ -6,15 +6,12 @@ type HeroProps = {
     headline?: string;
     tagline?: string;
     subtext?: string;
-    // Sanity hero.backgroundImageUrl — falls back to the offline default
-    // image below when the page doc has no background image.
     imageUrl?: string;
     imageAlt?: string;
 };
 
-// Offline fallback background only — Sanity hero.backgroundImage wins.
-const FALLBACK_HERO_IMAGE =
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuD3zyjgjfRUXUwV4h73FZ3cw6_qOKqZuxz7eFeNKhk49R8CSlpe1K0TV1DDMMfXnxRhH6OMM5Y45XUKSNTcR0j8rutnpO7UM7R6BTw3l6YIl7XVEhKESWc5yzhlv2pxI1B8pIUhzAbaw09Cy0b9SJSz31eqArxHzujVtrARWIa9i80D_3wc7XOPhJBvWqvLHw4xfx7UtRzRR3R2z8M9t_MiyLkE_4RhkpDNV7shMnRYtKrZeam1fc9pog";
+// Default hero background (self-hosted).
+const FALLBACK_HERO_IMAGE = "/images/hero-linen.jpg";
 
 export default function Hero({
     eyebrow = "Atelier de Parfum d'Intérieur",
@@ -43,7 +40,7 @@ export default function Hero({
             </div>
 
             <div className="relative z-10 w-full max-w-5xl mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin py-32 text-center flex flex-col items-center">
-                <div className="inline-flex items-center gap-space-xs mb-space-md">
+                <div className="hero-enter inline-flex items-center gap-space-xs mb-space-md" style={{ animationDelay: "50ms" }}>
                     <span className="w-8 h-[1px] bg-outline-variant" />
                     <span className="font-label-sm text-label-sm uppercase tracking-[0.24em] text-secondary">
                         {eyebrow}
@@ -51,17 +48,17 @@ export default function Hero({
                     <span className="w-8 h-[1px] bg-outline-variant" />
                 </div>
 
-                <h1 className="font-display text-display md:text-[72px] md:leading-[80px] text-primary tracking-[0.14em] uppercase mb-space-sm select-none">
+                <h1 className="hero-enter font-display text-display md:text-[72px] md:leading-[80px] text-primary tracking-[0.14em] uppercase mb-space-sm select-none" style={{ animationDelay: "150ms" }}>
                     {headline}
                 </h1>
-                <p className="font-headline-md text-headline-md italic text-on-surface-variant font-serif max-w-xl mb-space-md">
+                <p className="hero-enter font-headline-md text-headline-md italic text-on-surface-variant font-serif max-w-xl mb-space-md" style={{ animationDelay: "260ms" }}>
                     {tagline}
                 </p>
-                <p className="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-space-xl tracking-wide">
+                <p className="hero-enter font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-space-xl tracking-wide" style={{ animationDelay: "340ms" }}>
                     {subtext}
                 </p>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-space-md w-full sm:w-auto">
+                <div className="hero-enter flex flex-col sm:flex-row items-center justify-center gap-space-md w-full sm:w-auto" style={{ animationDelay: "430ms" }}>
                     <Link
                         href="/shop"
                         className="w-full sm:w-auto h-[52px] px-10 inline-flex items-center justify-center bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-[0.16em] hover:bg-primary-container transition-colors shadow-sm"
@@ -76,7 +73,7 @@ export default function Hero({
                     </Link>
                 </div>
 
-                <div className="mt-space-xl flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
+                <div className="hero-enter mt-space-xl flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity" style={{ animationDelay: "550ms" }}>
                     <span className="font-label-sm text-label-sm uppercase tracking-[0.2em] text-outline">
                         Scroll to inhabit
                     </span>

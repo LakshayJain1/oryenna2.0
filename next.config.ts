@@ -30,8 +30,8 @@ const securityHeaders = [
       "worker-src 'self' blob:",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: blob: https://cdn.sanity.io https://lh3.googleusercontent.com https://images.unsplash.com https://img.clerk.com",
-      "connect-src 'self' https://clerk.com https://*.clerk.com https://*.clerk.accounts.dev wss://*.clerk.accounts.dev https://api.razorpay.com https://*.sanity.io",
+      "img-src 'self' data: blob: https://lh3.googleusercontent.com https://images.unsplash.com https://img.clerk.com",
+      "connect-src 'self' https://clerk.com https://*.clerk.com https://*.clerk.accounts.dev wss://*.clerk.accounts.dev https://api.razorpay.com",
       "frame-src https://checkout.razorpay.com https://api.razorpay.com https://*.clerk.accounts.dev",
       "form-action 'self'",
       "base-uri 'self'",
@@ -60,10 +60,6 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "images.unsplash.com",
-      },
-      {
-        protocol: "https",
-        hostname: "cdn.sanity.io",
       },
     ],
   },

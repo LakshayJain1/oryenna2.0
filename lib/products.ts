@@ -1,7 +1,5 @@
-// Canonical frontend Product shape. Core commerce fields are required;
-// everything else mirrors the Sanity `product` schema and is optional so
-// legacy/offline fallback entries (lib/products.ts) keep working while
-// Sanity remains the source of truth.
+// Canonical frontend Product shape. This catalogue is the source of truth —
+// edit products directly in the array below.
 export type ProductGalleryImage = {
     url: string;
     alt?: string;
@@ -52,11 +50,7 @@ export type Product = {
     };
 };
 
-// EMERGENCY/OFFLINE FALLBACK ONLY — Sanity (`product` documents via
-// PRODUCTS_LIST_QUERY / PRODUCT_BY_SLUG_QUERY) is the source of truth.
-// This array renders only when Sanity is unreachable or returns zero
-// products. Do not add new catalogue content here; create `product`
-// documents in Studio instead.
+// The boutique catalogue. Add, edit, or remove products here.
 export const products: Product[] = [
     {
         id: "ember",
@@ -67,8 +61,7 @@ export const products: Product[] = [
         description:
             "A crackling fire captured through charred Cade wood, dark resinous labdanum, and soft, comforting honeyed birch.",
         price: 78,
-        image:
-            "https://lh3.googleusercontent.com/aida/AEtjO1XriQDEeBTvp-WB3OCY2_uA57waD6v-S2E7oqjFl0RAtTCMB21VMwGD4RGT7eMYvYgtAZ5fwAB4Y9e0d9KLMM--oha8Fd7nRfsNfrvehrPwCWqqFE2JjfyHLtoDJlMlhb7kRH38mCEdsfzVSaNuZm2OnzBidymSgUpaLFMNs0vKVGg4E-pDgWorJn8c-8ZkhWRm1Oo4Xd06EtVGNq-nJI5FwVKEuGnA4lsf8gY2BUPzwbQYVvBTwnf4DXfK",
+        image: "/images/ember.jpg",
         badge: "Signature",
         category: "botanical",
         burnTime: "65 hr slow burn",
@@ -83,8 +76,7 @@ export const products: Product[] = [
         description:
             "Creamy Mysore sandalwood balanced with aged Madagascar pod vanilla, cardamom pods, and crisp mountain cedarwood.",
         price: 78,
-        image:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuB5mOEJguAI1yq94xdHiIZdBlCTVfD5JMdQzGA6swY__oUgT4kdPS2yLmD5dVZ4E7X-1K4Ts2mYOSQQxq2uBpxC5fo27IVFP86Mshkan8O5AdooGfkdw92uORjU_AmGT7GFcfjkW9qyWu94oBeUDXfmBrrRtHgfWDZdj-OzlemrVWi8JYc1rP9WF7bRdLJKYren2VH4AYvvoy4XmRSeuZOfyctU2bKfysEobgT4gFA_JGffgCaeZi7htg",
+        image: "/images/santal.jpg",
         badge: "Classic",
         category: "botanical",
         burnTime: "62 hr burn",
@@ -99,8 +91,7 @@ export const products: Product[] = [
         description:
             "Sun-warmed fig pulp, crushed green leaves, bitter almond blossoms, and a whisper of terracotta earth after rain.",
         price: 78,
-        image:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuDxqWDpB4AmDvIHlbSpLSalJtrsk8rL55tzffDjTu_GizDlKHj69MB7oiPg6wjBfUG9XlQvL_hfdu-iC_ae4LtuejHrJwqxd1bYRs5emPvjr1OTmJywj9_GaJLQydJqpnde9NTLF-b3AZmAcqRT-YN9NlD3E2J_kcoe_DyiBrJBJ2VIfpyclZFQsoL2RAet4t581JgzhTbuz2EShnPRAdiXq-6_prEeJhGNu4uG9gxWOhurjwmeUDRKvw",
+        image: "/images/fig-olive.jpg",
         badge: "Botanical",
         category: "botanical",
         burnTime: "68 hr burn",
@@ -115,8 +106,7 @@ export const products: Product[] = [
         description:
             "Evokes sun-dried textiles suspended in a Tuscan breeze, delicate Florentine orris root, and clean sheer amber.",
         price: 74,
-        image:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuDhPEjNFeVKembgEaXFYo0RUtH_05DBjpUnqOuD6rHIj9IkJio-P_c6u0jfJ2pP-ybaa0DFPUMabYsK3B86qyyStm4xQmyklAqyRYwlpj1sTMngl5K4jkXxksHmtOxAj2Hh3w08bTSiQ-afOmoRWGHraDzsvQ-ioorUYYwByBCLyHf1r6PXT6AxC8jSE6IteAYZrp39VT7IenqdjVs_fKsOPeHej_zlr5WkCAlaA5brjuxYv_mjtbCohw",
+        image: "/images/soft-linen.jpg",
         badge: "Limited",
         category: "botanical",
         burnTime: "60 hr burn",
@@ -131,8 +121,7 @@ export const products: Product[] = [
         description:
             "Precision angled trimmer and snuffer designed to clip wicks cleanly at 5mm, preventing soot deposits and extending burn life.",
         price: 32,
-        image:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuD5GEIkk0rB4ZBeWXdtspd1vUncGa0-u5h5YcqIJtVeXpRlmjMtQTE4Z4769u_rIQBwRxfw0h-ketoDxgcJu6q3WBfTcAsHUBlE6HhRdSimfOgRdYu_M-sVmFXI12_qvHs_kAc30csKmwJT-1Jh3I_ApJgDOrWgPR1ALgMt_WRqBeLgGe88cv9OD7pzhhRXzuRJdx6uypWAcdjwAGgTgNMOcOhV6N70YqpwXiijX6WuoYtILUPhcAuPqg",
+        image: "/images/brass-duo.jpg",
         badge: "Ritual Tool",
         category: "objects",
         burnTime: "Ages with patina",
@@ -147,8 +136,7 @@ export const products: Product[] = [
         description:
             "Substantial thermal stone surface that safeguards credenzas while elevating your scent ritual into an altar of stillness.",
         price: 45,
-        image:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuDDbbFsFP53-z6-SSXWFRshUKMV0VmId4c4YEPAg2FguB15B4iLRsjGyFVxpOVuUuzhLWRps4elic72AhHA8BMHTBcwvMW8EBIcYeUD7FqQGIufbNE2b9w6xbLxqi3BfrClIRoNj48wDuANdkmVXcWXy_4xYdVTCXCgWrlaty6gj7FJGCN75vLbGN5U6XwKzURdITRGK7Ze69gzP7opuiiPJVJNFztChDrtYPD6adO72fP63b4WzLCK9g",
+        image: "/images/travertine.jpg",
         badge: "Stonework",
         category: "objects",
         burnTime: "Felt padded base",
