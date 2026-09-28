@@ -49,21 +49,21 @@ export const journalPosts: JournalPost[] = [
     category: "Craft",
     readTime: "8 min read",
     excerpt:
-      "Why mouth-blown glass, a double cotton wick, and sixty-five hours of burn time matter more than any logo — notes from inside the atelier.",
+      "Why mouth-blown glass, a double cotton wick, and sixty-five hours of burn time matter more than any logo — notes from inside the studio.",
     image: "/images/ember.jpg",
     content: [
-      p("Luxury, in the atelier sense, is not rarity performed for others. It is the density of decisions hidden inside an ordinary object. A candle jar looks simple. Ours carries forty-one decisions — wax ratio, wick braid, glass thickness, pour temperature, cure length — most of which you will never see, only feel as an evening that burns evenly for sixty-five hours."),
+      p("Luxury, in the studio sense, is not rarity performed for others. It is the density of decisions hidden inside an ordinary object. A candle jar looks simple. Ours carries forty-one decisions — wax ratio, wick braid, glass thickness, pour temperature, cure length — most of which you will never see, only feel as an evening that burns evenly for sixty-five hours."),
       h2("Glass first"),
       p("We pour into mouth-blown glass because machine glass is too perfect: uniform walls wick heat away too fast and the flame drowns in its own melt pool. A hand-blown vessel varies by a millimetre or two, and that variation breathes. Each jar is heavy-based, reusable for life, and numbered by pour batch."),
       h2("Wax with a memory"),
-      p("Our base is cold-pressed European rapeseed and coconut butter with a whisper of wild French beeswax — no paraffin, no palm, no pesticide soy. Plant waxes remember their first burn, which is why the opening lighting matters: let the pool reach the glass edge, all the way round, before the first snuff. Two and a half to three hours. It is the longest instruction we give, and the most important."),
+      p("Our base is cold-pressed cold-pressed rapeseed and coconut butter with a whisper of wild beeswax — no paraffin, no palm, no pesticide soy. Plant waxes remember their first burn, which is why the opening lighting matters: let the pool reach the glass edge, all the way round, before the first snuff. Two and a half to three hours. It is the longest instruction we give, and the most important."),
       quote("You should never see our work. You should only notice that the evening felt held."),
       h2("The wick is an instrument"),
       p("A double core of unbleached cotton sounds modest until you watch it siphon essential oil without mushrooming. Trim to 5mm before every lighting. If the flame dances taller than a thumbnail, it is asking to be trimmed, not admired."),
       p("When the wax is spent, hot water at 75 degrees lifts the remainder cleanly; the disc composts, and the vessel begins its second life as a vase, a cup for brushes, a keeper of small things. That is the whole philosophy: nothing here is single-use, least of all your attention."),
     ],
     closingNote:
-      "Every ORYENNA vessel is poured in small numbered batches in southern Provence.",
+      "Every ORYENNA vessel is poured in small numbered batches in Jaipur.",
   },
   {
     slug: "the-sensory-home",

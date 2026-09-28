@@ -4,15 +4,19 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
+import { useCurrency } from "@/context/CurrencyContext";
+import { unitPrices, feeFor } from "@/lib/pricing";
+import { products } from "@/lib/products";
 import { useUser } from "@clerk/nextjs";
 
 export default function CheckoutPage() {
     const { user } = useUser();
     const { items, updateQuantity, removeItem, subtotal, clearCart } = useCartStore();
+    const { currency, format } = useCurrency();
     
     const [giftWrap, setGiftWrap] = useState(true);
     const [shipping, setShipping] = useState("slow");
-    const [email, setEmail] = useState("astrid.lind@atelier.com");
+    const [email, setEmail] = useState("astrid.lind@studio.com");
     const [phone, setPhone] = useState("+1 (555) 382-9014");
     const [firstName, setFirstName] = useState("Astrid");
     const [lastName, setLastName] = useState("Lind");
@@ -32,11 +36,25 @@ export default function CheckoutPage() {
         document.body.appendChild(script);
     }, []);
 
-    const giftFee = giftWrap ? 14 : 0;
-    const shippingFee = shipping === "express" ? 18 : 0;
-    const tax = (subtotal() + giftFee + shippingFee) * 0.087;
-    const total = subtotal() + giftFee + shippingFee + tax + 4;
-    const totalINR = Math.round(total * 83);
+    // Region-variable totals in both currencies (server re-resolves
+    // the same numbers at charge time — display only here).
+    const sumBoth = (pick: (u: { usd: number; inr: number }) => number) =>
+      items.reduce((s, i) => {
+        const u = unitPrices(i.id, !!i.giftWrap, products, i.price);
+        return s + pick(u) * i.quantity;
+      }, 0);
+    const subUsd = sumBoth((u) => u.usd);
+    const subInr = sumBoth((u) => u.inr);
+    const giftUsd = giftWrap ? feeFor("keepsake", "USD") : 0;
+    const giftInr = giftWrap ? feeFor("keepsake", "INR") : 0;
+    const shipUsd = shipping === "express" ? feeFor("express", "USD") : 0;
+    const shipInr = shipping === "express" ? feeFor("express", "INR") : 0;
+    const strikerUsd = feeFor("striker", "USD");
+    const strikerInr = feeFor("striker", "INR");
+    const taxUsd = (subUsd + giftUsd + shipUsd) * 0.087;
+    const taxInr = (subInr + giftInr + shipInr) * 0.087;
+    const totalUsd = subUsd + giftUsd + shipUsd + taxUsd + strikerUsd;
+    const totalInr = subInr + giftInr + shipInr + taxInr + strikerInr;
 
     const handleCompleteOrder = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -55,7 +73,7 @@ export default function CheckoutPage() {
             const res = await fetch("/api/razorpay/create-order", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ lines, giftWrap, shipping }),
+                body: JSON.stringify({ lines, giftWrap, shipping, currency }),
             });
 
             const orderData = await res.json();
@@ -67,7 +85,7 @@ export default function CheckoutPage() {
                 key: orderData.keyId,
                 amount: orderData.amount,
                 currency: orderData.currency,
-                name: "Oryenna Atelier",
+                name: "Oryenna Studio",
                 description: "Hand-poured Luxury Fragrance & Candles",
                 image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=150&auto=format&fit=crop&q=80",
                 order_id: orderData.orderId,
@@ -137,16 +155,16 @@ export default function CheckoutPage() {
     return (
         <div className="flex flex-col w-full">
             <section className="pt-8 pb-10 text-center max-w-2xl mx-auto flex flex-col items-center px-4">
-                <span className="font-label-sm text-label-sm uppercase tracking-[0.24em] text-secondary mb-3 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
-                    Your Selection · Atelier Dispatch
+                <span className="font-label-sm text-label-sm uppercase tracking-[0.24em] text-accent mb-3 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                    Your Selection · Studio Dispatch
                 </span>
-                <h1 className="font-display text-headline-lg md:text-display text-primary tracking-wide mb-3 font-normal">
+                <h1 className="font-display text-headline-lg md:text-display text-ink tracking-wide mb-3 font-normal">
                     A Considered Checkout
                 </h1>
                 <p className="font-body-md text-body-md text-on-surface-variant max-w-lg text-center leading-relaxed">
                     Each vessel is poured in limited seasonal batches, packed by hand in
-                    our southern atelier, cradled in unbleached cotton.
+                    our southern studio, cradled in unbleached cotton.
                 </p>
             </section>
 
@@ -154,19 +172,19 @@ export default function CheckoutPage() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary/60 p-4 backdrop-blur-sm">
                     <div className="w-full max-w-lg border border-on-surface-variant/20 bg-surface p-8 text-center shadow-2xl">
                         <span className="text-[28px]">🌿</span>
-                        <h2 className="mt-4 font-headline-md text-[28px] uppercase tracking-wider text-primary">
+                        <h2 className="mt-4 font-headline-md text-[28px] uppercase tracking-wider text-ink">
                             Your Sanctuary Awaits.
                         </h2>
-                        <p className="mt-2 text-[13px] uppercase tracking-[0.16em] text-secondary font-medium">
+                        <p className="mt-2 text-[13px] uppercase tracking-[0.16em] text-accent font-medium">
                             Order Confirmed Successfully
                         </p>
                         <p className="mt-4 text-[14px] leading-relaxed text-on-surface-variant">
-                            We have received your order. Our team in Grasse will hand-pour, pack, and prepare your dispatch within 24 hours. A tracking notification will be dispatched to <strong className="text-primary">{email}</strong>.
+                            We have received your order. Our team in Jaipur will hand-pour, pack, and prepare your dispatch within 24 hours. A tracking notification will be dispatched to <strong className="text-ink">{email}</strong>.
                         </p>
                         <Link
                             href="/"
                             onClick={() => clearCart()}
-                            className="mt-6 inline-flex h-12 items-center justify-center bg-primary px-8 text-[11px] uppercase tracking-[0.2em] text-on-primary transition-all hover:bg-primary-container"
+                            className="mt-6 inline-flex h-12 items-center justify-center bg-primary px-8 text-[11px] uppercase tracking-[0.2em] text-on-primary transition-all hover:bg-primary-container hover:text-surface"
                         >
                             Return to Oryenna Flagship
                         </Link>
@@ -182,27 +200,29 @@ export default function CheckoutPage() {
                         <div className="bg-surface-container-low p-6 md:p-8 rounded-xl shadow-sm">
                             <div className="flex items-baseline justify-between mb-6 pb-4 border-b border-surface-container-high">
                                 <div className="flex items-center gap-3">
-                                    <h2 className="font-headline-md text-headline-md text-primary">
+                                    <h2 className="font-headline-md text-headline-md text-ink">
                                         Selected Vessels
                                     </h2>
-                                    <span className="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-medium px-2 py-0.5 bg-secondary-container rounded-full">
+                                    <span className="font-label-sm text-label-sm uppercase tracking-widest text-accent font-medium px-2 py-0.5 bg-secondary-container rounded-full">
                                         {items.length} Items
                                     </span>
                                 </div>
                             </div>
                             {items.length === 0 ? (
                                 <p className="font-body-md text-body-md text-on-surface-variant italic">
-                                    Your vessel bag is empty. Return to the atelier to make a
+                                    Your vessel bag is empty. Return to the studio to make a
                                     selection.
                                 </p>
                             ) : (
                                 <div className="flex flex-col gap-6">
-                                    {items.map((item) => (
+                                    {items.map((item) => {
+                                        const lu = unitPrices(item.id, !!item.giftWrap, products, item.price);
+                                        return (
                                         <div
                                             key={item.id}
                                             className="flex gap-5 items-start p-4 bg-surface rounded-lg shadow-sm"
                                         >
-                                            <div className="w-28 h-36 rounded-md overflow-hidden bg-surface-container flex-shrink-0 relative">
+                                            <div className="w-28 h-36 rounded-xl overflow-hidden bg-surface-container flex-shrink-0 relative">
                                                 <Image
                                                     src={item.image}
                                                     alt={item.name}
@@ -213,7 +233,7 @@ export default function CheckoutPage() {
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-start justify-between gap-4">
                                                     <div>
-                                                        <h3 className="font-headline-sm text-headline-sm text-primary">
+                                                        <h3 className="font-headline-sm text-headline-sm text-ink">
                                                             {item.name}
                                                         </h3>
                                                         {item.variant && (
@@ -223,8 +243,8 @@ export default function CheckoutPage() {
                                                         )}
                                                     </div>
                                                     <div className="text-right">
-                                                        <span className="font-title text-title text-primary font-medium">
-                                                            ${(item.price * item.quantity).toFixed(2)}
+                                                        <span className="font-title text-title text-ink font-medium">
+                                                            {format(lu.usd * item.quantity, lu.inr * item.quantity)}
                                                         </span>
                                                         <span className="block font-label-sm text-label-sm text-outline mt-0.5">
                                                             Qty {item.quantity}
@@ -236,17 +256,17 @@ export default function CheckoutPage() {
                                                         <button
                                                             type="button"
                                                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                                            className="px-2.5 text-on-surface hover:text-primary text-[12px]"
+                                                            className="px-2.5 text-on-surface hover:text-ink text-[12px]"
                                                         >
                                                             −
                                                         </button>
-                                                        <span className="w-6 text-center text-[11px] font-medium text-primary">
+                                                        <span className="w-6 text-center text-[11px] font-medium text-ink">
                                                             {item.quantity}
                                                         </span>
                                                         <button
                                                             type="button"
                                                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                            className="px-2.5 text-on-surface hover:text-primary text-[12px]"
+                                                            className="px-2.5 text-on-surface hover:text-ink text-[12px]"
                                                         >
                                                             +
                                                         </button>
@@ -261,14 +281,15 @@ export default function CheckoutPage() {
                                                 </div>
                                             </div>
                                         </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             )}
                         </div>
 
                         {/* Shipping details form */}
                         <div className="bg-surface-container-low p-6 md:p-8 rounded-xl shadow-sm space-y-4">
-                            <h2 className="font-headline-md text-headline-md text-primary mb-4">
+                            <h2 className="font-headline-md text-headline-md text-ink mb-4">
                                 Shipping Destination
                             </h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -279,7 +300,7 @@ export default function CheckoutPage() {
                                         required
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full h-11 px-3 bg-surface border border-on-surface-variant/20 rounded text-on-surface text-[13px]"
+                                        className="w-full h-11 px-3 bg-surface border border-on-surface-variant/20 rounded-xl text-on-surface text-[13px]"
                                     />
                                 </div>
                                 <div>
@@ -289,7 +310,7 @@ export default function CheckoutPage() {
                                         required
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
-                                        className="w-full h-11 px-3 bg-surface border border-on-surface-variant/20 rounded text-on-surface text-[13px]"
+                                        className="w-full h-11 px-3 bg-surface border border-on-surface-variant/20 rounded-xl text-on-surface text-[13px]"
                                     />
                                 </div>
                                 <div>
@@ -299,7 +320,7 @@ export default function CheckoutPage() {
                                         required
                                         value={firstName}
                                         onChange={(e) => setFirstName(e.target.value)}
-                                        className="w-full h-11 px-3 bg-surface border border-on-surface-variant/20 rounded text-on-surface text-[13px]"
+                                        className="w-full h-11 px-3 bg-surface border border-on-surface-variant/20 rounded-xl text-on-surface text-[13px]"
                                     />
                                 </div>
                                 <div>
@@ -309,7 +330,7 @@ export default function CheckoutPage() {
                                         required
                                         value={lastName}
                                         onChange={(e) => setLastName(e.target.value)}
-                                        className="w-full h-11 px-3 bg-surface border border-on-surface-variant/20 rounded text-on-surface text-[13px]"
+                                        className="w-full h-11 px-3 bg-surface border border-on-surface-variant/20 rounded-xl text-on-surface text-[13px]"
                                     />
                                 </div>
                             </div>
@@ -320,7 +341,7 @@ export default function CheckoutPage() {
                                     required
                                     value={address}
                                     onChange={(e) => setAddress(e.target.value)}
-                                    className="w-full h-11 px-3 bg-surface border border-on-surface-variant/20 rounded text-on-surface text-[13px]"
+                                    className="w-full h-11 px-3 bg-surface border border-on-surface-variant/20 rounded-xl text-on-surface text-[13px]"
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
@@ -331,7 +352,7 @@ export default function CheckoutPage() {
                                         required
                                         value={city}
                                         onChange={(e) => setCity(e.target.value)}
-                                        className="w-full h-11 px-3 bg-surface border border-on-surface-variant/20 rounded text-on-surface text-[13px]"
+                                        className="w-full h-11 px-3 bg-surface border border-on-surface-variant/20 rounded-xl text-on-surface text-[13px]"
                                     />
                                 </div>
                                 <div>
@@ -341,7 +362,7 @@ export default function CheckoutPage() {
                                         required
                                         value={zip}
                                         onChange={(e) => setZip(e.target.value)}
-                                        className="w-full h-11 px-3 bg-surface border border-on-surface-variant/20 rounded text-on-surface text-[13px]"
+                                        className="w-full h-11 px-3 bg-surface border border-on-surface-variant/20 rounded-xl text-on-surface text-[13px]"
                                     />
                                 </div>
                             </div>
@@ -352,7 +373,7 @@ export default function CheckoutPage() {
                     <div className="lg:col-span-5 xl:col-span-4 flex flex-col gap-6 lg:sticky lg:top-24">
                         <div className="bg-surface-container-low p-6 md:p-8 rounded-xl shadow-md flex flex-col gap-6">
                             <div className="flex items-baseline justify-between border-b border-surface-container-high pb-4">
-                                <span className="font-label-md text-label-md uppercase tracking-[0.2em] text-primary font-medium">
+                                <span className="font-label-md text-label-md uppercase tracking-[0.2em] text-ink font-medium">
                                     Order Summary
                                  </span>
                             </div>
@@ -360,29 +381,29 @@ export default function CheckoutPage() {
                             <div className="flex flex-col gap-3 font-body-sm text-body-sm">
                                 <div className="flex items-center justify-between text-on-surface-variant">
                                     <span>Vessels Subtotal</span>
-                                    <span className="font-title text-body-md text-primary">
-                                        ${subtotal().toFixed(2)}
+                                    <span className="font-title text-body-md text-ink">
+                                        {format(subUsd, subInr)}
                                     </span>
                                 </div>
                                 {giftWrap && (
                                     <div className="flex items-center justify-between text-on-surface-variant">
                                         <span>Keepsake Linen Box & Wax Seal</span>
-                                        <span className="text-primary">$14.00</span>
+                                        <span className="text-ink">{format(giftUsd, giftInr)}</span>
                                     </div>
                                 )}
                                 <div className="flex items-center justify-between text-on-surface-variant">
-                                    <span>Match Striker & Ritual Guide</span>
-                                    <span className="text-primary">$4.00</span>
+                                        <span>Match Striker & Ritual Guide</span>
+                                        <span className="text-ink">{format(strikerUsd, strikerInr)}</span>
                                 </div>
                                 <div className="flex items-center justify-between text-on-surface-variant">
-                                    <span>Estimated Local Tax</span>
-                                    <span className="text-primary">${tax.toFixed(2)}</span>
+                                        <span>Estimated Local Tax</span>
+                                        <span className="text-ink">{format(taxUsd, taxInr)}</span>
                                 </div>
                             </div>
 
                             <div className="pt-4 border-t border-surface-container-high flex items-baseline justify-between">
                                 <div>
-                                    <span className="font-title text-title text-primary uppercase tracking-wider block">
+                                    <span className="font-title text-title text-ink uppercase tracking-wider block">
                                         Total Due
                                     </span>
                                     <span className="font-label-sm text-label-sm text-outline">
@@ -390,8 +411,8 @@ export default function CheckoutPage() {
                                     </span>
                                 </div>
                                 <div className="text-right">
-                                    <span className="font-headline-md text-headline-md text-primary font-normal">
-                                        ${total.toFixed(2)}
+                                    <span className="font-headline-md text-headline-md text-ink font-normal">
+                                        {format(totalUsd, totalInr)}
                                     </span>
                                 </div>
                             </div>
@@ -404,12 +425,12 @@ export default function CheckoutPage() {
 
                             <button
                                 disabled={isSubmitting || items.length === 0}
-                                className="w-full h-14 bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg tracking-[0.16em] uppercase rounded transition-all duration-300 shadow-md flex items-center justify-center gap-3 disabled:opacity-50"
+                                className="pressable w-full h-14 bg-primary hover:bg-primary-container hover:text-surface text-on-primary font-label-lg text-label-lg tracking-[0.16em] uppercase rounded-full transition-all duration-300 shadow-md flex items-center justify-center gap-3 disabled:opacity-50"
                                 type="submit"
                             >
                                 <span>{isSubmitting ? "Connecting to Razorpay..." : "Complete Purchase"}</span>
                                 <span className="w-1.5 h-1.5 rounded-full bg-secondary-fixed" />
-                                <span>${total.toFixed(2)}</span>
+                                <span>{format(totalUsd, totalInr)} · {currency}</span>
                             </button>
                         </div>
                     </div>

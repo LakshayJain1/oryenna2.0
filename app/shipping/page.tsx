@@ -4,13 +4,13 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   path: "/shipping",
   title: "Shipping & Transit",
-  description: "Slow sensory transit — how your vessels travel from the atelier to your door.",
+  description: "Slow sensory transit — how your vessels travel from the studio to your door.",
 });
 
 const SECTIONS = [
   {
     h: "Slow sensory transit",
-    p: "Orders leave the atelier within two working days in biodegradable boxes tied with raw linen cord. Botanical wax dislikes pressure shocks and unheated cargo holds, so we ship by climate-controlled ground routes rather than overnight air.",
+    p: "Orders leave the studio within two working days in biodegradable boxes tied with raw linen cord. Botanical wax dislikes pressure shocks and unheated cargo holds, so we ship by climate-controlled ground routes rather than overnight air.",
   },
   {
     h: "Timelines",
@@ -18,7 +18,7 @@ const SECTIONS = [
   },
   {
     h: "Damaged in transit",
-    p: "If a vessel arrives cracked or broken, send a photograph to care@oryenna.com within seven days. A replacement leaves the atelier immediately — no forms, no return shipping.",
+    p: "If a vessel arrives cracked or broken, send a photograph to care@oryenna.com within seven days. A replacement leaves the studio immediately — no forms, no return shipping.",
   },
 ];
 

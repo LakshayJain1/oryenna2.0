@@ -49,9 +49,11 @@ export default function HomeWaxExperience({ hero, manifesto }: Props) {
           metrics={manifesto?.metrics}
         />
       }
-      // Tunables — warm candle wax that harmonises with ORYENNA surfaces.
-      waxColor="#f0e6cf"
-      waxDeep="#d9c6a0"
+      // Wax follows the active theme preset via CSS vars, so it always
+      // melts in the current primary (dune sand / sienna clay).
+      waxColor="var(--color-primary)"
+      waxDeep="var(--color-primary-fixed-dim)"
+      waxLight="var(--color-surface-bright)"
       waveHeight={220}
       amplitude={42}
       deformationIntensity={1}

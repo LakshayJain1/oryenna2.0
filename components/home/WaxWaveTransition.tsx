@@ -13,9 +13,9 @@ export type WaxWaveTransitionProps = {
   nextContent: ReactNode;
   /** Base molten-wax colour — becomes the next section background. */
   waxColor?: string;
-  /** Deeper wax tone for depth / back crest / lower gradient. */
+  /** Deeper wax tone for depth / lower gradient. */
   waxDeep?: string;
-  /** Crest highlight colour. */
+  /** Crest shine colour. */
   waxHighlight?: string;
   /** Creamy light tone melting from the crest lip into the base. */
   waxLight?: string;
@@ -25,6 +25,12 @@ export type WaxWaveTransitionProps = {
   amplitude?: number;
   /** 0–2 — slow viscous wobble intensity. */
   deformationIntensity?: number;
+  /** Horizontal crest sway in px (side-to-side drift). */
+  sway?: number;
+  /** Vertical crest heave in px (independent liquid bob). */
+  heave?: number;
+  /** 0–2 — melted-wax surface texture intensity (drips, marbling, grain). */
+  texture?: number;
   /** Extra scroll length (vh) pinned for the transition. */
   scrollDistanceVh?: number;
   /** ScrollTrigger scrub smoothing (seconds). */
@@ -36,6 +42,7 @@ export type WaxWaveTransitionProps = {
 };
 
 const VB_W = 1440;
+const STREAKS = 5;
 
 function buildCrest(
   t: number,
@@ -43,25 +50,24 @@ function buildCrest(
   waveHeight: number,
   amplitude: number,
   deform: number,
-  phaseOffset: number,
   bulge: number
 ) {
-  // Asymmetric, slow, heavy wax: low-frequency sines + centre bulge so the
-  // pool first domes at bottom-centre, then spreads into an ocean-like crest.
+  // Melted wax: layered travelling swells (they slide sideways as well as
+  // bob), asymmetric lumps, and fine surface ripples over a centre dome.
   const pts: Array<[number, number]> = [];
-  const N = 9;
+  const N = 12;
   for (let i = 0; i <= N; i++) {
     const x = (VB_W / N) * i;
     const u = x / VB_W; // 0..1
-    const centre = Math.exp(-Math.pow((u - 0.5) / 0.24, 2)); // bottom-centre dome
+    const centre = Math.exp(-Math.pow((u - 0.5) / 0.24, 2));
+    const lopsided = Math.exp(-Math.pow((u - 0.38) / 0.4, 2)); // uneven pour
     const y =
       waveHeight * 0.52 +
-      Math.sin(u * 5.1 + t * 0.9 + phaseOffset) * amplitude * 0.55 * deform +
-      Math.sin(u * 9.4 - t * 0.62 + phaseOffset * 1.7 + 1.3) *
-        amplitude *
-        0.3 *
-        deform +
-      Math.sin(u * 2.2 + t * 0.4 + phaseOffset * 0.6) * amplitude * 0.45 +
+      Math.sin(u * 5.1 + t * 0.9) * amplitude * 0.5 * deform +
+      Math.sin(u * 8.3 - t * 1.35 + 1.3) * amplitude * 0.32 * deform + // travelling swell
+      Math.sin(u * 13.7 + t * 2.1 + 4.1) * amplitude * 0.13 * deform + // fine ripples
+      Math.sin(u * 2.3 - t * 0.5) * amplitude * 0.45 +
+      Math.sin(u * 3.7 + t * 0.33 + 2.0) * amplitude * 0.5 * lopsided + // lumps
       centre * bulge * (0.55 + progress * 0.45);
     pts.push([x, y]);
   }
@@ -76,7 +82,7 @@ function buildCrest(
     )}, ${x1.toFixed(1)} ${y1.toFixed(1)}`;
   }
   d += ` L ${VB_W + 20} ${waveHeight + 40} Z`;
-  // Crest stroke line (highlight follows the same lip).
+  // Crest stroke line (shine follows the same lip).
   let lip = `M -20 ${pts[0][1].toFixed(1)}`;
   for (let i = 0; i < pts.length - 1; i++) {
     const [x0, y0] = pts[i];
@@ -92,13 +98,16 @@ function buildCrest(
 export default function WaxWaveTransition({
   hero,
   nextContent,
-  waxColor = "#f0e6cf",
-  waxDeep = "#dcc9a1",
+  waxColor = "#ecd2ab",
+  waxDeep = "#d6b585",
   waxHighlight = "rgba(255,252,242,0.85)",
   waxLight = "#fffdf4",
   waveHeight = 220,
   amplitude = 42,
   deformationIntensity = 1,
+  sway = 26,
+  heave = 10,
+  texture = 1,
   scrollDistanceVh = 170,
   smoothness = 1.1,
   contentRevealStart = 0.36,
@@ -110,10 +119,13 @@ export default function WaxWaveTransition({
   const heroInnerRef = useRef<HTMLDivElement>(null);
   const waxBodyRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const crestRef = useRef<SVGSVGElement>(null);
   const frontRef = useRef<SVGPathElement>(null);
   const lipRef = useRef<SVGPathElement>(null);
+  const streakRefs = useRef<Array<SVGRectElement | null>>([]);
   const progressRef = useRef(0);
   const gradId = useId().replace(/:/g, "wax");
+  const grainId = useId().replace(/:/g, "grain");
 
   useLayoutEffect(() => {
     const wrap = wrapRef.current;
@@ -168,7 +180,8 @@ export default function WaxWaveTransition({
       );
     }, wrap);
 
-    // Slow viscous drift — independent of scroll so the crest feels alive.
+    // Slow viscous life — independent of scroll so the melt feels alive:
+    // crest bobs AND sways sideways, drips run and lengthen.
     let raf = 0;
     let t = Math.random() * 10;
     const tick = () => {
@@ -177,9 +190,37 @@ export default function WaxWaveTransition({
       // Crest settles as the pool fills the viewport (less bulge at the end).
       const bulge = 120 * (1 - p * 0.72) + 26;
       const amp = amplitude * (1 - p * 0.25);
-      const front = buildCrest(t, p, waveHeight, amp, deformationIntensity, 0, bulge);
+      const front = buildCrest(t, p, waveHeight, amp, deformationIntensity, bulge);
       if (frontRef.current) frontRef.current.setAttribute("d", front.d);
       if (lipRef.current) lipRef.current.setAttribute("d", front.lip);
+      // Lateral sway + vertical heave of the whole crest (GPU transform).
+      if (crestRef.current) {
+        const sx = Math.sin(t * 0.5) * sway;
+        const hy = Math.sin(t * 0.72 + 1.1) * heave;
+        crestRef.current.style.transform = `translate3d(${sx.toFixed(2)}px, ${hy.toFixed(2)}px, 0)`;
+      }
+      // Molten runs: streaks below the lip that lengthen as the pool grows.
+      for (let i = 0; i < STREAKS; i++) {
+        const el = streakRefs.current[i];
+        if (!el) continue;
+        const slot = (i + 0.6) / (STREAKS + 0.4); // spread across width
+        const drift = Math.sin(t * 0.4 + i * 1.9) * 26;
+        const x = slot * VB_W + drift;
+        const w = 13 + ((i * 7) % 3) * 7;
+        const len =
+          (46 + p * 130 + Math.sin(t * 0.66 + i * 2.4) * 26) *
+          (0.4 + texture * 0.6);
+        const top = waveHeight * 0.78;
+        el.setAttribute("x", (x - w / 2).toFixed(1));
+        el.setAttribute("y", top.toFixed(1));
+        el.setAttribute("width", w.toFixed(1));
+        el.setAttribute("height", Math.max(8, len).toFixed(1));
+        el.setAttribute("rx", (w / 2).toFixed(1));
+        el.setAttribute(
+          "opacity",
+          ((0.16 + 0.1 * Math.sin(t * 0.5 + i)) * texture).toFixed(3)
+        );
+      }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -200,9 +241,14 @@ export default function WaxWaveTransition({
     contentRevealEnd,
     contentRevealStart,
     deformationIntensity,
+    heave,
     smoothness,
+    sway,
+    texture,
     waveHeight,
   ]);
+
+  const tex = Math.max(0, texture);
 
   return (
     <div
@@ -242,6 +288,60 @@ export default function WaxWaveTransition({
                     "radial-gradient(120% 90% at 50% 0%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.12) 34%, rgba(255,255,255,0) 62%)",
                 }}
               />
+              {/* marbled cream folds drifting sideways — melted wax body */}
+              {tex > 0 && (
+                <>
+                  <div
+                    className="wax-marble wax-drift-a absolute -left-[10%] top-[8%] h-[46%] w-[55%] pointer-events-none"
+                    style={{
+                      background: `radial-gradient(closest-side, ${waxLight} 0%, rgba(255,253,244,0) 72%)`,
+                      opacity: 0.5 * tex,
+                    }}
+                  />
+                  <div
+                    className="wax-marble wax-drift-b absolute left-[38%] top-[30%] h-[52%] w-[60%] pointer-events-none"
+                    style={{
+                      background: `radial-gradient(closest-side, ${waxDeep} 0%, rgba(220,201,161,0) 70%)`,
+                      opacity: 0.42 * tex,
+                    }}
+                  />
+                  <div
+                    className="wax-marble wax-drift-c absolute left-[62%] top-[4%] h-[40%] w-[48%] pointer-events-none"
+                    style={{
+                      background: `radial-gradient(closest-side, ${waxLight} 0%, rgba(255,253,244,0) 72%)`,
+                      opacity: 0.38 * tex,
+                    }}
+                  />
+                  {/* slow horizontal flow bands */}
+                  <div className="absolute inset-x-0 top-[16%] h-10 overflow-hidden pointer-events-none" style={{ opacity: 0.16 * tex }}>
+                    <div
+                      className="wax-flow h-full w-[200%]"
+                      style={{
+                        background:
+                          "repeating-linear-gradient(100deg, rgba(255,255,255,0.55) 0px, rgba(255,255,255,0) 46px, rgba(120,90,55,0.20) 92px, rgba(255,255,255,0) 150px)",
+                      }}
+                    />
+                  </div>
+                  <div className="absolute inset-x-0 top-[52%] h-14 overflow-hidden pointer-events-none" style={{ opacity: 0.12 * tex }}>
+                    <div
+                      className="wax-flow-rev h-full w-[200%]"
+                      style={{
+                        background:
+                          "repeating-linear-gradient(96deg, rgba(255,255,255,0) 0px, rgba(120,90,55,0.22) 60px, rgba(255,255,255,0.4) 120px, rgba(255,255,255,0) 190px)",
+                      }}
+                    />
+                  </div>
+                  {/* fine surface grain */}
+                  <svg className="absolute inset-0 h-full w-full pointer-events-none" style={{ opacity: 0.06 * tex, mixBlendMode: "multiply" }} aria-hidden="true">
+                    <defs>
+                      <filter id={grainId}>
+                        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+                      </filter>
+                    </defs>
+                    <rect width="100%" height="100%" filter={`url(#${grainId})`} />
+                  </svg>
+                </>
+              )}
               <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
@@ -252,9 +352,11 @@ export default function WaxWaveTransition({
             </div>
 
             {/* single crème-wax crest — cream lip melting into the base,
-                with a glossy shine tracing the crest line */}
+                swaying sideways + heaving as it rises, with molten runs
+                and a glossy shine tracing the crest line */}
             <svg
-              className="absolute left-0 w-full pointer-events-none"
+              ref={crestRef}
+              className="absolute left-[-3%] w-[106%] pointer-events-none will-change-transform"
               style={{ top: -waveHeight + 2, height: waveHeight + 4 }}
               viewBox={`-20 0 ${VB_W + 40} ${waveHeight + 40}`}
               preserveAspectRatio="none"
@@ -274,6 +376,17 @@ export default function WaxWaveTransition({
                 </linearGradient>
               </defs>
               <path ref={frontRef} fill={`url(#${gradId})`} />
+              {/* molten runs below the lip */}
+              {Array.from({ length: STREAKS }).map((_, i) => (
+                <rect
+                  key={i}
+                  ref={(el) => {
+                    streakRefs.current[i] = el;
+                  }}
+                  fill={i % 2 === 0 ? waxLight : waxDeep}
+                  opacity={0.2 * tex}
+                />
+              ))}
               {/* glossy crest shine */}
               <path
                 ref={lipRef}

@@ -89,7 +89,7 @@ function PortableTextBlock({ block }: { block: any }) {
       }
       if (style === "blockquote") {
         return (
-          <blockquote className="border-l-2 border-secondary pl-4 my-6 font-headline-sm text-headline-sm italic text-primary">
+          <blockquote className="border-l-2 border-accent pl-4 my-6 font-headline-sm text-headline-sm italic text-ink">
             {children}
           </blockquote>
         );
@@ -105,7 +105,7 @@ function PortableTextBlock({ block }: { block: any }) {
       if (!url) return null;
       return (
         <figure className="my-8">
-          <div className="relative w-full aspect-[16/9] overflow-hidden bg-surface-container">
+          <div className="relative w-full aspect-[16/9] overflow-hidden rounded-2xl bg-surface-container">
             <Image
               src={url}
               alt={block.alt || ""}
@@ -190,7 +190,7 @@ function PortableTextSpans({
               <Link
                 key={`${child._key || i}-${mark}`}
                 href={href}
-                className="text-secondary underline underline-offset-2 hover:text-primary transition-colors"
+                className="text-accent underline underline-offset-2 hover:text-ink transition-colors"
               >
                 {node}
               </Link>
@@ -200,7 +200,7 @@ function PortableTextSpans({
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-secondary underline underline-offset-2 hover:text-primary transition-colors"
+                className="text-accent underline underline-offset-2 hover:text-ink transition-colors"
               >
                 {node}
               </a>

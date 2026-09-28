@@ -13,7 +13,7 @@ const FALLBACK_METRICS: ManifestoMetric[] = [
     {
         value: "100%",
         label: "Botanical Wax Blend",
-        description: "European rapeseed & clean soy without paraffin.",
+        description: "cold-pressed rapeseed & clean soy without paraffin.",
     },
     {
         value: "65+ Hrs",
@@ -22,8 +22,8 @@ const FALLBACK_METRICS: ManifestoMetric[] = [
     },
     {
         value: "Small Batch",
-        label: "Handcrafted Atelier",
-        description: "Numbered pours made in southern Provence.",
+        label: "Handcrafted Studio",
+        description: "Numbered pours made in Jaipur.",
     },
 ];
 
@@ -41,12 +41,12 @@ export default function Manifesto({
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-space-lg lg:gap-gutter items-start">
                     <div className="lg:col-span-4">
                         <Reveal variant="up">
-                            <span className="font-label-sm text-label-sm uppercase tracking-[0.22em] text-secondary block mb-space-xs">
+                            <span className="font-label-sm text-label-sm uppercase tracking-[0.22em] text-accent block mb-space-xs">
                                 {eyebrow}
                             </span>
                         </Reveal>
                         <Reveal variant="up" delay={100}>
-                            <h2 className="font-headline-lg text-headline-lg text-primary leading-tight uppercase font-serif tracking-wide">
+                            <h2 className="font-headline-lg text-headline-lg text-ink leading-tight uppercase font-serif tracking-wide">
                                 {headline}
                             </h2>
                         </Reveal>
@@ -65,7 +65,7 @@ export default function Manifesto({
                                     key={s.label}
                                     className="bg-surface-container-low p-space-md rounded-DEFAULT h-full"
                                 >
-                                    <span className="font-headline-sm text-headline-sm text-primary block mb-1">
+                                    <span className="font-headline-sm text-headline-sm text-ink block mb-1">
                                         {s.value}
                                     </span>
                                     <span className="font-label-md text-label-md text-on-surface-variant tracking-[0.14em] uppercase">

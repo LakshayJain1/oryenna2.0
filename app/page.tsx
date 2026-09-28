@@ -11,7 +11,7 @@ export const metadata = pageMetadata({
   path: "/",
   title: "ORYENNA — Fine Fragrance & Slow Living",
   description:
-    "Hand-poured botanical candles and slow living objects from Grasse and Provence. Curated releases, atelier craft, and essays on slow living.",
+    "Hand-poured botanical candles and slow living objects from Jaipur. Curated releases, studio craft, and essays on slow living.",
 });
 
 export default function HomePage() {
@@ -26,10 +26,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-space-xl gap-space-md">
             <Reveal variant="up">
-              <span className="font-label-sm text-label-sm uppercase tracking-[0.2em] text-secondary mb-space-xs block">
+              <span className="font-label-sm text-label-sm uppercase tracking-[0.2em] text-accent mb-space-xs block">
                 02 / Signature Pours
               </span>
-              <h2 className="font-headline-lg text-headline-lg text-primary uppercase font-serif tracking-wider">
+              <h2 className="font-headline-lg text-headline-lg text-ink uppercase font-serif tracking-wider">
                 Curated Releases
               </h2>
               <p className="font-body-md text-body-md text-on-surface-variant mt-2 max-w-xl">
@@ -52,21 +52,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Atelier interlude */}
+      {/* Studio interlude */}
       <section className="w-full bg-primary py-space-xl px-margin-mobile md:px-margin-tablet lg:px-margin">
         <div className="max-w-[800px] mx-auto text-center">
           <Reveal variant="up">
-            <div className="w-8 h-[2px] bg-secondary mx-auto mb-6" />
+            <div className="w-8 h-[2px] bg-accent mx-auto mb-6" />
             <blockquote className="font-headline-md text-headline-md text-on-primary italic leading-snug">
               &ldquo;Scent is an invisible architecture — shaping the energy,
               stillness, and emotional landscape of the rooms we inhabit.&rdquo;
             </blockquote>
             <p className="mt-4 text-[11px] uppercase tracking-[0.2em] text-on-primary/70">
-              The Oryenna Atelier · Grasse & Provence
+              The Oryenna Studio · Jaipur
             </p>
             <Link
               href="/about"
-              className="inline-flex items-center justify-center mt-8 h-[52px] px-8 bg-on-primary text-primary font-label-lg text-label-lg uppercase tracking-[0.14em] hover:bg-on-primary/90 transition-colors"
+              className="pressable inline-flex items-center justify-center mt-8 h-[52px] px-8 rounded-full bg-on-primary text-ink font-label-lg text-label-lg uppercase tracking-[0.14em] hover:bg-on-primary/90 transition-colors"
             >
               Our Craft & Story
             </Link>
@@ -79,13 +79,13 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-space-xl gap-space-md">
             <Reveal variant="up">
-              <h2 className="font-headline-lg text-headline-lg text-primary uppercase font-serif tracking-wider">
+              <h2 className="font-headline-lg text-headline-lg text-ink uppercase font-serif tracking-wider">
                 {JOURNAL_TITLE}
               </h2>
             </Reveal>
             <Link
               href="/journal"
-              className="font-label-md text-label-md uppercase tracking-[0.16em] text-primary hover:text-secondary transition-colors inline-flex items-center gap-1"
+              className="font-label-md text-label-md uppercase tracking-[0.16em] text-ink hover:text-accent transition-colors inline-flex items-center gap-1"
             >
               <span>Read All Dispatches</span>
               <span className="material-symbols-outlined text-[16px]">
@@ -101,7 +101,7 @@ export default function HomePage() {
                 href={`/journal/${post.slug}`}
                 className="group flex flex-col h-full"
               >
-                <div className="aspect-[16/11] bg-surface-container overflow-hidden mb-space-sm">
+                <div className="aspect-[16/11] bg-surface-container overflow-hidden rounded-2xl mb-space-sm">
                   {post.image ? (
                   <img
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
@@ -113,7 +113,7 @@ export default function HomePage() {
                 {(post.category || post.readTime) ? (
                 <div className="flex items-center gap-2 mb-1">
                   {post.category ? (
-                  <span className="font-label-sm text-label-sm uppercase tracking-[0.16em] text-secondary">
+                  <span className="font-label-sm text-label-sm uppercase tracking-[0.16em] text-accent">
                     {post.category}
                   </span>
                   ) : null}
@@ -127,7 +127,7 @@ export default function HomePage() {
                   ) : null}
                 </div>
                 ) : null}
-                <h3 className="font-headline-sm text-headline-sm text-primary font-serif uppercase tracking-wide group-hover:text-secondary transition-colors mb-2">
+                <h3 className="font-headline-sm text-headline-sm text-ink font-serif uppercase tracking-wide group-hover:text-accent transition-colors mb-2">
                   {post.title}
                 </h3>
                 {post.excerpt ? (

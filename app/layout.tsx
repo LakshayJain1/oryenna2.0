@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Reveal } from "@/components/ui/Reveal";
+import { CurrencyProvider } from "@/context/CurrencyContext";
 import ClientChrome from "@/components/layout/ClientChrome";
 import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION } from "@/lib/seo";
 
@@ -92,12 +93,14 @@ export default function RootLayout({
           />
         </head>
         <body className="bg-surface font-body-md text-body-md text-on-surface antialiased">
-          <Header />
-          <main className="w-full pt-20 bg-surface min-h-screen">{children}</main>
-          <Reveal variant="fade">
-            <Footer />
-          </Reveal>
-          <ClientChrome />
+          <CurrencyProvider>
+            <Header />
+            <main className="w-full pt-20 bg-surface min-h-screen">{children}</main>
+            <Reveal variant="fade">
+              <Footer />
+            </Reveal>
+            <ClientChrome />
+          </CurrencyProvider>
         </body>
       </html>
     </ClerkProvider>

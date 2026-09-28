@@ -20,7 +20,7 @@ export default function AddToBagButton({ id, name, price, image }: AddToBagButto
     return (
         <button
             onClick={handleAdd}
-            className="w-full py-3 bg-surface text-primary font-label-lg text-label-lg uppercase tracking-wider hover:bg-primary-fixed transition-colors flex items-center justify-center gap-2"
+            className="pressable w-full py-3 bg-surface/95 backdrop-blur-md text-ink font-label-lg text-label-lg uppercase tracking-wider hover:bg-primary-fixed transition-colors flex items-center justify-center gap-2 rounded-full shadow-lg"
             type="button"
         >
             <span className="material-symbols-outlined text-[16px]">add</span>{" "}

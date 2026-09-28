@@ -23,8 +23,8 @@ export default function TabSwitcher({
                         key={tab.id}
                         onClick={() => onChange(tab.id)}
                         className={`w-1/2 py-2.5 text-center font-label-md text-label-md rounded transition-all duration-300 ${activeTab === tab.id
-                                ? "bg-surface-container-lowest text-primary shadow-sm"
-                                : "text-on-surface-variant hover:text-primary"
+                                ? "bg-surface-container-lowest text-ink shadow-sm"
+                                : "text-on-surface-variant hover:text-ink"
                             }`}
                         type="button"
                     >
@@ -43,7 +43,7 @@ export default function TabSwitcher({
                     onClick={() => onChange(tab.id)}
                     className={`flex-1 py-2.5 px-4 font-label-lg text-label-lg tracking-wider transition-all duration-300 text-center uppercase ${activeTab === tab.id
                             ? "text-on-primary bg-primary shadow-sm"
-                            : "text-on-surface-variant hover:text-primary"
+                            : "text-on-surface-variant hover:text-ink"
                         }`}
                     type="button"
                 >

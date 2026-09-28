@@ -9,10 +9,10 @@ export default function Footer() {
             <div className="w-full px-margin-mobile md:px-margin-tablet lg:px-margin pt-space-xl pb-space-lg">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-gutter lg:gap-space-lg mb-space-xl">
                     <div className="lg:col-span-5 space-y-space-md">
-                        <span className="font-label-sm text-label-sm tracking-widest uppercase text-secondary">
+                        <span className="font-label-sm text-label-sm tracking-widest uppercase text-accent">
                             Olfactory Gazette
                         </span>
-                        <h3 className="font-headline-md text-headline-md text-primary">
+                        <h3 className="font-headline-md text-headline-md text-ink">
                             An Invitation to Slow Down
                         </h3>
                         <p className="font-body-md text-body-md text-on-surface-variant max-w-md">
@@ -23,13 +23,13 @@ export default function Footer() {
                         <div className="flex flex-col gap-space-xs pt-space-xs max-w-md">
                             <Link
                                 href="/contact"
-                                className="h-[52px] px-space-lg bg-primary-container text-surface font-label-lg text-label-lg uppercase tracking-wider hover:bg-primary transition-colors duration-300 inline-flex items-center justify-center"
+                                 className="pressable h-[52px] px-space-lg rounded-full bg-primary-container text-surface font-label-lg text-label-lg uppercase tracking-wider hover:bg-primary hover:text-on-primary transition-colors duration-300 inline-flex items-center justify-center"
                             >
                                 Request the Gazette via Contact
                             </Link>
                             <p className="font-body-sm text-body-sm text-on-surface-variant/80">
                                 Gazette subscriptions are handled through the
-                                atelier until the newsletter provider is
+                                studio until the newsletter provider is
                                 connected.
                             </p>
                         </div>
@@ -40,7 +40,7 @@ export default function Footer() {
                             key={col.title}
                             className="lg:col-span-2 space-y-space-sm"
                         >
-                            <h4 className="font-label-md text-label-md uppercase text-primary tracking-widest">
+                            <h4 className="font-label-md text-label-md uppercase text-ink tracking-widest">
                                 {col.title}
                             </h4>
                             <ul className="space-y-space-xs">

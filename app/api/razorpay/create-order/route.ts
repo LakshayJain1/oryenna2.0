@@ -29,14 +29,26 @@ export async function POST(request: Request) {
     );
   }
 
-  const { lines, giftWrap, shipping } =
-    (body as { lines?: unknown; giftWrap?: unknown; shipping?: unknown }) ?? {};
+  const { lines, giftWrap, shipping, currency } =
+    (body as {
+      lines?: unknown;
+      giftWrap?: unknown;
+      shipping?: unknown;
+      currency?: unknown;
+    }) ?? {};
 
-  // The payable total is recomputed server-side from the trusted catalogue.
-  // Client-supplied amounts are never accepted.
-  let paise: number;
+  // The payable total is recomputed server-side from the trusted catalogue
+  // in the shopper's region currency. Client-supplied amounts are never
+  // accepted.
+  let minor: number;
+  let orderCurrency: "INR" | "USD";
   try {
-    ({ paise } = await priceOrder({ lines, giftWrap, shipping }));
+    ({ minor, currency: orderCurrency } = await priceOrder({
+      lines,
+      giftWrap,
+      shipping,
+      currency,
+    }));
   } catch (err) {
     const message = err instanceof Error ? err.message : "Invalid order.";
     return NextResponse.json({ success: false, message }, { status: 400 });
@@ -51,8 +63,8 @@ export async function POST(request: Request) {
 
   try {
     const order = await razorpay.orders.create({
-      amount: paise,
-      currency: "INR",
+      amount: minor,
+      currency: orderCurrency,
       receipt: `rcpt_${Date.now()}_${Math.floor(Math.random() * 1_000_000)}`,
     });
 

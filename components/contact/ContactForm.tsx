@@ -42,14 +42,14 @@ export default function ContactForm() {
   if (status === "sent") {
     return (
       <div className="bg-surface-container-low p-space-lg md:p-space-xl text-center">
-        <span className="material-symbols-outlined text-[36px] text-secondary">
+        <span className="material-symbols-outlined text-[36px] text-accent">
           mark_email_read
         </span>
-        <h3 className="font-headline-md text-headline-md text-primary mt-4">
+        <h3 className="font-headline-md text-headline-md text-ink mt-4">
           Received with thanks.
         </h3>
         <p className="font-body-md text-body-md text-on-surface-variant mt-2 max-w-md mx-auto">
-          Your note is on the workbench. A human from the atelier will reply
+          Your note is on the workbench. A human from the studio will reply
           within two working days.
         </p>
       </div>
@@ -57,7 +57,7 @@ export default function ContactForm() {
   }
 
   const inputCls =
-    "w-full bg-surface border border-on-surface-variant/20 px-4 py-3 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary transition-colors";
+    "w-full bg-surface border border-on-surface-variant/20 rounded-xl px-4 py-3 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary transition-colors";
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-space-md">
@@ -70,7 +70,7 @@ export default function ContactForm() {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Camille Aubert"
+            placeholder="Ananya Sharma"
             maxLength={80}
             className={inputCls}
           />
@@ -101,7 +101,7 @@ export default function ContactForm() {
               key={t}
               type="button"
               onClick={() => setTopic(t)}
-              className={`px-4 py-2 font-label-sm text-label-sm uppercase tracking-[0.14em] transition-colors ${
+              className={`pressable px-4 py-2 rounded-full font-label-sm text-label-sm uppercase tracking-[0.14em] transition-colors ${
                 topic === t
                   ? "bg-primary text-on-primary"
                   : "bg-surface-container-low text-on-surface-variant hover:bg-surface-container"
@@ -135,9 +135,9 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="h-[52px] px-8 inline-flex items-center justify-center gap-2 bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-[0.14em] hover:bg-primary-container transition-colors disabled:opacity-60"
+        className="pressable h-[52px] px-8 rounded-full inline-flex items-center justify-center gap-2 bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-[0.14em] hover:bg-primary-container hover:text-surface transition-colors disabled:opacity-60"
       >
-        {status === "sending" ? "Sending…" : "Send to the Atelier"}
+        {status === "sending" ? "Sending…" : "Send to the Studio"}
         <span className="material-symbols-outlined text-[18px]">send</span>
       </button>
     </form>

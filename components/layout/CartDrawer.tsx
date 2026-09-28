@@ -2,10 +2,22 @@
 
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
+import { useCurrency } from "@/context/CurrencyContext";
+import { unitPrices } from "@/lib/pricing";
+import { products } from "@/lib/products";
 
 export default function CartDrawer() {
-    const { items, isOpen, closeCart, subtotal, removeItem, count } =
+    const { items, isOpen, closeCart, removeItem, count } =
         useCartStore();
+    const { format } = useCurrency();
+    const subUsd = items.reduce((s, i) => {
+      const u = unitPrices(i.id, !!i.giftWrap, products, i.price);
+      return s + u.usd * i.quantity;
+    }, 0);
+    const subInr = items.reduce((s, i) => {
+      const u = unitPrices(i.id, !!i.giftWrap, products, i.price);
+      return s + u.inr * i.quantity;
+    }, 0);
 
     const itemCount = count();
 
@@ -17,12 +29,12 @@ export default function CartDrawer() {
                 onClick={closeCart}
             />
             <aside
-                className={`fixed top-0 right-0 h-full w-full sm:w-[420px] bg-surface-container-low shadow-[0_16px_32px_-8px_rgba(75,58,46,0.12)] z-50 transform transition-transform duration-500 ease-out flex flex-col ${isOpen ? "translate-x-0" : "translate-x-full"
+                className={`fixed top-0 right-0 h-full w-full sm:w-[420px] bg-surface-container-low shadow-[0_16px_32px_-8px_rgba(75,58,46,0.12)] z-50 transform transition-transform duration-500 ease-out flex flex-col rounded-l-[1.75rem] overflow-hidden ${isOpen ? "translate-x-0" : "translate-x-full"
                     }`}
             >
                 <div className="h-20 px-space-lg flex items-center justify-between bg-surface-container-low">
                     <div className="flex items-baseline gap-space-sm">
-                        <span className="font-headline-sm text-headline-sm text-primary">
+                        <span className="font-headline-sm text-headline-sm text-ink">
                             Your Selection
                         </span>
                         <span className="font-label-sm text-label-sm text-on-surface-variant tracking-widest uppercase">
@@ -30,7 +42,7 @@ export default function CartDrawer() {
                         </span>
                     </div>
                     <button
-                        className="text-on-surface-variant hover:text-primary transition-colors p-space-xs"
+                        className="text-on-surface-variant hover:text-ink transition-colors p-space-xs"
                         onClick={closeCart}
                         type="button"
                     >
@@ -40,7 +52,7 @@ export default function CartDrawer() {
 
                 {items.length === 0 ? (
                     <div className="flex-1 overflow-y-auto px-space-lg py-space-xl flex flex-col items-center justify-center text-center">
-                        <span className="font-headline-md text-headline-md text-primary mb-space-sm italic">
+                        <span className="font-headline-md text-headline-md text-ink mb-space-sm italic">
                             A quiet space awaits
                         </span>
                         <p className="font-body-md text-body-md text-on-surface-variant max-w-xs mb-space-lg">
@@ -50,25 +62,27 @@ export default function CartDrawer() {
                         <Link
                             href="/shop"
                             onClick={closeCart}
-                            className="h-[52px] px-space-lg inline-flex items-center justify-center bg-primary text-on-primary font-label-lg text-label-lg tracking-[0.14em] uppercase transition-colors hover:bg-primary-container"
+                            className="pressable h-[52px] px-space-lg rounded-full inline-flex items-center justify-center bg-primary text-on-primary font-label-lg text-label-lg tracking-[0.14em] uppercase transition-colors hover:bg-primary-container hover:text-surface"
                         >
                             Explore Fragrances
                         </Link>
                     </div>
                 ) : (
                     <div className="flex-1 overflow-y-auto px-space-lg py-space-md space-y-space-md">
-                        {items.map((item) => (
+                        {items.map((item) => {
+                            const u = unitPrices(item.id, !!item.giftWrap, products, item.price);
+                            return (
                             <div
                                 key={item.id}
-                                className="flex gap-space-sm bg-surface p-space-sm"
+                                className="flex gap-space-sm bg-surface p-space-sm rounded-2xl"
                             >
                                 <img
                                     src={item.image}
                                     alt={item.name}
-                                    className="w-16 h-20 object-cover"
+                                    className="w-16 h-20 object-cover rounded-xl"
                                 />
                                 <div className="flex-1 min-w-0">
-                                    <h4 className="font-title text-title text-primary truncate">
+                                    <h4 className="font-title text-title text-ink truncate">
                                         {item.name}
                                     </h4>
                                     {item.variant && (
@@ -80,8 +94,8 @@ export default function CartDrawer() {
                                         <span className="font-body-sm text-body-sm text-on-surface-variant">
                                             Qty {item.quantity}
                                         </span>
-                                        <span className="font-title text-title text-primary">
-                                            ${(item.price * item.quantity).toFixed(2)}
+                                        <span className="font-title text-title text-ink">
+                                            {format(u.usd * item.quantity, u.inr * item.quantity)}
                                         </span>
                                     </div>
                                     <button
@@ -92,7 +106,8 @@ export default function CartDrawer() {
                                     </button>
                                 </div>
                             </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
 
@@ -101,8 +116,8 @@ export default function CartDrawer() {
                         <span className="font-label-md text-label-md uppercase tracking-[0.16em] text-on-surface-variant">
                             Subtotal
                         </span>
-                        <span className="font-title text-title text-primary">
-                            ${subtotal().toFixed(2)}
+                        <span className="font-title text-title text-ink">
+                            {format(subUsd, subInr)}
                         </span>
                     </div>
                     <p className="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
@@ -112,7 +127,7 @@ export default function CartDrawer() {
                     <Link
                         href="/checkout"
                         onClick={closeCart}
-                        className={`w-full h-[52px] flex items-center justify-center font-label-lg text-label-lg tracking-[0.14em] uppercase transition-colors ${items.length === 0
+                        className={`pressable w-full h-[52px] rounded-full flex items-center justify-center font-label-lg text-label-lg tracking-[0.14em] uppercase transition-colors ${items.length === 0
                                 ? "bg-primary/40 text-on-primary cursor-not-allowed pointer-events-none"
                                 : "bg-primary text-on-primary hover:bg-primary-container"
                             }`}

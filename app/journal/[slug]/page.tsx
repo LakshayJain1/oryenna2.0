@@ -38,7 +38,7 @@ export default async function JournalArticlePage({
             <Reveal variant="up">
               <header className="max-w-4xl mx-auto text-center space-y-space-md pb-space-lg">
                   {byline.length > 0 ? (
-                  <div className="flex items-center justify-center gap-space-xs text-secondary font-label-md uppercase tracking-widest">
+                  <div className="flex items-center justify-center gap-space-xs text-accent font-label-md uppercase tracking-widest">
                       {byline.map((item, i) => (
                         <span key={`${item}-${i}`}>
                           {i > 0 ? " • " : ""}
@@ -47,7 +47,7 @@ export default async function JournalArticlePage({
                       ))}
                   </div>
                   ) : null}
-                  <h1 className="font-display text-display text-primary leading-[1.12]">
+                  <h1 className="font-display text-display text-ink leading-[1.12]">
                       {post.title}
                   </h1>
                   {post.excerpt ? (

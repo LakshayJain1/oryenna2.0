@@ -4,7 +4,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   path: "/terms",
   title: "Terms of Service",
-  description: "The terms governing your use of the Oryenna boutique and atelier services.",
+  description: "The terms governing your use of the Oryenna boutique and studio services.",
 });
 
 const SECTIONS = [
@@ -14,7 +14,7 @@ const SECTIONS = [
   },
   {
     h: "Orders & availability",
-    p: "Every vessel is poured in small numbered batches. If a pour sells through while your order is being prepared, we will offer the next batch, an equivalent composition, or a full refund — your choice, always. We reserve the right to decline orders that cannot be fulfilled to atelier standard.",
+    p: "Every vessel is poured in small numbered batches. If a pour sells through while your order is being prepared, we will offer the next batch, an equivalent composition, or a full refund — your choice, always. We reserve the right to decline orders that cannot be fulfilled to studio standard.",
   },
   {
     h: "Payment",
@@ -22,7 +22,7 @@ const SECTIONS = [
   },
   {
     h: "Intellectual property",
-    p: "All compositions, names, texts, and imagery are the property of the atelier. You may enjoy them in your home; you may not reproduce them commercially without written consent.",
+    p: "All compositions, names, texts, and imagery are the property of the studio. You may enjoy them in your home; you may not reproduce them commercially without written consent.",
   },
 ];
 

@@ -140,7 +140,7 @@ export default function AuthPage() {
     const handleToken = async () => {
         setError("");
         if (!email) {
-            setError("Enter your atelier email first, then request a token.");
+            setError("Enter your studio email first, then request a token.");
             return;
         }
         if (!signIn) return;
@@ -164,7 +164,7 @@ export default function AuthPage() {
     return (
         <main className="min-h-screen w-full flex items-center justify-center bg-surface p-margin-mobile md:p-margin">
             <div className="flex flex-col w-full max-w-7xl mx-auto my-auto">
-                <div className="grid grid-cols-1 lg:grid-cols-12 overflow-hidden bg-surface-container-low shadow-sm">
+                <div className="grid grid-cols-1 lg:grid-cols-12 overflow-hidden bg-surface-container-low shadow-sm rounded-[1.75rem]">
                     {/* Left Visual */}
                     <div
                         className="relative lg:col-span-5 min-h-[520px] lg:min-h-[820px] flex flex-col justify-between p-8 sm:p-12 overflow-hidden bg-surface-container bg-cover bg-center"
@@ -184,13 +184,13 @@ export default function AuthPage() {
                                 </span>
                             </div>
                             <div className="text-label-sm font-label-sm tracking-widest uppercase opacity-75">
-                                Atelier Archive
+                                Studio Archive
                             </div>
                         </div>
 
                         <div className="relative z-10 flex flex-col gap-6 mt-auto pt-24">
                             <div className="p-6 bg-surface-bright/95 backdrop-blur-md shadow-md">
-                                <div className="flex items-center gap-2 text-secondary mb-3">
+                                <div className="flex items-center gap-2 text-accent mb-3">
                                     <span
                                         className="material-symbols-outlined text-title"
                                         style={{ fontVariationSettings: "'FILL' 1" }}
@@ -198,10 +198,10 @@ export default function AuthPage() {
                                         local_fire_department
                                     </span>
                                     <span className="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">
-                                        Atelier Manual • Entry 01
+                                        Studio Manual • Entry 01
                                     </span>
                                 </div>
-                                <blockquote className="font-body-lg text-body-lg text-primary italic leading-relaxed">
+                                <blockquote className="font-body-lg text-body-lg text-ink italic leading-relaxed">
                                     "The striking of a match is a boundary line between the noise
                                     outside and your quiet haven within."
                                 </blockquote>
@@ -215,11 +215,11 @@ export default function AuthPage() {
                             <div className="flex flex-col gap-3">
                                 <div className="flex items-center gap-3">
                                     <span className="w-6 h-px bg-outline-variant" />
-                                    <span className="font-label-md text-label-md uppercase text-secondary tracking-widest">
-                                        Oryenna Atelier & Sanctuary
+                                    <span className="font-label-md text-label-md uppercase text-accent tracking-widest">
+                                        Oryenna Studio & Sanctuary
                                     </span>
                                 </div>
-                                <h1 className="font-display text-headline-lg sm:text-display text-primary tracking-tight mt-1">
+                                <h1 className="font-display text-headline-lg sm:text-display text-ink tracking-tight mt-1">
                                     Return to Calm.
                                 </h1>
                                 <p className="font-body-md text-body-md text-on-surface-variant max-w-md">
@@ -243,10 +243,10 @@ export default function AuthPage() {
                             <form className="flex flex-col gap-6" onSubmit={verifyMode ? handleVerify : handleSubmit}>
                                 <div className="flex flex-col gap-2">
                                     <label className="font-label-md text-label-md tracking-wider uppercase text-on-surface-variant">
-                                        Atelier Email / Sanctuary ID
+                                        Studio Email / Sanctuary ID
                                     </label>
                                     <input
-                                        className="w-full py-3 px-4 bg-surface-container-low text-primary font-body-md focus:bg-surface-container-lowest focus:outline-none transition-colors placeholder:text-outline-variant"
+                                        className="w-full py-3 px-4 rounded-xl bg-surface-container-low text-ink font-body-md focus:bg-surface-container-lowest focus:outline-none transition-colors placeholder:text-outline-variant"
                                         placeholder="julian.vane@sanctuary.studio"
                                         required
                                         type="email"
@@ -262,7 +262,7 @@ export default function AuthPage() {
                                             Verification Token
                                         </label>
                                         <input
-                                            className="w-full py-3 px-4 bg-surface-container-low text-primary font-body-md focus:bg-surface-container-lowest focus:outline-none transition-colors placeholder:text-outline-variant tracking-[0.3em]"
+                                            className="w-full py-3 px-4 rounded-xl bg-surface-container-low text-ink font-body-md focus:bg-surface-container-lowest focus:outline-none transition-colors placeholder:text-outline-variant tracking-[0.3em]"
                                             placeholder="••••••"
                                             required
                                             type="text"
@@ -282,7 +282,7 @@ export default function AuthPage() {
                                                 Passcode
                                             </label>
                                             <a
-                                                className="font-body-sm text-body-sm text-secondary hover:text-primary underline underline-offset-4"
+                                                className="font-body-sm text-body-sm text-accent hover:text-ink underline underline-offset-4"
                                                 href="#forgot"
                                             >
                                                 Forgot passcode?
@@ -291,7 +291,7 @@ export default function AuthPage() {
                                         <div className="relative flex items-center">
                                             <input
                                                 type={showPass ? "text" : "password"}
-                                                className="w-full py-3 pl-4 pr-16 bg-surface-container-low text-primary font-body-md focus:bg-surface-container-lowest focus:outline-none"
+                                                className="w-full py-3 pl-4 pr-16 rounded-xl bg-surface-container-low text-ink font-body-md focus:bg-surface-container-lowest focus:outline-none"
                                                 placeholder="••••••••••••"
                                                 required
                                                 value={password}
@@ -299,7 +299,7 @@ export default function AuthPage() {
                                             />
                                             <button
                                                 onClick={() => setShowPass(!showPass)}
-                                                className="absolute right-3 px-2 py-1 font-label-sm text-label-sm tracking-wider uppercase text-on-surface-variant hover:text-primary"
+                                                className="absolute right-3 px-2 py-1 font-label-sm text-label-sm tracking-wider uppercase text-on-surface-variant hover:text-ink"
                                                 type="button"
                                             >
                                                 {showPass ? "Hide" : "Show"}
@@ -324,7 +324,7 @@ export default function AuthPage() {
                                             Keep me signed in to this sanctuary
                                         </span>
                                     </label>
-                                    <span className="hidden sm:inline-flex items-center gap-1 text-label-sm font-label-sm text-secondary tracking-wider uppercase">
+                                    <span className="hidden sm:inline-flex items-center gap-1 text-label-sm font-label-sm text-accent tracking-wider uppercase">
                                         <span
                                             className="material-symbols-outlined text-title"
                                             style={{ fontVariationSettings: "'FILL' 1" }}
@@ -336,13 +336,13 @@ export default function AuthPage() {
                                 </div>
 
                                 {error && (
-                                    <div className="p-3 bg-error/10 border border-error/30 text-error font-body-sm text-body-sm">
+                                    <div className="p-3 rounded-xl bg-error/10 border border-error/30 text-error font-body-sm text-body-sm">
                                         {error}
                                     </div>
                                 )}
 
                                 <button
-                                    className={`w-full py-4 px-8 bg-primary text-on-primary font-label-lg text-label-lg tracking-widest uppercase hover:bg-surface-tint transition-colors duration-300 flex items-center justify-center gap-3 shadow-sm ${submitting ? "opacity-80 pointer-events-none" : ""
+                                    className={`pressable w-full py-4 px-8 rounded-full bg-primary text-on-primary font-label-lg text-label-lg tracking-widest uppercase hover:bg-surface-tint transition-colors duration-300 flex items-center justify-center gap-3 shadow-sm ${submitting ? "opacity-80 pointer-events-none" : ""
                                         }`}
                                     type="submit"
                                 >
@@ -362,7 +362,7 @@ export default function AuthPage() {
                                 </div>
                                 <div className="grid grid-cols-1 gap-3">
                                     <button
-                                        className="w-full h-12 px-4 bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md tracking-wider uppercase transition-colors flex items-center justify-center gap-2"
+                                        className="pressable w-full h-12 px-4 rounded-full bg-surface-container hover:bg-surface-container-high text-ink font-label-md text-label-md tracking-wider uppercase transition-colors flex items-center justify-center gap-2"
                                         type="button"
                                         onClick={handleToken}
                                     >
@@ -374,9 +374,9 @@ export default function AuthPage() {
                                 </div>
                             </div>
 
-                            <div className="mt-8 p-6 bg-surface-container-low flex flex-col gap-3">
-                                <div className="flex items-center gap-2 text-primary font-title text-title mb-1">
-                                    <span className="material-symbols-outlined text-title text-secondary">
+                            <div className="mt-8 p-6 rounded-2xl bg-surface-container-low flex flex-col gap-3">
+                                <div className="flex items-center gap-2 text-ink font-title text-title mb-1">
+                                    <span className="material-symbols-outlined text-title text-accent">
                                         workspace_premium
                                     </span>
                                     <span>Sanctuary Patron Privileges</span>
@@ -388,7 +388,7 @@ export default function AuthPage() {
                                         "Curated handwritten unboxing notes with each order.",
                                     ].map((privilege) => (
                                         <li key={privilege} className="flex items-start gap-2.5">
-                                            <span className="material-symbols-outlined text-body-sm text-secondary mt-0.5">
+                                            <span className="material-symbols-outlined text-body-sm text-accent mt-0.5">
                                                 spa
                                             </span>
                                             <span>{privilege}</span>
@@ -401,9 +401,9 @@ export default function AuthPage() {
                                 <span>Need guidance with your account?</span>
                                 <Link
                                     href="/contact"
-                                    className="text-primary font-label-md text-label-md uppercase tracking-wider hover:text-secondary underline underline-offset-4"
+                                    className="text-ink font-label-md text-label-md uppercase tracking-wider hover:text-accent underline underline-offset-4"
                                 >
-                                    Contact the Atelier
+                                    Contact the Studio
                                 </Link>
                             </div>
                         </div>

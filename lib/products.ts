@@ -61,6 +61,7 @@ export const products: Product[] = [
         description:
             "A crackling fire captured through charred Cade wood, dark resinous labdanum, and soft, comforting honeyed birch.",
         price: 78,
+        priceINR: 2400,
         image: "/images/ember.jpg",
         badge: "Signature",
         category: "botanical",
@@ -76,6 +77,7 @@ export const products: Product[] = [
         description:
             "Creamy Mysore sandalwood balanced with aged Madagascar pod vanilla, cardamom pods, and crisp mountain cedarwood.",
         price: 78,
+        priceINR: 2400,
         image: "/images/santal.jpg",
         badge: "Classic",
         category: "botanical",
@@ -91,6 +93,7 @@ export const products: Product[] = [
         description:
             "Sun-warmed fig pulp, crushed green leaves, bitter almond blossoms, and a whisper of terracotta earth after rain.",
         price: 78,
+        priceINR: 2400,
         image: "/images/fig-olive.jpg",
         badge: "Botanical",
         category: "botanical",
@@ -104,8 +107,9 @@ export const products: Product[] = [
         scentNumber: "Botanical Scent No. 02",
         notes: "Cotton · Iris · White Musk",
         description:
-            "Evokes sun-dried textiles suspended in a Tuscan breeze, delicate Florentine orris root, and clean sheer amber.",
+            "Evokes sun-dried textiles suspended in a desert breeze, delicate orris root, and clean sheer amber.",
         price: 74,
+        priceINR: 2200,
         image: "/images/soft-linen.jpg",
         badge: "Limited",
         category: "botanical",
@@ -116,11 +120,12 @@ export const products: Product[] = [
         id: "brass-wick-duo",
         slug: "brass-wick-duo",
         name: "Brass Wick Ritual Duo",
-        scentNumber: "Atelier Tool",
+        scentNumber: "Studio Tool",
         notes: "Hand-Forged · Unlacquered Brass",
         description:
             "Precision angled trimmer and snuffer designed to clip wicks cleanly at 5mm, preventing soot deposits and extending burn life.",
         price: 32,
+        priceINR: 950,
         image: "/images/brass-duo.jpg",
         badge: "Ritual Tool",
         category: "objects",
@@ -132,10 +137,11 @@ export const products: Product[] = [
         slug: "travertine-pedestal",
         name: "Travertine Pedestal",
         scentNumber: "Stonework",
-        notes: "Honed Roman Travertine · 18cm × 18cm",
+        notes: "Honed Travertine · 18cm × 18cm",
         description:
             "Substantial thermal stone surface that safeguards credenzas while elevating your scent ritual into an altar of stillness.",
         price: 45,
+        priceINR: 1350,
         image: "/images/travertine.jpg",
         badge: "Stonework",
         category: "objects",

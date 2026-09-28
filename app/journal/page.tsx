@@ -22,7 +22,7 @@ export default function JournalPage() {
     <div className="flex flex-col w-full">
       <section className="w-full px-margin-mobile md:px-margin-tablet lg:px-margin pt-space-xl pb-space-lg">
         <Reveal variant="up" className="flex flex-col items-center text-center max-w-4xl mx-auto space-y-space-sm">
-          <h1 className="font-display text-display md:text-[68px] text-primary leading-tight font-normal">
+          <h1 className="font-display text-display md:text-[68px] text-ink leading-tight font-normal">
             {JOURNAL_TITLE}
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant italic max-w-2xl pt-space-xs">
@@ -51,11 +51,11 @@ export default function JournalPage() {
             <div className="lg:col-span-5 p-space-lg md:p-space-xl flex flex-col justify-between bg-surface-container-low">
               <div className="space-y-space-md">
                 {featured.readTime ? (
-                <div className="flex items-center gap-space-xs text-secondary font-label-md text-label-md uppercase tracking-widest">
+                <div className="flex items-center gap-space-xs text-accent font-label-md text-label-md uppercase tracking-widest">
                   <span>{featured.readTime}</span>
                 </div>
                 ) : null}
-                <h2 className="font-display text-headline-lg lg:text-[44px] lg:leading-[52px] text-primary font-normal">
+                <h2 className="font-display text-headline-lg lg:text-[44px] lg:leading-[52px] text-ink font-normal">
                   {featured.title}
                 </h2>
                 {featured.excerpt ? (
@@ -65,7 +65,7 @@ export default function JournalPage() {
                 ) : null}
               </div>
               <div className="pt-space-lg">
-                <span className="inline-flex items-center justify-center h-[52px] px-space-lg bg-primary text-surface font-label-lg text-label-lg uppercase tracking-wider group-hover:bg-primary-container transition-colors duration-300">
+                <span className="inline-flex items-center justify-center h-[52px] px-space-lg rounded-full bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-wider group-hover:bg-primary-container group-hover:text-surface transition-colors duration-300">
                   Read Dispatch
                   <span className="material-symbols-outlined ml-space-xs text-[18px] transition-transform duration-300 group-hover:translate-x-1">
                     arrow_forward
@@ -82,10 +82,10 @@ export default function JournalPage() {
       <section className="w-full px-margin-mobile md:px-margin-tablet lg:px-margin py-space-lg pb-space-xl">
         <Stagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter lg:gap-space-lg stagger-fill">
           {rest.map((post) => (
-            <article
-              key={post.slug}
-              className="flex flex-col bg-surface-container-low overflow-hidden group h-full"
-            >
+                        <article
+                            key={post.slug}
+                            className="flex flex-col bg-surface-container-low overflow-hidden group h-full rounded-[1.5rem] hover:-translate-y-1 hover:shadow-[0_20px_44px_-12px_rgba(52,37,26,0.22)] transition-all duration-500"
+                        >
               <Link
                 href={`/journal/${post.slug}`}
                 className="flex flex-col h-full"
@@ -99,7 +99,7 @@ export default function JournalPage() {
                   />
                   ) : null}
                   {post.category ? (
-                  <div className="absolute bottom-space-xs left-space-xs bg-surface/90 px-space-sm py-space-xs font-label-sm text-label-sm text-primary uppercase tracking-wider">
+                  <div className="absolute bottom-space-xs left-space-xs bg-surface/90 px-space-sm py-space-xs font-label-sm text-label-sm text-ink uppercase tracking-wider">
                     {post.category}
                   </div>
                   ) : null}
@@ -107,11 +107,11 @@ export default function JournalPage() {
                 <div className="p-space-md lg:p-space-lg flex-1 flex flex-col justify-between space-y-space-md">
                   <div className="space-y-space-xs">
                     {post.readTime ? (
-                    <span className="font-label-sm text-label-sm text-secondary uppercase tracking-widest">
+                    <span className="font-label-sm text-label-sm text-accent uppercase tracking-widest">
                       {post.readTime}
                     </span>
                     ) : null}
-                    <h4 className="font-headline-sm text-headline-sm text-primary group-hover:text-tertiary transition-colors duration-300">
+                    <h4 className="font-headline-sm text-headline-sm text-ink group-hover:text-tertiary transition-colors duration-300">
                       {post.title}
                     </h4>
                     {post.excerpt ? (
@@ -121,7 +121,7 @@ export default function JournalPage() {
                     ) : null}
                   </div>
                   <div className="pt-space-xs">
-                    <span className="inline-flex items-center text-primary font-label-sm text-label-sm uppercase tracking-widest">
+                    <span className="inline-flex items-center text-ink font-label-sm text-label-sm uppercase tracking-widest">
                       Read Essay
                       <span className="material-symbols-outlined text-[14px] ml-1">
                         arrow_outward

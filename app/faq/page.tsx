@@ -14,20 +14,20 @@ const QUICK_ANSWERS = [
   {
     question: "How long does shipping take?",
     answer:
-      "Orders leave the atelier within 2 working days and travel by climate-controlled ground transit: 3–5 days in Europe, 5–9 days worldwide. Every parcel is tracked and packed in biodegradable materials with linen cord.",
+      "Orders leave the studio within 2 working days and travel by climate-controlled ground transit: 3–5 days in Europe, 5–9 days worldwide. Every parcel is tracked and packed in biodegradable materials with linen cord.",
   },
   {
     question: "What is your returns policy?",
     answer:
-      "Unburned vessels may be returned within 30 days for a full refund. If a vessel arrives damaged, send a photograph within 7 days and a replacement leaves the atelier immediately — no return shipping needed.",
+      "Unburned vessels may be returned within 30 days for a full refund. If a vessel arrives damaged, send a photograph within 7 days and a replacement leaves the studio immediately — no return shipping needed.",
   },
   {
     question: "Do you offer gifting and handwritten notes?",
     answer:
-      "Yes — select Slow Living Presentation Packaging at checkout for a linen gift box, wax seal, and herb card. Add an Atelier Scribe Note and our archivist will hand-inscribe your dedication in oak gall ink.",
+      "Yes — select Slow Living Presentation Packaging at checkout for a linen gift box, wax seal, and herb card. Add an Studio Scribe Note and our archivist will hand-inscribe your dedication in oak gall ink.",
   },
   {
-    question: "How can I reach the atelier directly?",
+    question: "How can I reach the studio directly?",
     answer:
       "Write to care@oryenna.com for orders, atelier@oryenna.com for bespoke work, or use the contact desk — every message is read by a human at the workbench.",
   },
@@ -46,17 +46,17 @@ export default function FAQPage() {
       <section className="w-full bg-surface-container-low py-space-xl px-margin-mobile md:px-margin-tablet lg:px-margin">
         <div className="max-w-[800px] mx-auto">
           <Reveal variant="up">
-            <span className="font-label-sm text-label-sm uppercase tracking-[0.22em] text-secondary block mb-2">
+            <span className="font-label-sm text-label-sm uppercase tracking-[0.22em] text-accent block mb-2">
               Quick Answers
             </span>
-            <h2 className="font-headline-lg text-headline-lg text-primary uppercase tracking-wide mb-8">
-              Orders, shipping & the atelier
+            <h2 className="font-headline-lg text-headline-lg text-ink uppercase tracking-wide mb-8">
+              Orders, shipping & the studio
             </h2>
           </Reveal>
           <div className="space-y-4">
             {QUICK_ANSWERS.map((faq, i) => (
               <Reveal key={i} variant="up" delay={Math.min(i * 60, 300)}>
-                <details className="group bg-surface rounded-none border border-on-surface-variant/10 overflow-hidden">
+                <details className="group bg-surface rounded-2xl border border-on-surface-variant/10 overflow-hidden">
                   <summary className="flex items-center justify-between p-6 cursor-pointer list-none">
                     <span className="font-title text-title text-on-surface pr-8">
                       {faq.question}

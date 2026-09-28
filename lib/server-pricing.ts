@@ -4,11 +4,13 @@
 
 import { products, type Product } from "@/lib/products";
 import {
-  VESSELS,
+  toMinor,
+  MAX_ORDER_MINOR,
+  type CurrencyCode,
   VESSEL_IDS,
-  ITEM_GIFT_WRAP_FEE,
+  vesselPrice,
+  feeFor,
   computeTotals,
-  MAX_ORDER_PAISE,
 } from "@/lib/pricing";
 
 export type CartLineInput = {
@@ -21,6 +23,7 @@ export type OrderInput = {
   lines: unknown;
   giftWrap: unknown;
   shipping: unknown;
+  currency?: unknown;
 };
 
 function isRecord(v: unknown): v is Record<string, unknown> {
@@ -31,11 +34,13 @@ async function loadCatalogue(): Promise<Product[]> {
   return products;
 }
 
-function resolveUnitUsd(
+function resolveUnit(
   cartId: string,
   gift: boolean,
-  catalogue: Product[]
+  catalogue: Product[],
+  code: CurrencyCode
 ): number | null {
+  const giftFee = feeFor("gift", code);
   // Product-page adds carry a vessel suffix: "<productId>-<vessel>".
   for (const vessel of VESSEL_IDS) {
     const suffix = `-${vessel}`;
@@ -43,20 +48,22 @@ function resolveUnitUsd(
       const baseId = cartId.slice(0, -suffix.length);
       const base = catalogue.find((p) => p.id === baseId);
       if (!base) return null;
-      return VESSELS[vessel] + (gift ? ITEM_GIFT_WRAP_FEE : 0);
+      return vesselPrice(vessel, code) + (gift ? giftFee : 0);
     }
   }
   // Shop adds carry the plain catalogue id — price comes from catalogue.
   const product = catalogue.find((p) => p.id === cartId);
-  return product ? product.price : null;
+  if (!product) return null;
+  return code === "INR" ? (product.priceINR ?? product.price) : product.price;
 }
 
 /**
- * Validate client lines and recompute the Razorpay paise amount.
- * Throws an Error describing the problem for any invalid input.
+ * Validate client lines and recompute the Razorpay minor-unit amount in
+ * the order currency. Catalogue numbers are prices in the shown currency
+ * ($78 in Europe, ₹78 in India). Throws on any invalid input.
  */
 export async function priceOrder(input: OrderInput) {
-  const { lines, giftWrap, shipping } = input;
+  const { lines, giftWrap, shipping, currency } = input;
 
   if (!Array.isArray(lines) || lines.length === 0 || lines.length > 50) {
     throw new Error("Invalid cart lines.");
@@ -67,6 +74,7 @@ export async function priceOrder(input: OrderInput) {
   if (shipping !== "slow" && shipping !== "express") {
     throw new Error("Invalid shipping option.");
   }
+  const code: CurrencyCode = currency === "USD" ? "USD" : "INR";
 
   const catalogue = await loadCatalogue();
   const priced = (lines as CartLineInput[]).map((line) => {
@@ -80,23 +88,28 @@ export async function priceOrder(input: OrderInput) {
     }
     const giftFlag = gift === undefined ? false : gift;
     if (typeof giftFlag !== "boolean") throw new Error("Invalid gift flag.");
-    const unitUsd = resolveUnitUsd(id, giftFlag, catalogue);
-    if (unitUsd === null || unitUsd <= 0) {
+    const unit = resolveUnit(id, giftFlag, catalogue, code);
+    if (unit === null || unit <= 0) {
       throw new Error("Unknown catalogue item.");
     }
-    return { unitUsd, qty: qty as number };
+    return { unitUsd: unit, qty: qty as number };
   });
 
-  const totals = computeTotals(priced, {
-    keepsake: giftWrap,
-    express: shipping === "express",
-  });
+  const totals = computeTotals(
+    priced,
+    {
+      keepsake: giftWrap,
+      express: shipping === "express",
+    },
+    code
+  );
 
-  if (!Number.isFinite(totals.paise) || totals.paise <= 0) {
+  const minor = toMinor(totals.totalUsd, code);
+  if (!Number.isFinite(minor) || minor <= 0) {
     throw new Error("Invalid order total.");
   }
-  if (totals.paise > MAX_ORDER_PAISE) {
+  if (minor > MAX_ORDER_MINOR[code]) {
     throw new Error("Order total exceeds the allowed maximum.");
   }
-  return totals;
+  return { ...totals, currency: code, minor };
 }

@@ -51,7 +51,7 @@ export function AuthModal() {
 
       {/* Modal Dialog */}
       <div
-        className="relative z-10 w-full max-w-[950px] overflow-hidden border border-on-surface-variant/20 bg-surface shadow-2xl transition-all"
+        className="relative z-10 w-full max-w-[950px] overflow-hidden rounded-[1.75rem] border border-on-surface-variant/20 bg-surface shadow-2xl transition-all"
         role="dialog"
         aria-modal="true"
         aria-labelledby="auth-modal-title"
@@ -70,15 +70,15 @@ export function AuthModal() {
           {/* Left Column: Atmospheric imagery */}
           <div className="relative hidden md:col-span-5 md:block h-full min-h-[620px] bg-surface-container">
             <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent flex flex-col justify-end p-8 text-on-primary">
-              <span className="text-[10px] uppercase tracking-[0.24em] text-secondary mb-2">
-                Oryenna Atelier
+              <span className="text-[10px] uppercase tracking-[0.24em] text-accent mb-2">
+                Oryenna Studio
               </span>
               <p className="font-headline-sm text-[16px] italic leading-snug text-on-primary">
                 &ldquo;The scent fills the room like a quiet mist. It has completely transformed my evening unwind ritual.&rdquo;
               </p>
               <div className="mt-4 flex items-center justify-between border-t border-on-primary/20 pt-3 text-[9px] uppercase tracking-[0.2em] text-on-primary/70">
-                <span>Éléonore V.</span>
-                <span>Paris, 6e</span>
+                <span>Ananya S.</span>
+                <span>Jaipur</span>
               </div>
             </div>
           </div>
@@ -86,7 +86,7 @@ export function AuthModal() {
           {/* Right Column: Styled Clerk Components */}
           <div className="flex flex-col justify-between p-6 sm:p-8 md:col-span-7 max-h-[90vh] overflow-y-auto">
             <div>
-              <span className="text-[10px] uppercase tracking-[0.22em] text-primary font-medium">
+              <span className="text-[10px] uppercase tracking-[0.22em] text-ink font-medium">
                 Sanctuary Member Access
               </span>
               <h2
@@ -106,7 +106,7 @@ export function AuthModal() {
                   onClick={() => setAuthTab("signin")}
                   className={`pb-3 font-medium transition-colors ${
                     authTab === "signin"
-                      ? "border-b-2 border-primary text-primary"
+                      ? "border-b-2 border-primary text-ink"
                       : "text-on-surface-variant hover:text-on-surface"
                   }`}
                 >
@@ -117,7 +117,7 @@ export function AuthModal() {
                   onClick={() => setAuthTab("register")}
                   className={`ml-8 pb-3 font-medium transition-colors ${
                     authTab === "register"
-                      ? "border-b-2 border-primary text-primary"
+                      ? "border-b-2 border-primary text-ink"
                       : "text-on-surface-variant hover:text-on-surface"
                   }`}
                 >
@@ -137,14 +137,14 @@ export function AuthModal() {
                         headerTitle: "hidden",
                         headerSubtitle: "hidden",
                         socialButtonsBlockButton:
-                          "border border-on-surface-variant/30 bg-surface hover:bg-surface-container text-on-surface rounded-none h-11 uppercase tracking-[0.1em] text-[11px]",
+                          "border border-on-surface-variant/30 bg-surface hover:bg-surface-container text-on-surface rounded-full h-11 uppercase tracking-[0.1em] text-[11px]",
                         formButtonPrimary:
-                          "bg-primary hover:bg-primary/90 text-on-primary uppercase tracking-[0.18em] text-[11px] h-11 rounded-none",
+                          "bg-primary hover:bg-primary/90 text-on-primary uppercase tracking-[0.18em] text-[11px] h-11 rounded-full",
                         formFieldInput:
-                          "bg-surface-container border-on-surface-variant/30 rounded-none text-on-surface h-11 px-4 text-[13px]",
+                          "bg-surface-container border-on-surface-variant/30 rounded-xl text-on-surface h-11 px-4 text-[13px]",
                         formFieldLabel: "text-[10px] uppercase tracking-[0.16em] text-on-surface-variant",
                         footerAction: "hidden",
-                        identityAccount: "bg-surface-container border-on-surface-variant/20",
+                        identityAccount: "bg-surface-container border-on-surface-variant/20 rounded-2xl",
                       },
                     }}
                   />
@@ -158,11 +158,11 @@ export function AuthModal() {
                         headerTitle: "hidden",
                         headerSubtitle: "hidden",
                         socialButtonsBlockButton:
-                          "border border-on-surface-variant/30 bg-surface hover:bg-surface-container text-on-surface rounded-none h-11 uppercase tracking-[0.1em] text-[11px]",
+                          "border border-on-surface-variant/30 bg-surface hover:bg-surface-container text-on-surface rounded-full h-11 uppercase tracking-[0.1em] text-[11px]",
                         formButtonPrimary:
-                          "bg-primary hover:bg-primary/90 text-on-primary uppercase tracking-[0.18em] text-[11px] h-11 rounded-none",
+                          "bg-primary hover:bg-primary/90 text-on-primary uppercase tracking-[0.18em] text-[11px] h-11 rounded-full",
                         formFieldInput:
-                          "bg-surface-container border-on-surface-variant/30 rounded-none text-on-surface h-11 px-4 text-[13px]",
+                          "bg-surface-container border-on-surface-variant/30 rounded-xl text-on-surface h-11 px-4 text-[13px]",
                         formFieldLabel: "text-[10px] uppercase tracking-[0.16em] text-on-surface-variant",
                         footerAction: "hidden",
                         identityAccount: "bg-surface-container border-on-surface-variant/20",
@@ -180,10 +180,10 @@ export function AuthModal() {
               </p>
               <ul className="mt-1.5 space-y-1 text-[11px] text-on-surface-variant">
                 <li className="flex items-center gap-2">
-                  <span className="text-primary">✓</span> Curated archive & early private pour access
+                  <span className="text-ink">✓</span> Curated archive & early private pour access
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-primary">✓</span> Complimentary custom 2ml scent vials with every order
+                  <span className="text-ink">✓</span> Complimentary custom 2ml scent vials with every order
                 </li>
               </ul>
             </div>

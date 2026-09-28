@@ -32,10 +32,10 @@ export const FOOTER_COLUMNS = [
     ],
   },
   {
-    title: "Atelier",
+    title: "Studio",
     links: [
       { label: "Our Craft & Story", href: "/about" },
-      { label: "Atelier Inquiries", href: "/contact" },
+      { label: "Studio Inquiries", href: "/contact" },
       { label: "Questions & Care", href: "/faq" },
       { label: "Contact", href: "/contact" },
     ],
@@ -46,7 +46,7 @@ export const COPYRIGHT_TEXT =
   "© 2026 ORYENNA Parfums & Bougies. Crafted for contemplative spaces.";
 
 export const BRAND_TAGLINE =
-  "Receive sensory vignettes, private atelier batch release notices, and quiet reflections on spatial fragrance architecture.";
+  "Receive sensory vignettes, private studio batch release notices, and quiet reflections on spatial fragrance architecture.";
 
 export const JOURNAL_TITLE = "Dispatches on Slow Living";
 

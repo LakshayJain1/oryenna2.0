@@ -14,11 +14,11 @@ const SECTIONS = [
   },
   {
     h: "Burned vessels",
-    p: "Because scent is personal, lightly burned vessels cannot be resold — but if a composition truly does not belong in your home, tell us within fourteen days and we will offer an exchange for another pour or atelier credit.",
+    p: "Because scent is personal, lightly burned vessels cannot be resold — but if a composition truly does not belong in your home, tell us within fourteen days and we will offer an exchange for another pour or studio credit.",
   },
   {
     h: "Refunds",
-    p: "Refunds return to the original payment method within five working days of the vessel reaching the atelier. Return transit on us for damaged parcels; otherwise a modest label fee applies.",
+    p: "Refunds return to the original payment method within five working days of the vessel reaching the studio. Return transit on us for damaged parcels; otherwise a modest label fee applies.",
   },
 ];
 

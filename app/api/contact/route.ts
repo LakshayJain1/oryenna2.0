@@ -43,7 +43,7 @@ export async function POST(request: Request) {
   if (!apiKey) {
     console.error("Contact form: missing RESEND_API_KEY");
     return Response.json(
-      { message: "The atelier desk is momentarily unreachable." },
+      { message: "The studio desk is momentarily unreachable." },
       { status: 500 }
     );
   }
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
   try {
     const resend = new Resend(apiKey);
     await resend.emails.send({
-      from: "Oryenna Atelier <orders@resend.dev>",
+      from: "Oryenna Studio <orders@resend.dev>",
       to: inbox,
       replyTo: email,
       subject: `[Contact · ${topic}] ${name}`,

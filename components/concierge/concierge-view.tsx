@@ -18,7 +18,7 @@ type ConciergeViewProps = {
 };
 
 export default function ConciergeView({
-  eyebrow = "Knowledge & Atelier Inquiries",
+  eyebrow = "Knowledge & Studio Inquiries",
   title = "Questions on Cadence, Wax & Care",
   tagline = "A contemplative guide to botanical flame stewardship, clean burning rituals, solventless formulations, and slow sensory transit.",
   groups,
@@ -46,14 +46,14 @@ export default function ConciergeView({
             {/* Hero */}
             <section className="w-full px-margin-mobile md:px-margin-tablet lg:px-margin pt-space-lg pb-space-xl">
                 <div className="max-w-4xl mx-auto text-center space-y-space-md">
-                    <div className="flex items-center justify-center gap-space-xs text-secondary">
-                        <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
+                    <div className="flex items-center justify-center gap-space-xs text-accent">
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent" />
                         <span className="font-label-sm text-label-sm uppercase tracking-widest">
                             {eyebrow}
                         </span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent" />
                     </div>
-                    <h1 className="font-display text-display text-primary tracking-tight">
+                    <h1 className="font-display text-display text-ink tracking-tight">
                         {title}
                     </h1>
                     <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto leading-relaxed">
@@ -61,7 +61,7 @@ export default function ConciergeView({
                     </p>
 
                     <div className="pt-space-sm max-w-2xl mx-auto">
-                        <div className="relative flex items-center bg-surface-container-lowest shadow-[0_12px_28px_-6px_rgba(75,58,46,0.06)] px-space-md py-space-sm focus-within:shadow-[0_16px_36px_-6px_rgba(75,58,46,0.1)]">
+                        <div className="relative flex items-center bg-surface-container-lowest shadow-[0_12px_28px_-6px_rgba(75,58,46,0.06)] rounded-full px-space-md py-space-sm focus-within:shadow-[0_16px_36px_-6px_rgba(75,58,46,0.1)]">
                             <span className="material-symbols-outlined text-outline text-[22px] mr-space-sm">
                                 search
                             </span>
@@ -86,7 +86,7 @@ export default function ConciergeView({
                         <button
                             key={cat.id}
                             onClick={() => setFilter(cat.id)}
-                            className={`px-space-md py-space-sm font-label-md text-label-md uppercase tracking-wider transition-all duration-300 whitespace-nowrap ${filter === cat.id
+                            className={`pressable px-space-md py-space-sm rounded-full font-label-md text-label-md uppercase tracking-wider transition-all duration-300 whitespace-nowrap ${filter === cat.id
                                     ? "bg-primary text-on-primary"
                                     : "bg-surface-container text-on-surface hover:bg-surface-container-high"
                                 }`}
@@ -105,10 +105,10 @@ export default function ConciergeView({
                         <div key={group.id} className="space-y-space-sm">
                             <div className="flex items-center justify-between pb-space-xs">
                                 <div>
-                                    <span className="font-label-sm text-label-sm uppercase tracking-widest text-secondary">
+                                    <span className="font-label-sm text-label-sm uppercase tracking-widest text-accent">
                                         {group.discipline}
                                     </span>
-                                    <h3 className="font-headline-md text-headline-md text-primary">
+                                    <h3 className="font-headline-md text-headline-md text-ink">
                                         {group.title}
                                     </h3>
                                 </div>
@@ -121,13 +121,13 @@ export default function ConciergeView({
                                     const key = `${group.id}-${i}`;
                                     const open = openKey === key;
                                     return (
-                                        <div key={key} className="bg-surface-container-low">
+                                        <div key={key} className="bg-surface-container-low rounded-2xl overflow-hidden">
                                             <button
                                                 onClick={() => setOpenKey(open ? null : key)}
                                                 className="w-full text-left p-space-md flex items-center justify-between gap-space-sm group"
                                                 type="button"
                                             >
-                                                <span className="font-headline-sm text-headline-sm text-primary pr-space-sm group-hover:text-primary-container transition-colors">
+                                                <span className="font-headline-sm text-headline-sm text-ink pr-space-sm group-hover:text-primary-container transition-colors">
                                                     {item.q}
                                                 </span>
                                                 <span
@@ -156,7 +156,7 @@ export default function ConciergeView({
 
             {/* Concierge Contact */}
             <section className="w-full px-margin-mobile md:px-margin-tablet lg:px-margin mb-space-xl">
-                <div className="max-w-4xl mx-auto bg-primary text-on-primary p-space-lg md:p-space-xl">
+                <div className="max-w-4xl mx-auto bg-primary-container text-on-primary p-space-lg md:p-space-xl rounded-[1.75rem]">
                     <div className="max-w-2xl space-y-space-md">
                         <span className="font-label-sm text-label-sm tracking-widest uppercase text-tertiary-fixed">
                             Direct Guidance
@@ -165,20 +165,20 @@ export default function ConciergeView({
                             Unanswered Curiosities?
                         </h3>
                         <p className="font-body-md text-body-md text-surface-variant max-w-lg">
-                            Our atelier specialists hold daily dialogues concerning scent
+                            Our studio specialists hold daily dialogues concerning scent
                             pairings, seasonal vessel care, and bespoke olfactory
                             installations.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-space-sm pt-space-xs">
                             <Link
                                 href="/contact"
-                                className="h-[52px] px-space-lg bg-surface-bright text-primary font-label-lg text-label-lg uppercase tracking-wider hover:bg-surface-container transition-colors inline-flex items-center justify-center"
+                                className="pressable h-[52px] px-space-lg rounded-full bg-surface-bright text-ink font-label-lg text-label-lg uppercase tracking-wider hover:bg-surface-container transition-colors inline-flex items-center justify-center"
                             >
-                                Inquire via Atelier Desk
+                                Inquire via Studio Desk
                             </Link>
                             <Link
                                 href="/contact"
-                                className="h-[52px] px-space-lg bg-transparent text-surface-bright font-label-lg text-label-lg uppercase tracking-wider hover:bg-surface-bright/10 transition-colors inline-flex items-center justify-center"
+                                className="pressable h-[52px] px-space-lg rounded-full bg-transparent text-surface-bright font-label-lg text-label-lg uppercase tracking-wider hover:bg-surface-bright/10 transition-colors inline-flex items-center justify-center"
                             >
                                 Schedule Consultation
                             </Link>

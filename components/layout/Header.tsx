@@ -1,15 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
 import { ClerkAccountTrigger } from "@/components/auth/ClerkAccountTrigger";
+import { GooeyInput } from "@/components/ui/gooey-input";
 import { NAV_LINKS, ANNOUNCEMENT_TEXT } from "@/lib/site";
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const { count, openCart, setIsAuthOpen } = useCartStore();
   const links = NAV_LINKS;
+  const [query, setQuery] = useState("");
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
@@ -22,7 +26,7 @@ export default function Header() {
       <div className="w-full px-margin-mobile md:px-margin-tablet lg:px-margin h-20 flex items-center justify-between border-b border-on-surface-variant/10">
         <div className="flex items-center gap-space-sm">
           <Link href="/" className="flex items-center gap-space-sm group">
-            <span className="font-headline-sm text-headline-sm tracking-wide text-primary uppercase select-none">
+            <span className="font-headline-sm text-headline-sm tracking-wide text-ink uppercase select-none">
               Oryenna
             </span>
           </Link>
@@ -37,7 +41,7 @@ export default function Header() {
                 href={link.url}
                 className={`font-label-lg text-label-lg uppercase transition-colors duration-300 ${
                   isActive
-                    ? "text-primary font-bold"
+                    ? "text-ink font-bold"
                     : "text-on-surface-variant hover:text-on-surface"
                 }`}
               >
@@ -48,10 +52,34 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-space-md">
+          {/* Gooey expanding search — Enter routes to filtered shop. */}
+          <form
+            className="hidden sm:block"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const q = query.trim();
+              router.push(q ? `/shop?q=${encodeURIComponent(q)}` : "/shop");
+            }}
+          >
+            <GooeyInput
+              placeholder=""
+              collapsedWidth={40}
+              expandedWidth={210}
+              onValueChange={setQuery}
+              classNames={{
+                trigger:
+                  "bg-surface-container text-ink ring-1 ring-on-surface-variant/20",
+                input: "text-ink placeholder:text-on-surface-variant/60",
+                bubbleSurface:
+                  "bg-surface-container text-ink ring-1 ring-on-surface-variant/20",
+              }}
+            />
+          </form>
+          {/* Compact fallback for small screens. */}
           <Link
             aria-label="Search the collection"
             href="/shop"
-            className="p-space-xs text-on-surface-variant hover:text-on-surface transition-colors duration-300 flex items-center"
+            className="p-space-xs text-on-surface-variant hover:text-on-surface transition-colors duration-300 flex items-center sm:hidden"
           >
             <span className="material-symbols-outlined text-[20px]">search</span>
           </Link>

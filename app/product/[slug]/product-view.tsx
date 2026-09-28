@@ -5,13 +5,16 @@ import { notFound } from "next/navigation";
 import { getProductBySlug, type Product } from "@/lib/products";
 import {
   VESSELS,
-  ITEM_GIFT_WRAP_FEE,
+  VESSELS_INR,
+  vesselPrice,
+  feeFor,
   type VesselId,
 } from "@/lib/pricing";
 import { useCartStore } from "@/lib/cart-store";
 import { PortableTextRenderer } from "@/components/portable-text-renderer";
 import Accordion from "@/components/ui/Accordion";
 import { Reveal } from "@/components/ui/Reveal";
+import { useCurrency } from "@/context/CurrencyContext";
 
 // Vessel presentation labels are intentional static UI configuration.
 // Prices always come from lib/pricing VESSELS (single source of truth),
@@ -24,7 +27,7 @@ const VESSEL_META: Record<
     name: "Standard Mouth-Blown Glass",
     desc: "290g / 10.2 oz · Heavy-base soda lime glassware",
     spec: "65 Hr Slow Burn",
-    badge: "Atelier Favorite",
+    badge: "Studio Favorite",
   },
   grand: {
     name: "Grand Hand-Poured Stoneware",
@@ -55,21 +58,27 @@ export default function ProductView({
     const [quantity, setQuantity] = useState(1);
     const [gifting, setGifting] = useState(false);
     const { addItem, openCart } = useCartStore();
+    const { format, code, currency } = useCurrency();
 
     const vesselOptions = useMemo(
       () =>
         VESSEL_ORDER.map((id) => ({
           id,
           ...VESSEL_META[id],
-          price: VESSELS[id],
+          usd: VESSELS[id],
+          inr: VESSELS_INR[id],
+          price: vesselPrice(id, currency),
         })),
-      []
+      [currency]
     );
     const vessel =
       vesselOptions.find((v) => v.id === vesselId) ?? vesselOptions[0];
 
-    const unitPrice = vessel.price + (gifting ? ITEM_GIFT_WRAP_FEE : 0);
-    const total = unitPrice * quantity;
+    const unitPrice = vessel.price + (gifting ? feeFor("gift", currency) : 0);
+    const usdUnit = VESSELS[vesselId] + (gifting ? feeFor("gift", "USD") : 0);
+    const inrUnit = VESSELS_INR[vesselId] + (gifting ? feeFor("gift", "INR") : 0);
+    const totalUsd = usdUnit * quantity;
+    const totalInr = inrUnit * quantity;
 
     // Olfactory pyramid comes from the product catalogue entry.
     const pyramid = [
@@ -106,7 +115,7 @@ export default function ProductView({
                     {gallery.map((img, i) => (
                       <Reveal key={`${img.url}-${i}`} variant="up" distance={32}>
                       <div
-                        className="relative w-full aspect-[4/5] bg-surface-container overflow-hidden rounded-sm"
+                        className="relative w-full aspect-[4/5] bg-surface-container overflow-hidden rounded-[1.5rem]"
                       >
                         <img
                           alt={img.alt || product.name}
@@ -114,15 +123,15 @@ export default function ProductView({
                           src={img.url}
                         />
                         {i === 0 && product.badge ? (
-                          <div className="absolute top-space-md left-space-md bg-surface/85 backdrop-blur-md px-space-md py-space-xs rounded-sm">
-                            <span className="font-label-sm text-label-sm text-primary uppercase tracking-widest">
+                          <div className="absolute top-space-md left-space-md bg-surface/85 backdrop-blur-md px-space-md py-space-xs rounded-full">
+                            <span className="font-label-sm text-label-sm text-ink uppercase tracking-widest">
                               {product.badge}
                             </span>
                           </div>
                         ) : null}
                         {img.caption ? (
                           <div className="absolute bottom-space-md left-space-md right-space-md">
-                            <p className="font-body-sm text-body-sm bg-surface/85 backdrop-blur-md px-space-md py-space-xs rounded-sm text-primary">
+                            <p className="font-body-sm text-body-sm bg-surface/85 backdrop-blur-md px-space-md py-space-xs rounded-xl text-ink">
                               {img.caption}
                             </p>
                           </div>
@@ -136,26 +145,26 @@ export default function ProductView({
                 <div className="lg:col-span-5 flex flex-col gap-space-lg lg:sticky lg:top-24">
                     <Reveal variant="up">
                     <div className="space-y-space-xs">
-                        <span className="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold">
+                        <span className="font-label-sm text-label-sm uppercase tracking-widest text-accent font-semibold">
                             {product.collection?.name || "Signature Composition"}
                         </span>
-                        <h1 className="font-headline-lg text-headline-lg text-primary">
+                        <h1 className="font-headline-lg text-headline-lg text-ink">
                             {product.name}
                         </h1>
                         <p className="font-body-lg text-body-lg text-on-surface-variant italic">
                             {product.notes}
                         </p>
                         <div className="pt-space-xs flex items-baseline gap-space-md">
-                            <span className="font-display-mobile text-display-mobile text-primary font-normal">
-                                ${vessel.price}
+                            <span className="font-display-mobile text-display-mobile text-ink font-normal">
+                                {format(vessel.usd, vessel.inr)}
                             </span>
                             {product.comparePrice && product.comparePrice > vessel.price ? (
                               <span className="font-body-md text-body-md text-on-surface-variant line-through">
-                                ${product.comparePrice}
+                                {format(product.comparePrice)}
                               </span>
                             ) : null}
                             <span className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">
-                                USD / {product.weight}
+                                {code} / {product.weight}
                             </span>
                         </div>
                         {product.sku || product.size ? (
@@ -169,7 +178,7 @@ export default function ProductView({
                     {/* Vessel Selection — prices from lib/pricing */}
                     <Reveal variant="up" delay={80}>
                     <div className="space-y-space-sm pt-space-xs">
-                        <label className="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold">
+                        <label className="font-label-sm text-label-sm uppercase tracking-widest text-ink font-semibold">
                             Select Medium &amp; Vessel Form
                         </label>
                         <div className="grid grid-cols-1 gap-space-xs">
@@ -177,7 +186,7 @@ export default function ProductView({
                                 <button
                                     key={opt.id}
                                     onClick={() => setVesselId(opt.id)}
-                                    className={`w-full p-space-md text-left flex items-center justify-between transition-all duration-300 ${vessel.id === opt.id
+                                    className={`pressable w-full p-space-md rounded-2xl text-left flex items-center justify-between transition-all duration-300 ${vessel.id === opt.id
                                         ? "ring-1 ring-primary bg-surface-container"
                                         : "bg-surface-container-low hover:bg-surface-container"
                                         }`}
@@ -185,11 +194,11 @@ export default function ProductView({
                                 >
                                     <div className="space-y-1">
                                         <div className="flex items-center gap-space-xs">
-                                            <span className="font-title text-title text-primary">
+                                            <span className="font-title text-title text-ink">
                                                 {opt.name}
                                             </span>
                                             {opt.badge && (
-                                                <span className="bg-secondary/15 text-secondary px-space-xs py-0.5 font-label-sm text-[10px] uppercase tracking-wider rounded-sm">
+                                                <span className="bg-accent/15 text-accent px-space-xs py-0.5 font-label-sm text-[10px] uppercase tracking-wider rounded-full">
                                                     {opt.badge}
                                                 </span>
                                             )}
@@ -201,8 +210,8 @@ export default function ProductView({
                                             {opt.spec}
                                         </p>
                                     </div>
-                                    <span className="font-label-lg text-label-lg text-primary font-bold ml-space-md shrink-0">
-                                        ${opt.price}
+                                    <span className="font-label-lg text-label-lg text-ink font-bold ml-space-md shrink-0">
+                                        {format(opt.usd, opt.inr)}
                                     </span>
                                 </button>
                             ))}
@@ -213,8 +222,8 @@ export default function ProductView({
                     {/* Olfactory Pyramid — hidden when empty */}
                     {pyramid.length > 0 ? (
                     <Reveal variant="up">
-                    <div className="space-y-space-sm bg-surface-container-low p-space-md rounded-sm">
-                        <span className="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold">
+                    <div className="space-y-space-sm bg-surface-container-low p-space-md rounded-2xl">
+                        <span className="font-label-sm text-label-sm uppercase tracking-widest text-ink font-semibold">
                             Olfactory Note Architecture
                         </span>
                         <div className="space-y-space-sm pt-space-xs">
@@ -224,7 +233,7 @@ export default function ProductView({
                                         {note.tier}
                                     </div>
                                     <div className="flex-1">
-                                        <p className="font-body-sm text-body-sm text-primary font-medium">
+                                        <p className="font-body-sm text-body-sm text-ink font-medium">
                                             {note.notes}
                                         </p>
                                     </div>
@@ -240,7 +249,7 @@ export default function ProductView({
                         {product.accentNotes.map((note) => (
                           <span
                             key={note}
-                            className="bg-surface-container-low px-space-sm py-space-xs font-label-sm text-label-sm uppercase tracking-wider text-primary"
+                            className="bg-surface-container-low px-space-sm py-space-xs font-label-sm text-label-sm uppercase tracking-wider text-ink"
                           >
                             {note}
                           </span>
@@ -251,12 +260,12 @@ export default function ProductView({
                     {/* Purchasing */}
                     <div className="space-y-space-md pt-space-xs">
                         <div
-                            className="p-space-sm bg-surface-container rounded-sm flex items-center justify-between cursor-pointer"
+                            className="p-space-sm bg-surface-container rounded-2xl flex items-center justify-between cursor-pointer"
                             onClick={() => setGifting(!gifting)}
                         >
                             <div className="flex items-center gap-space-sm">
                                 <div
-                                    className={`w-4 h-4 rounded-sm flex items-center justify-center text-primary ring-1 ring-outline ${gifting ? "bg-primary text-surface" : "bg-surface"
+                                    className={`w-4 h-4 rounded-full flex items-center justify-center text-ink ring-1 ring-outline ${gifting ? "bg-primary text-surface" : "bg-surface"
                                         }`}
                                 >
                                     {gifting && (
@@ -266,11 +275,11 @@ export default function ProductView({
                                     )}
                                 </div>
                                 <div>
-                                    <span className="font-body-sm text-body-sm text-primary font-medium block">
+                                    <span className="font-body-sm text-body-sm text-ink font-medium block">
                                         Slow Living Presentation Packaging
                                     </span>
                                     <span className="font-label-sm text-[11px] text-on-surface-variant">
-                                        Linen gift box, wax seal, hand-pressed herb card (+ ${ITEM_GIFT_WRAP_FEE})
+                                        Linen gift box, wax seal, hand-pressed herb card (+ {format(feeFor("gift", "USD"), feeFor("gift", "INR"))})
                                     </span>
                                 </div>
                             </div>
@@ -280,20 +289,20 @@ export default function ProductView({
                         </div>
 
                         <div className="flex gap-space-sm">
-                            <div className="h-[52px] bg-surface-container flex items-center px-space-sm rounded-sm">
+                            <div className="h-[52px] bg-surface-container flex items-center px-space-sm rounded-full">
                                 <button
                                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                    className="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors text-lg"
+                                    className="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-ink transition-colors text-lg"
                                     type="button"
                                 >
                                     −
                                 </button>
-                                <span className="w-8 text-center font-title text-title text-primary">
+                                <span className="w-8 text-center font-title text-title text-ink">
                                     {quantity}
                                 </span>
                                 <button
                                     onClick={() => setQuantity(quantity + 1)}
-                                    className="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors text-lg"
+                                    className="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-ink transition-colors text-lg"
                                     type="button"
                                 >
                                     +
@@ -301,13 +310,13 @@ export default function ProductView({
                             </div>
                             <button
                                 onClick={handleAdd}
-                                className="flex-1 h-[52px] px-space-lg bg-primary text-surface font-label-lg text-label-lg uppercase tracking-wider hover:bg-primary-container transition-all duration-300 flex items-center justify-between rounded-sm shadow-sm group"
+                                className="pressable flex-1 h-[52px] px-space-lg bg-primary text-surface font-label-lg text-label-lg uppercase tracking-wider hover:bg-primary-container hover:text-surface transition-all duration-300 flex items-center justify-between rounded-full shadow-sm group"
                                 type="button"
                             >
                                 <span className="group-hover:translate-x-0.5 transition-transform duration-300">
                                     Reserve For Bag
                                 </span>
-                                <span className="font-medium">${total}</span>
+                                <span className="font-medium">{format(totalUsd, totalInr)}</span>
                             </button>
                         </div>
                     </div>

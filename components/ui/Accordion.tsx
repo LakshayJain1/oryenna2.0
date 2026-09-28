@@ -16,18 +16,18 @@ export default function Accordion({
     const [open, setOpen] = useState(defaultOpen);
 
     return (
-        <div className="bg-surface-container-low overflow-hidden">
+        <div className="bg-surface-container-low rounded-2xl overflow-hidden">
             <button
                 className="w-full px-space-md py-space-sm flex items-center justify-between text-left"
                 onClick={() => setOpen(!open)}
                 type="button"
                 aria-expanded={open}
             >
-                <span className="font-label-md text-label-md uppercase tracking-[0.16em] text-primary">
+                <span className="font-label-md text-label-md uppercase tracking-[0.16em] text-ink">
                     {title}
                 </span>
                 <span
-                    className={`material-symbols-outlined text-[20px] text-primary transition-transform duration-300 ${open ? "rotate-180" : ""
+                    className={`material-symbols-outlined text-[20px] text-ink transition-transform duration-300 ${open ? "rotate-180" : ""
                         }`}
                 >
                     expand_more

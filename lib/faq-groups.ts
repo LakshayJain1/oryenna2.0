@@ -28,7 +28,7 @@ export const FAQ_GROUPS: ConciergeGroup[] = [
     items: [
       {
         q: "What is inside the proprietary ORYENNA botanical wax base?",
-        a: "Our bespoke wax contains zero petroleum paraffin, zero pesticide monoculture soy, and zero palm oils. Instead, a cold-pressed European rapeseed and organic coconut butter base, balanced with a whisper of sustainably sourced wild French cera alba.",
+        a: "Our bespoke wax contains zero petroleum paraffin, zero pesticide monoculture soy, and zero palm oils. Instead, a cold-pressed cold-pressed rapeseed and organic coconut butter base, balanced with a whisper of sustainably sourced wild natural cera alba.",
       },
       {
         q: "Are your fragrances synthetic-free, phthalate-free, and safe around pets?",
@@ -62,7 +62,7 @@ export const FAQ_GROUPS: ConciergeGroup[] = [
       },
       {
         q: "Can I request a personalized handwritten calligraphy parchment note?",
-        a: "Indubitably. During checkout, select 'Atelier Scribe Note.' Our in-house archivist inscribes your personal dedication using oak gall ink onto handmade hemp rag paper, folded and hand-stamped with our botanical monogram in terracotta beeswax.",
+        a: "Indubitably. During checkout, select 'Studio Scribe Note.' Our in-house archivist inscribes your personal dedication using oak gall ink onto handmade hemp rag paper, folded and hand-stamped with our botanical monogram in terracotta beeswax.",
       },
     ],
   },

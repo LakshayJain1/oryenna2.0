@@ -5,9 +5,9 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   path: "/contact",
-  title: "Contact the Atelier",
+  title: "Contact the Studio",
   description:
-    "Reach the Oryenna atelier for order care, bespoke requests, and press enquiries.",
+    "Reach the Oryenna studio for order care, bespoke requests, and press enquiries.",
 });
 
 const DETAILS = [
@@ -34,8 +34,8 @@ const DETAILS = [
   },
   {
     icon: "location_on",
-    label: "The Atelier",
-    value: "Route de Grasse, Provence",
+    label: "The Studio",
+    value: "Route de Jaipur, Rajasthan",
     href: undefined,
     note: "Visits by appointment, Monday–Friday · 9h–18h CET",
   },
@@ -46,11 +46,11 @@ export default function ContactPage() {
     <div className="flex flex-col w-full">
       <section className="w-full px-margin-mobile md:px-margin-tablet lg:px-margin pt-space-xl pb-space-lg">
         <Reveal variant="up" className="max-w-4xl space-y-space-sm">
-          <span className="font-label-sm text-label-sm uppercase tracking-[0.22em] text-secondary block">
-            Contact / The Atelier
+          <span className="font-label-sm text-label-sm uppercase tracking-[0.22em] text-accent block">
+            Contact / The Studio
           </span>
-          <h1 className="font-headline-lg text-headline-lg text-primary tracking-tight">
-            Write to the atelier.
+          <h1 className="font-headline-lg text-headline-lg text-ink tracking-tight">
+            Write to the studio.
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
             Every message is read by a human at the workbench — never a queue,
@@ -63,7 +63,7 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter lg:gap-space-lg items-start">
           {/* Form */}
           <Reveal variant="up" className="lg:col-span-7">
-            <div className="bg-surface-container-low p-space-md md:p-space-lg">
+            <div className="bg-surface-container-low p-space-md md:p-space-lg rounded-[1.75rem]">
               <ContactForm />
             </div>
           </Reveal>
@@ -72,8 +72,8 @@ export default function ContactPage() {
           <div className="lg:col-span-5 flex flex-col gap-space-md">
             {DETAILS.map((d, i) => (
               <Reveal key={d.label} variant="up" delay={Math.min(i * 80, 240)}>
-                <div className="bg-surface border border-on-surface-variant/10 p-space-md flex gap-space-md">
-                  <span className="material-symbols-outlined text-[22px] text-secondary shrink-0">
+                <div className="bg-surface border border-on-surface-variant/10 rounded-2xl p-space-md flex gap-space-md">
+                  <span className="material-symbols-outlined text-[22px] text-accent shrink-0">
                     {d.icon}
                   </span>
                   <div className="space-y-1">
@@ -83,12 +83,12 @@ export default function ContactPage() {
                     {d.href ? (
                       <Link
                         href={d.href}
-                        className="font-headline-sm text-headline-sm text-primary hover:text-secondary transition-colors"
+                        className="font-headline-sm text-headline-sm text-ink hover:text-accent transition-colors"
                       >
                         {d.value}
                       </Link>
                     ) : (
-                      <p className="font-headline-sm text-headline-sm text-primary">
+                      <p className="font-headline-sm text-headline-sm text-ink">
                         {d.value}
                       </p>
                     )}

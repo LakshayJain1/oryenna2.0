@@ -17,8 +17,8 @@ export default async function OpengraphImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#1c1917",
-          color: "#faf7f2",
+          backgroundColor: "#2a0b3d",
+          color: "#fbf6ec",
           fontFamily: "Georgia, serif",
         }}
       >
@@ -27,11 +27,11 @@ export default async function OpengraphImage() {
             fontSize: 28,
             letterSpacing: "0.35em",
             textTransform: "uppercase",
-            color: "#c9a96a",
+            color: "#ecd2ab",
             marginBottom: 24,
           }}
         >
-          Atelier de Parfum d'Intérieur
+          Studio de Parfum d'Intérieur
         </div>
         <div
           style={{
@@ -47,7 +47,7 @@ export default async function OpengraphImage() {
             marginTop: 24,
             fontSize: 30,
             fontStyle: "italic",
-            color: "#d6cfc4",
+            color: "#f37121",
           }}
         >
           Fine Fragrance &amp; Slow Living
