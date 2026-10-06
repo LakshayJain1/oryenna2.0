@@ -2,8 +2,8 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   path: "/account",
-  title: "Sanctuary Member Account",
-  description: "Your Oryenna order archive, rituals, and private releases.",
+  title: "Member Account",
+  description: "Your Oryenna order archive, and new releases.",
   noindex: true,
 });
 

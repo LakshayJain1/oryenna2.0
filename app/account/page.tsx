@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import { useUser, SignOutButton } from "@clerk/nextjs";
 
 type OrderTuple = [string, string, number, number, string, string, string?];
 
@@ -24,14 +24,18 @@ function statusText(status: number): string {
 export default function AccountPage() {
     const { user, isLoaded } = useUser();
 
-    // Order archive written by /api/razorpay/verify into Clerk unsafeMetadata
-    // o: [[id, date, status, totalINR, summary, pin], ...]
+    // Compact archives written by /api/razorpay/verify into Clerk
+    // unsafeMetadata (kept tiny for the ~8kb metadata limit):
+    // o: [[id, date, status, total, summary, pin, currency?], ...]
+    // a: [[address, city, state, pin], ...]
     const metadata = (user?.unsafeMetadata || {}) as {
         o?: OrderTuple[];
+        a?: Array<[string, string, string, string]>;
     };
     const orders = metadata.o || [];
     const latest = orders[0];
     const archived = orders.slice(1);
+    const addresses = (metadata.a || []).filter((a) => a && a[0]);
 
     const displayName = user?.fullName || "Aarav Mehta";
     const transitValue =
@@ -49,46 +53,43 @@ export default function AccountPage() {
                     </span>
                     <span className="text-on-surface-variant/40">/</span>
                     <span className="font-label-sm text-label-sm tracking-widest uppercase text-ink">
-                        Patron Sanctuary
+                        My Account
                     </span>
                 </div>
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md">
                     <div>
                         <div className="inline-flex items-center gap-space-xs px-space-sm py-1 bg-surface-container rounded-full text-accent font-label-sm text-label-sm tracking-widest uppercase mb-space-xs">
                             <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                            Patron Tier: Lunar Circle • Member No. {memberNo(user?.id)}
+                            Member • Member No. {memberNo(user?.id)}
                         </div>
                         <h1 className="font-headline-lg text-headline-lg text-ink tracking-tight">
                             Welcome back, {!isLoaded ? "…" : displayName}
                         </h1>
                         <p className="font-body-md text-body-md text-on-surface-variant mt-1 max-w-xl">
                             Your personal olfactory dossier, artisanal pour allocations, and
-                            private concierge archives across Jaipur and Kyoto studios.
+                            private archives from the Jaipur studio.
                         </p>
                     </div>
                     <div className="flex items-center gap-space-sm self-start lg:self-end pt-space-xs">
-                        <button className="h-[44px] px-space-md bg-surface-container-high hover:bg-surface-container-highest text-ink font-label-md text-label-md uppercase tracking-wider transition-colors flex items-center gap-2">
+                        <Link
+                            href="/shop"
+                            className="h-[44px] px-space-md bg-primary text-on-primary font-label-md text-label-md uppercase tracking-wider hover:bg-primary-container hover:text-surface transition-colors flex items-center gap-2 shadow-sm rounded-full"
+                        >
                             <span className="material-symbols-outlined text-[18px]">
-                                calendar_month
+                                shopping_bag
                             </span>
-                            Studio Booking: Oct 24
-                        </button>
-                        <button className="h-[44px] px-space-md bg-primary text-on-primary font-label-md text-label-md uppercase tracking-wider hover:bg-primary-container hover:text-surface transition-colors flex items-center gap-2 shadow-sm">
-                            <span className="material-symbols-outlined text-[18px]">
-                                auto_stories
-                            </span>
-                            Sensory Vault
-                        </button>
+                            Shop Candles
+                        </Link>
                     </div>
                 </div>
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-gutter mt-space-lg">
                     {[
-                        { label: "Private Pours", value: "04", icon: "explore_off", sub: "Allocated in Autumn Batch" },
-                        { label: "Transit Status", value: transitValue, icon: "local_shipping", sub: "Low-Emission Ground Courier" },
-                        { label: "Sanctuary Vault", value: "280 tokens", icon: "token", sub: "Redeemable for Bespoke Extraits" },
-                        { label: "Private Session", value: "Oct 24", icon: "history_edu", sub: "Master Perfumer Dialogue" },
+                        { label: "Orders Placed", value: String(orders.length).padStart(2, "0"), icon: "shopping_bag", sub: "Across all time" },
+                        { label: "In Transit", value: transitValue, icon: "local_shipping", sub: "Tracked ground courier" },
+                        { label: "Saved Addresses", value: String(addresses.length).padStart(2, "0"), icon: "location_on", sub: "Stored at checkout" },
+                        { label: "Member No.", value: memberNo(user?.id), icon: "badge", sub: "Since your first order" },
                     ].map((s) => (
                         <div
                             key={s.label}
@@ -123,10 +124,10 @@ export default function AccountPage() {
                             <div className="flex items-center justify-between mb-space-md">
                                 <div>
                                     <span className="font-label-sm text-label-sm tracking-widest uppercase text-accent">
-                                        Active Dispatch Manifest
+                                        Current Order
                                     </span>
                                     <h2 className="font-headline-md text-headline-md text-ink">
-                                        In-Flight Olfactory Allocation
+                                        Your Latest Order
                                     </h2>
                                 </div>
                                 <span className="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase tracking-wider rounded-full">
@@ -151,7 +152,7 @@ export default function AccountPage() {
                                         <div className="font-body-md text-body-md text-ink font-medium">
                                             {latest
                                                 ? `${latest[1]} • Studio Dispatch ${latest[5]}`
-                                                : "October 12, 2025 • Kyoto Kiln Batch 09"}
+                                                : "October 12, 2025 • Jaipur Kiln Batch 09"}
                                         </div>
                                     </div>
                                 </div>
@@ -163,7 +164,7 @@ export default function AccountPage() {
                                         <span className="text-ink font-bold">
                                             Transit: Point Reyes Depot
                                         </span>
-                                        <span>Sanctuary Delivery</span>
+                                        <span>Doorstep Delivery</span>
                                     </div>
                                     <div className="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
                                         <div className="bg-primary h-full rounded-full" style={{ width: "68%" }} />
@@ -231,6 +232,72 @@ export default function AccountPage() {
 
                     {/* Right column */}
                     <div className="lg:col-span-4 space-y-space-lg">
+                        {/* Member details */}
+                        <div className="bg-surface-container-low p-space-md md:p-space-lg rounded-[1.5rem] shadow-sm space-y-space-md">
+                            <span className="font-label-sm text-label-sm tracking-widest uppercase text-accent">
+                                Member Details
+                            </span>
+                            <div className="flex items-center gap-space-sm">
+                                <div className="w-12 h-12 rounded-full bg-primary-container text-primary-fixed flex items-center justify-center overflow-hidden shrink-0">
+                                    {user?.imageUrl ? (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img src={user.imageUrl} alt="" className="w-12 h-12 object-cover" />
+                                    ) : (
+                                        <span className="font-headline-sm text-headline-sm">
+                                            {(displayName || "A").charAt(0)}
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="min-w-0">
+                                    <p className="font-headline-sm text-headline-sm text-ink truncate">
+                                        {displayName}
+                                    </p>
+                                    <p className="font-body-sm text-body-sm text-on-surface-variant truncate">
+                                        {user?.primaryEmailAddress?.emailAddress || "Guest"}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
+                                <span>Member No.</span>
+                                <span className="font-medium text-ink">{memberNo(user?.id)}</span>
+                            </div>
+                            <SignOutButton>
+                                <button className="pressable w-full h-[44px] rounded-full bg-surface-container hover:bg-surface-container-high text-ink font-label-md text-label-md uppercase tracking-wider transition-colors flex items-center justify-center gap-2">
+                                    <span className="material-symbols-outlined text-[18px]">
+                                        logout
+                                    </span>
+                                    Sign Out
+                                </button>
+                            </SignOutButton>
+                        </div>
+
+                        {/* Saved addresses */}
+                        <div className="bg-surface-container-low p-space-md md:p-space-lg rounded-[1.5rem] shadow-sm space-y-space-md">
+                            <span className="font-label-sm text-label-sm tracking-widest uppercase text-accent">
+                                Saved Addresses
+                            </span>
+                            {addresses.length > 0 ? (
+                                <ul className="space-y-space-sm">
+                                    {addresses.map((a, i) => (
+                                        <li key={i} className="bg-surface-container p-space-sm rounded-xl flex gap-space-sm">
+                                            <span className="material-symbols-outlined text-[18px] text-accent shrink-0">
+                                                location_on
+                                            </span>
+                                            <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                                                {a[0]}, {a[1]}
+                                                {a[2] && a[2] !== "Region" ? `, ${a[2]}` : ""} — {a[3]}
+                                            </p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="font-body-sm text-body-sm text-on-surface-variant">
+                                    No saved addresses yet — tick “save address” at checkout
+                                    and your destinations will appear here.
+                                </p>
+                            )}
+                        </div>
+
                         <div className="bg-surface-container-low p-space-md md:p-space-lg rounded-[1.5rem] shadow-sm space-y-space-md">
                             <div>
                                 <span className="font-label-sm text-label-sm tracking-widest uppercase text-accent">
@@ -243,7 +310,7 @@ export default function AccountPage() {
                             <div className="space-y-space-sm">
                                 {[
                                     { name: "Smoked Resin & Amber", fit: 94 },
-                                    { name: "Kyoto Hinoki & Cade Wood", fit: 88 },
+                                    { name: "Jaipur Cedar & Cade Wood", fit: 88 },
                                     { name: "Wild Mediterranean Fig", fit: 72 },
                                 ].map((note) => (
                                     <div key={note.name} className="bg-surface-container p-space-sm rounded-xl">
@@ -259,27 +326,30 @@ export default function AccountPage() {
                             </div>
                         </div>
 
-                        <div className="bg-primary text-on-primary p-space-md md:p-space-lg shadow-md space-y-space-sm">
+                        <div className="bg-primary text-on-primary p-space-md md:p-space-lg rounded-[1.5rem] shadow-md space-y-space-sm">
                             <div className="flex items-center gap-space-sm">
                                 <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-primary-fixed">
                                     <span className="material-symbols-outlined text-[22px]">
-                                        spatial_audio_off
+                                        support_agent
                                     </span>
                                 </div>
                                 <div>
                                     <span className="font-label-sm text-label-sm uppercase tracking-widest text-on-primary/70">
-                                        Dedicated Host
+                                        Order Support
                                     </span>
-                                    <h4 className="font-title text-title">Maison Concierge Claire</h4>
+                                    <h4 className="font-title text-title">Need help with an order?</h4>
                                 </div>
                             </div>
                             <p className="font-body-sm text-body-sm text-on-primary/80">
-                                For custom room-volume fragrance consultations, bespoke brass
-                                vessel engraving, or private holiday gifting concierge.
+                                Damaged parcel, wrong item, or a question about your
+                                delivery — write to us and we will sort it out.
                             </p>
-                            <button className="w-full h-[44px] bg-primary-fixed text-on-primary-fixed font-label-md text-label-md uppercase tracking-wider hover:bg-surface transition-colors">
-                                Initiate Private Dialogue
-                            </button>
+                            <Link
+                                href="/contact"
+                                className="pressable w-full h-[44px] rounded-full bg-primary-fixed text-on-primary-fixed font-label-md text-label-md uppercase tracking-wider hover:bg-surface transition-colors flex items-center justify-center"
+                            >
+                                Contact Support
+                            </Link>
                         </div>
                     </div>
                 </div>

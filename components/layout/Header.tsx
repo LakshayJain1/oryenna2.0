@@ -1,105 +1,180 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
 import { ClerkAccountTrigger } from "@/components/auth/ClerkAccountTrigger";
-import { GooeyInput } from "@/components/ui/gooey-input";
-import { NAV_LINKS, ANNOUNCEMENT_TEXT } from "@/lib/site";
+import Image from "next/image";
+
+const NAV_LINKS = [
+  { label: "Gallery", url: "/shop" },
+  { label: "About", url: "/about" },
+  { label: "FAQ", url: "/faq" },
+  { label: "Journal", url: "/journal" },
+];
 
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const { count, openCart, setIsAuthOpen } = useCartStore();
   const links = NAV_LINKS;
-  const [query, setQuery] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  useEffect(() => { 
+    setIsExpanded(false); 
+  }, [pathname]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-      {/* Top Announcement Bar */}
-      <div className="px-margin-mobile md:px-margin-tablet lg:px-margin h-8 flex items-center justify-center bg-primary text-on-primary text-[10px] uppercase tracking-[0.24em]">
-        {ANNOUNCEMENT_TEXT}
-      </div>
+    <header
+      id="main-header"
+      aria-label="Site navigation"
+      onMouseEnter={() => setIsExpanded(true)}
+      onMouseLeave={() => setIsExpanded(false)}
+      style={{
+        position: "fixed",
+        top: 20,
+        left: "50%",
+        transform: "translateX(-50%)",
+        zIndex: 100,
+        display: "flex",
+        alignItems: "center",
+        height: 64,
+        width: "auto",
+        padding: "0 24px",
+        background: "rgba(255,255,255,0.8)",
+        backdropFilter: "blur(24px) saturate(180%)",
+        WebkitBackdropFilter: "blur(24px) saturate(180%)",
+        borderRadius: "9999px",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
+        border: "1px solid rgba(255,255,255,0.4)",
+        transition: "all 500ms cubic-bezier(0.4, 0, 0.2, 1)",
+        gap: isExpanded ? 32 : 16,
+      }}
+    >
+      {/* Logo */}
+      <Link
+        href="/"
+        aria-label="Oryenna — Home"
+        style={{
+          flexShrink: 0,
+          width: 40,
+          height: 40,
+          borderRadius: "50%",
+          overflow: "hidden",
+          position: "relative",
+        }}
+      >
+        <Image
+          src="/images/oryenna-logo.jpg"
+          alt="Oryenna logo"
+          fill
+          sizes="40px"
+          style={{ objectFit: "cover" }}
+          priority
+        />
+      </Link>
 
-      {/* Main Navigation Bar */}
-      <div className="w-full px-margin-mobile md:px-margin-tablet lg:px-margin h-20 flex items-center justify-between border-b border-on-surface-variant/10">
-        <div className="flex items-center gap-space-sm">
-          <Link href="/" className="flex items-center gap-space-sm group">
-            <span className="font-headline-sm text-headline-sm tracking-wide text-ink uppercase select-none">
-              Oryenna
-            </span>
-          </Link>
-        </div>
-
-        <nav className="hidden lg:flex items-center gap-space-lg" aria-label="Main Navigation">
-          {links.map((link) => {
-            const isActive = pathname === link.url;
-            return (
-              <Link
-                key={link.label}
-                href={link.url}
-                className={`font-label-lg text-label-lg uppercase transition-colors duration-300 ${
-                  isActive
-                    ? "text-ink font-bold"
-                    : "text-on-surface-variant hover:text-on-surface"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="flex items-center gap-space-md">
-          {/* Gooey expanding search — Enter routes to filtered shop. */}
-          <form
-            className="hidden sm:block"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const q = query.trim();
-              router.push(q ? `/shop?q=${encodeURIComponent(q)}` : "/shop");
-            }}
-          >
-            <GooeyInput
-              placeholder=""
-              collapsedWidth={40}
-              expandedWidth={210}
-              onValueChange={setQuery}
-              classNames={{
-                trigger:
-                  "bg-surface-container text-ink ring-1 ring-on-surface-variant/20",
-                input: "text-ink placeholder:text-on-surface-variant/60",
-                bubbleSurface:
-                  "bg-surface-container text-ink ring-1 ring-on-surface-variant/20",
+      {/* Nav links - Transitioning from width 0 to auto */}
+      <nav
+        aria-label="Main Navigation"
+        style={{ 
+          display: "flex", 
+          alignItems: "center", 
+          gap: 24,
+          overflow: "hidden",
+          width: isExpanded ? "auto" : "0px",
+          opacity: isExpanded ? 1 : 0,
+          transform: isExpanded ? "translateX(0)" : "translateX(-10px)",
+          transition: "all 500ms cubic-bezier(0.4, 0, 0.2, 1)",
+          pointerEvents: isExpanded ? "auto" : "none",
+        }}
+      >
+        {links.map((link) => {
+          const isActive = pathname === link.url;
+          return (
+            <Link
+              key={link.label}
+              href={link.url}
+              style={{
+                fontFamily: "var(--font-garamond), serif",
+                fontSize: 13,
+                fontWeight: 500,
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: isActive ? "#000000" : "#888888",
+                textDecoration: "none",
+                position: "relative",
+                whiteSpace: "nowrap",
+                transition: "color 300ms ease",
               }}
-            />
-          </form>
-          {/* Compact fallback for small screens. */}
-          <Link
-            aria-label="Search the collection"
-            href="/shop"
-            className="p-space-xs text-on-surface-variant hover:text-on-surface transition-colors duration-300 flex items-center sm:hidden"
-          >
-            <span className="material-symbols-outlined text-[20px]">search</span>
-          </Link>
-          <button
-            aria-label="Bag"
-            onClick={openCart}
-            className="p-space-xs text-on-surface-variant hover:text-on-surface transition-colors duration-300 flex items-center relative"
-            type="button"
-          >
-            <span className="material-symbols-outlined text-[20px]">
-              shopping_bag
-            </span>
-            {count() > 0 && (
-              <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-surface rounded-full flex items-center justify-center font-label-sm text-label-sm leading-none">
+            >
+              {link.label}
+              {isActive && (
+                <span style={{
+                  position: "absolute",
+                  bottom: -4,
+                  left: 0,
+                  right: 0,
+                  height: "1px",
+                  background: "#000",
+                  transition: "all 300ms ease"
+                }} />
+              )}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Cart & Account */}
+      <div style={{ 
+        display: "flex", 
+        alignItems: "center", 
+        gap: 12, 
+        marginLeft: "auto",
+        flexShrink: 0
+      }}>
+        <button
+          aria-label="Open shopping bag"
+          onClick={openCart}
+          type="button"
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: "50%",
+            border: "none",
+            background: "rgba(0,0,0,0.05)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#666666",
+            cursor: "pointer",
+            transition: "all 200ms ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "rgba(0,0,0,0.1)";
+            e.currentTarget.style.color = "#000000";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "rgba(0,0,0,0.05)";
+            e.currentTarget.style.color = "#666666";
+          }}
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: 20 }}>shopping_bag</span>
+          {count() > 0 && (
+            <span
+              style={{
+                position: "absolute", top: 2, right: 2,
+                width: 14, height: 14, borderRadius: "50%",
+                background: "#000000", color: "#ffffff",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 8, fontWeight: 700,
+              }}>
                 {count()}
               </span>
-            )}
-          </button>
-          <ClerkAccountTrigger onOpenAuth={() => setIsAuthOpen(true)} />
-        </div>
+          )}
+        </button>
+        <ClerkAccountTrigger onOpenAuth={() => setIsAuthOpen(true)} />
       </div>
     </header>
   );

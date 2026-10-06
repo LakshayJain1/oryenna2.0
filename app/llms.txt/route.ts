@@ -6,9 +6,9 @@ export async function GET() {
 Oryenna is an artisanal luxury fragrance and candle studio. Every candle is hand-poured using sustainable botanical waxes, cotton wicks, and mouth-blown glass vessels designed to be reusable for life.
 
 ## Core Collections & Signature Products
-- **Amber 78 Candle**: Rich resinous amber, smoked labdanum, and sacred woods. 290G (Standard) & 500G (Grande).
+- **Amber 78 Candle**: Rich resinous amber, smoked labdanum, and aged woods. 290G (Standard) & 500G (Grande).
 - **Signature Collection**: Hand-poured botanical creations designed for evening stillness and slow living.
-- **Complimentary Ritual Samples**: Every order includes 2 mini scent vials (2ml Eau de Parfum).
+- **Complimentary Scent Samples**: Every order includes 2 mini scent vials (2ml Eau de Parfum).
 
 ## Studio Services
 - **White-Glove Shipping**: Carbon-neutral transit packed in biodegradable recycled boxes with raw linen cords.

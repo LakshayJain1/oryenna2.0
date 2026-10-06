@@ -2,19 +2,11 @@
 
 import { useState, type FormEvent } from "react";
 
-const TOPICS = [
-  "Order care",
-  "Bespoke & gifting",
-  "Press & stockists",
-  "Something else",
-];
-
 type Status = "idle" | "sending" | "sent" | "error";
 
 export default function ContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [topic, setTopic] = useState(TOPICS[0]);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
@@ -28,7 +20,7 @@ export default function ContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, topic, message }),
+        body: JSON.stringify({ name, email, message }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.message || "Something went wrong.");
@@ -41,7 +33,7 @@ export default function ContactForm() {
 
   if (status === "sent") {
     return (
-      <div className="bg-surface-container-low p-space-lg md:p-space-xl text-center">
+      <div className="bg-surface-container-low p-space-lg md:p-space-xl text-center rounded-[1.5rem]">
         <span className="material-symbols-outlined text-[36px] text-accent">
           mark_email_read
         </span>
@@ -49,7 +41,7 @@ export default function ContactForm() {
           Received with thanks.
         </h3>
         <p className="font-body-md text-body-md text-on-surface-variant mt-2 max-w-md mx-auto">
-          Your note is on the workbench. A human from the studio will reply
+          Your note is on the workbench. Someone from the studio will reply
           within two working days.
         </p>
       </div>
@@ -93,35 +85,13 @@ export default function ContactForm() {
 
       <label className="flex flex-col gap-2">
         <span className="font-label-md text-label-md uppercase tracking-[0.16em] text-on-surface-variant">
-          Topic
-        </span>
-        <div className="flex flex-wrap gap-2">
-          {TOPICS.map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => setTopic(t)}
-              className={`pressable px-4 py-2 rounded-full font-label-sm text-label-sm uppercase tracking-[0.14em] transition-colors ${
-                topic === t
-                  ? "bg-primary text-on-primary"
-                  : "bg-surface-container-low text-on-surface-variant hover:bg-surface-container"
-              }`}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
-      </label>
-
-      <label className="flex flex-col gap-2">
-        <span className="font-label-md text-label-md uppercase tracking-[0.16em] text-on-surface-variant">
-          Message
+          Message / Inquiry
         </span>
         <textarea
           required
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Tell us about your room, your ritual, or your order…"
+          placeholder="Tell us about your room, your home or your order…"
           rows={6}
           maxLength={3000}
           className={`${inputCls} resize-y min-h-[140px]`}

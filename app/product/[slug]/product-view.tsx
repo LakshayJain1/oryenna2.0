@@ -115,7 +115,7 @@ export default function ProductView({
                     {gallery.map((img, i) => (
                       <Reveal key={`${img.url}-${i}`} variant="up" distance={32}>
                       <div
-                        className="relative w-full aspect-[4/5] bg-surface-container overflow-hidden rounded-[1.5rem]"
+                        className="relative w-full aspect-square bg-surface-container overflow-hidden rounded-[1.5rem]"
                       >
                         <img
                           alt={img.alt || product.name}
@@ -276,7 +276,7 @@ export default function ProductView({
                                 </div>
                                 <div>
                                     <span className="font-body-sm text-body-sm text-ink font-medium block">
-                                        Slow Living Presentation Packaging
+                                        Signature Gift Packaging
                                     </span>
                                     <span className="font-label-sm text-[11px] text-on-surface-variant">
                                         Linen gift box, wax seal, hand-pressed herb card (+ {format(feeFor("gift", "USD"), feeFor("gift", "INR"))})

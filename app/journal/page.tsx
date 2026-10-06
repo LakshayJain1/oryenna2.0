@@ -36,7 +36,7 @@ export default function JournalPage() {
         <Reveal variant="up">
           <Link
             href={`/journal/${featured.slug}`}
-            className="grid grid-cols-1 lg:grid-cols-12 bg-surface-container-low overflow-hidden group"
+            className="grid grid-cols-1 lg:grid-cols-12 bg-surface-container-low overflow-hidden rounded-[1.5rem] group"
           >
             <div className="lg:col-span-7 relative min-h-[420px] lg:min-h-[580px] overflow-hidden">
               {featured.image ? (

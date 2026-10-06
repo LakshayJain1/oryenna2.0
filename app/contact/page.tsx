@@ -7,37 +7,21 @@ export const metadata = pageMetadata({
   path: "/contact",
   title: "Contact the Studio",
   description:
-    "Reach the Oryenna studio for order care, bespoke requests, and press enquiries.",
+    "Reach the Oryenna studio in Jaipur for order care, bulk orders, and press enquiries.",
 });
 
 const DETAILS = [
   {
     icon: "mail",
-    label: "Order Care",
-    value: "care@oryenna.com",
-    href: "mailto:care@oryenna.com",
-    note: "Orders, transit & returns · replies within 2 working days",
+    label: "Email",
+    value: "contact@oryenna.in",
+    href: "mailto:contact@oryenna.in",
   },
   {
-    icon: "palette",
-    label: "Bespoke & Gifting",
-    value: "atelier@oryenna.com",
-    href: "mailto:atelier@oryenna.com",
-    note: "Large-format pours, weddings & corporate scenting",
-  },
-  {
-    icon: "newspaper",
-    label: "Press & Stockists",
-    value: "press@oryenna.com",
-    href: "mailto:press@oryenna.com",
-    note: "Editorial loans, samples & wholesale",
-  },
-  {
-    icon: "location_on",
-    label: "The Studio",
-    value: "Route de Jaipur, Rajasthan",
-    href: undefined,
-    note: "Visits by appointment, Monday–Friday · 9h–18h CET",
+    icon: "call",
+    label: "Phone",
+    value: "+91-6378146202",
+    href: "tel:+916378146202",
   },
 ];
 
@@ -54,7 +38,7 @@ export default function ContactPage() {
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
             Every message is read by a human at the workbench — never a queue,
-            never a bot. Send a note below, or reach the right desk directly.
+            never a bot.
           </p>
         </Reveal>
       </section>
@@ -68,37 +52,64 @@ export default function ContactPage() {
             </div>
           </Reveal>
 
-          {/* Details */}
+          {/* Direct details */}
           <div className="lg:col-span-5 flex flex-col gap-space-md">
             {DETAILS.map((d, i) => (
               <Reveal key={d.label} variant="up" delay={Math.min(i * 80, 240)}>
-                <div className="bg-surface border border-on-surface-variant/10 rounded-2xl p-space-md flex gap-space-md">
-                  <span className="material-symbols-outlined text-[22px] text-accent shrink-0">
-                    {d.icon}
+                <div className="bg-surface border border-on-surface-variant/10 rounded-2xl p-space-md flex gap-space-md items-center">
+                  <span className="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+                    <span className="material-symbols-outlined text-[22px] text-accent">
+                      {d.icon}
+                    </span>
                   </span>
-                  <div className="space-y-1">
+                  <div className="space-y-0.5">
                     <p className="font-label-md text-label-md uppercase tracking-[0.16em] text-on-surface-variant">
                       {d.label}
                     </p>
-                    {d.href ? (
-                      <Link
-                        href={d.href}
-                        className="font-headline-sm text-headline-sm text-ink hover:text-accent transition-colors"
-                      >
-                        {d.value}
-                      </Link>
-                    ) : (
-                      <p className="font-headline-sm text-headline-sm text-ink">
-                        {d.value}
-                      </p>
-                    )}
-                    <p className="font-body-sm text-body-sm text-on-surface-variant">
-                      {d.note}
-                    </p>
+                    <Link
+                      href={d.href}
+                      className="font-headline-sm text-headline-sm text-ink hover:text-accent transition-colors break-all"
+                    >
+                      {d.value}
+                    </Link>
                   </div>
                 </div>
               </Reveal>
             ))}
+
+            {/* Studio map */}
+            <Reveal variant="up" delay={160}>
+              <div className="bg-surface border border-on-surface-variant/10 rounded-2xl p-space-md">
+                <div className="flex gap-space-md items-center mb-space-sm">
+                  <span className="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+                    <span className="material-symbols-outlined text-[22px] text-accent">
+                      location_on
+                    </span>
+                  </span>
+                  <div>
+                    <p className="font-label-md text-label-md uppercase tracking-[0.16em] text-on-surface-variant">
+                      Studio
+                    </p>
+                    <p className="font-headline-sm text-headline-sm text-ink">
+                      Mandalora Studios, Jaipur
+                    </p>
+                  </div>
+                </div>
+                <div className="rounded-xl overflow-hidden">
+                  <iframe
+                    title="Mandalora Studios, Jaipur on the map"
+                    src="https://www.google.com/maps?q=Mandalora%20Studios%20Jaipur&output=embed"
+                    className="w-full h-[280px] border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    allowFullScreen
+                  />
+                </div>
+                <p className="font-body-sm text-body-sm text-on-surface-variant mt-space-sm">
+                  Visits by appointment, Monday–Friday · 9h–18h IST.
+                </p>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>

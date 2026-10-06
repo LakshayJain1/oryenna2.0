@@ -14,7 +14,7 @@ const SECTIONS = [
   },
   {
     h: "Timelines",
-    p: "Europe: 3–5 working days. Rest of world: 5–9 working days. Every parcel is tracked from the workbench to your door, and complimentary ritual samples travel in every box.",
+    p: "Europe: 3–5 working days. Rest of world: 5–9 working days. Every parcel is tracked from the workbench to your door, and complimentary scent samples travel in every box.",
   },
   {
     h: "Damaged in transit",

@@ -1,68 +1,68 @@
 import type { ConciergeGroup } from "@/components/concierge/concierge-view";
 
-// Discipline-grouped ritual knowledge. Rendered on /faq.
+// Plain candle-care knowledge, grouped by topic. Rendered on /faq.
 export const FAQ_GROUPS: ConciergeGroup[] = [
   {
     id: "burn",
-    discipline: "Discipline 01",
-    title: "The Art of the Burn & Wick Care",
+    discipline: "Topic 01",
+    title: "Burning & Wick Care",
     items: [
       {
-        q: "Why is the initial burn ritual so critical to the life of the candle?",
-        a: "Plant-based botanical waxes possess an olfactory 'wax memory.' On the first lighting, do not extinguish your candle until the liquefied pool has melted completely to the outer edge of the vessel. Allow between 2.5 and 3 hours.",
+        q: "How long should the first burn last?",
+        a: "Two and a half to three hours, until the melted wax reaches the glass edge all the way round. Plant waxes hold the shape of their first burn, and a full opening pool prevents tunnelling for the rest of the candle's life.",
       },
       {
-        q: "Why do you recommend trimming the unbleached cotton wick to 5mm before every lighting?",
-        a: "Unbleached, braided organic wicks naturally form carbon blooms at their tips as they siphon rich essential oils. Trimming to exactly 5mm before each lighting ensures an untroubled, teardrop flame and eliminates black soot trails.",
+        q: "Why trim the cotton wick to 5mm before every lighting?",
+        a: "Unbleached cotton wicks form carbon buildup at the tip as they burn. Trimming to 5mm keeps the flame steady and teardrop-shaped, stops black soot marks on the glass, and delivers the full 60+ hour burn time.",
       },
       {
-        q: "How do I snuff out the candle without acrid smoke disrupting the room?",
-        a: "Blowing directly upon a molten candle disturbs the essential oil vapor. Either place a conical bell snuffer gently over the flame for three breaths, or employ a brass wick-dipper to bend the burning wick into the warm wax pool.",
+        q: "What is the cleanest way to put the candle out?",
+        a: "Don't blow on it — that sprays hot wax and fills the room with smoke. Place a snuffer or the lid over the flame for a few seconds to starve it cleanly.",
       },
     ],
   },
   {
     id: "wax",
-    discipline: "Discipline 02",
-    title: "Botanical Wax & Clean Formulations",
+    discipline: "Topic 02",
+    title: "Wax & Ingredients",
     items: [
       {
-        q: "What is inside the proprietary ORYENNA botanical wax base?",
-        a: "Our bespoke wax contains zero petroleum paraffin, zero pesticide monoculture soy, and zero palm oils. Instead, a cold-pressed cold-pressed rapeseed and organic coconut butter base, balanced with a whisper of sustainably sourced wild natural cera alba.",
+        q: "What is the wax made of?",
+        a: "A cold-pressed rapeseed and coconut butter base with a little natural beeswax. No paraffin, no palm oil, no pesticide soy — and every fragrance is phthalate-free and follows IFRA safety standards.",
       },
       {
-        q: "Are your fragrances synthetic-free, phthalate-free, and safe around pets?",
-        a: "Yes. We compose exclusively with pure steam-distilled essential oils, CO2 resinoid extracts, and artisanal enfleurage absolutes. Every formula adheres to rigorous IFRA Standards and remains free from phthalates, parabens, formaldehydes, and nitro-musks.",
+        q: "Are the fragrances safe around pets and children?",
+        a: "Our formulas contain only essential oils, resin extracts, and absolutes within IFRA safety limits. Still, always burn in a ventilated room, keep lit candles out of reach, and never leave a flame unattended.",
       },
     ],
   },
   {
     id: "vessel",
-    discipline: "Discipline 03",
-    title: "Vessel Permanence & Refill Rituals",
+    discipline: "Topic 03",
+    title: "Vessels & Refills",
     items: [
       {
-        q: "How do I clean the stoneware ceramic or mouth-blown vessel once the wax is spent?",
-        a: "Pour hot water (around 75°C, not boiling) directly into the vessel. The botanical wax will liquify and rise to the water's surface. Once cooled overnight, the hardened wax disc can be popped out and composted.",
+        q: "How do I clean the glass or ceramic vessel when the wax is finished?",
+        a: "Pour in hot water (around 75°C, not boiling). The wax melts, floats up, and sets into a disc overnight that pops out and can go in compost. Wash with warm soapy water and the vessel is ready for reuse.",
       },
       {
-        q: "How does the Zero-Waste Wax Drop-In Refill system function?",
-        a: "Every vessel in the ORYENNA catalog is precision-engineered to accommodate our cylindrical Wax Drop-In refills. Arriving enclosed in wild chamomile-seeded compostable paper, you merely peel away the wrapping and slide the cold wax block into place.",
+        q: "How do the wax drop-in refills work?",
+        a: "Every ORYENNA vessel is sized to take our cylindrical refill blocks. Peel off the seed-paper wrapping, drop the cold wax block in, and light as normal — no new jar needed.",
       },
     ],
   },
   {
     id: "transit",
-    discipline: "Discipline 04",
-    title: "Slow Sensory Transit & Gifting",
+    discipline: "Topic 04",
+    title: "Shipping & Gifting",
     items: [
       {
-        q: "Why do you offer dedicated Slow Sensory Transit rather than overnight air freight?",
-        a: "Sudden atmospheric pressure drops and uninsulated cargo holds during rapid air transit shock fragile vegetable waxes, inducing 'frosting' and premature essential oil sweat. We curate ground transit routes with climate-controlled staging.",
+        q: "How long does shipping take?",
+        a: "Orders leave our Jaipur studio within 2 working days. Europe takes 3–5 working days, India 2–4, and the rest of the world 5–9. Every parcel is tracked and packed in biodegradable boxes tied with cotton cord.",
       },
       {
-        q: "Can I request a personalized handwritten calligraphy parchment note?",
-        a: "Indubitably. During checkout, select 'Studio Scribe Note.' Our in-house archivist inscribes your personal dedication using oak gall ink onto handmade hemp rag paper, folded and hand-stamped with our botanical monogram in terracotta beeswax.",
+        q: "Do you offer gift packaging?",
+        a: "Yes — choose Signature Gift Packaging at checkout for a cotton-lined gift box with a wax seal and herb card. It fits every vessel in the collection.",
       },
     ],
   },

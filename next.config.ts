@@ -32,7 +32,7 @@ const securityHeaders = [
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: blob: https://lh3.googleusercontent.com https://images.unsplash.com https://img.clerk.com",
       "connect-src 'self' https://clerk.com https://*.clerk.com https://*.clerk.accounts.dev wss://*.clerk.accounts.dev https://api.razorpay.com",
-      "frame-src https://checkout.razorpay.com https://api.razorpay.com https://*.clerk.accounts.dev",
+      "frame-src https://checkout.razorpay.com https://api.razorpay.com https://*.clerk.accounts.dev https://www.google.com https://maps.google.com",
       "form-action 'self'",
       "base-uri 'self'",
       "object-src 'none'",

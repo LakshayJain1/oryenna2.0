@@ -5,7 +5,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function clean(value: unknown, max: number): string | null {
   if (typeof value !== "string") return null;
-  const v = value.trim();
+  const v = value.trim().replace(/[\r\n]+/g, " ");
   if (v.length === 0 || v.length > max) return null;
   return v;
 }
@@ -28,18 +28,17 @@ export async function POST(request: Request) {
 
   const name = clean(body.name, 80);
   const email = clean(body.email, 120);
-  const topic = clean(body.topic, 40);
-  const message = clean(body.message, 3000);
+  const message = body.message && typeof body.message === "string" ? body.message.trim() : "";
 
-  if (!name || !email || !EMAIL_RE.test(email) || !topic || !message) {
+  if (!name || !email || !EMAIL_RE.test(email) || !message || message.length > 3000) {
     return Response.json(
-      { message: "Please complete every field with a valid email." },
+      { message: "Please share your name, a valid email, and a message." },
       { status: 400 }
     );
   }
 
   const apiKey = process.env.RESEND_API_KEY;
-  const inbox = process.env.CONTACT_INBOX || "atelier@oryenna.com";
+  const inbox = process.env.CONTACT_INBOX || "contact@oryenna.in";
   if (!apiKey) {
     console.error("Contact form: missing RESEND_API_KEY");
     return Response.json(
@@ -54,8 +53,8 @@ export async function POST(request: Request) {
       from: "Oryenna Studio <orders@resend.dev>",
       to: inbox,
       replyTo: email,
-      subject: `[Contact · ${topic}] ${name}`,
-      text: `From: ${name} <${email}>\nTopic: ${topic}\n\n${message}`,
+      subject: `[Contact] ${name}`,
+      text: `From: ${name} <${email}>\n\n${message}`,
     });
     return Response.json({ ok: true });
   } catch (err) {

@@ -17,7 +17,7 @@ const resetSubmit = (
     mode: string
 ) => {
     setSubmitting(false);
-    setSubmitText(mode === "signin" ? "Enter Your Sanctuary" : "Transmit Sensory Link");
+    setSubmitText(mode === "signin" ? "Sign In" : "Create Account");
 };
 
 export default function AuthPage() {
@@ -29,7 +29,7 @@ export default function AuthPage() {
     const [mode, setMode] = useState("signin");
     const [showPass, setShowPass] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-    const [submitText, setSubmitText] = useState("Enter Your Sanctuary");
+    const [submitText, setSubmitText] = useState("Sign In");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [code, setCode] = useState("");
@@ -73,7 +73,7 @@ export default function AuthPage() {
             setSubmitText("Sending Link...");
             const { error } = await signUp.create({ emailAddress: email });
             if (error) {
-                setError(errMsg(error, "Could not create your sanctuary account."));
+                setError(errMsg(error, "Could not create your account."));
                 resetSubmit(setSubmitting, setSubmitText, mode);
                 return;
             }
@@ -84,7 +84,7 @@ export default function AuthPage() {
                 return;
             }
             setVerifyMode("register");
-            setSubmitText("Enter Your Sanctuary");
+            setSubmitText("Sign In");
             setSubmitting(false);
         }
     };
@@ -216,15 +216,15 @@ export default function AuthPage() {
                                 <div className="flex items-center gap-3">
                                     <span className="w-6 h-px bg-outline-variant" />
                                     <span className="font-label-md text-label-md uppercase text-accent tracking-widest">
-                                        Oryenna Studio & Sanctuary
+                                        Oryenna Studio
                                     </span>
                                 </div>
                                 <h1 className="font-display text-headline-lg sm:text-display text-ink tracking-tight mt-1">
                                     Return to Calm.
                                 </h1>
                                 <p className="font-body-md text-body-md text-on-surface-variant max-w-md">
-                                    Access your bespoke order archive, private seasonal releases,
-                                    and personalized olfactory preferences.
+                                    Access your order archive, new seasonal releases,
+                                    and saved preferences.
                                 </p>
                             </div>
 
@@ -232,7 +232,7 @@ export default function AuthPage() {
                                 <TabSwitcher
                                     tabs={[
                                         { id: "signin", label: "Sign In" },
-                                        { id: "register", label: "Join Sanctuary" },
+                                        { id: "register", label: "Create Account" },
                                     ]}
                                     activeTab={mode}
                                     onChange={setMode}
@@ -243,11 +243,11 @@ export default function AuthPage() {
                             <form className="flex flex-col gap-6" onSubmit={verifyMode ? handleVerify : handleSubmit}>
                                 <div className="flex flex-col gap-2">
                                     <label className="font-label-md text-label-md tracking-wider uppercase text-on-surface-variant">
-                                        Studio Email / Sanctuary ID
+                                        Email address
                                     </label>
                                     <input
                                         className="w-full py-3 px-4 rounded-xl bg-surface-container-low text-ink font-body-md focus:bg-surface-container-lowest focus:outline-none transition-colors placeholder:text-outline-variant"
-                                        placeholder="julian.vane@sanctuary.studio"
+                                        placeholder="you@example.com"
                                         required
                                         type="email"
                                         value={email}
@@ -270,7 +270,7 @@ export default function AuthPage() {
                                             onChange={(e) => setCode(e.target.value)}
                                         />
                                         <span className="font-body-sm text-body-sm text-on-surface-variant">
-                                            A token was dispatched to {email}. Enter it to enter your sanctuary.
+                                            A token was dispatched to {email}. Enter it to sign in.
                                         </span>
                                     </div>
                                 )}
@@ -321,7 +321,7 @@ export default function AuthPage() {
                                             </span>
                                         </div>
                                         <span className="font-body-sm text-body-sm text-on-surface-variant">
-                                            Keep me signed in to this sanctuary
+                                            Keep me signed in
                                         </span>
                                     </label>
                                     <span className="hidden sm:inline-flex items-center gap-1 text-label-sm font-label-sm text-accent tracking-wider uppercase">
@@ -346,7 +346,7 @@ export default function AuthPage() {
                                         }`}
                                     type="submit"
                                 >
-                                    <span>{verifyMode ? "Verify & Enter Sanctuary" : submitText}</span>
+                                    <span>{verifyMode ? "Verify & Sign In" : submitText}</span>
                                     <span className="material-symbols-outlined text-title">
                                         east
                                     </span>
@@ -379,11 +379,11 @@ export default function AuthPage() {
                                     <span className="material-symbols-outlined text-title text-accent">
                                         workspace_premium
                                     </span>
-                                    <span>Sanctuary Patron Privileges</span>
+                                    <span>Member Benefits</span>
                                 </div>
                                 <ul className="flex flex-col gap-2.5 font-body-sm text-body-sm text-on-surface-variant">
                                     {[
-                                        "Complimentary Slow Sensory Dispatch on all private pours.",
+                                        "Complimentary Tracked Dispatch on all pours.",
                                         "Priority invitation to limited seasonal botanical batches.",
                                         "Curated handwritten unboxing notes with each order.",
                                     ].map((privilege) => (

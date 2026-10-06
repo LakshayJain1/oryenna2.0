@@ -20,7 +20,7 @@ type ConciergeViewProps = {
 export default function ConciergeView({
   eyebrow = "Knowledge & Studio Inquiries",
   title = "Questions on Cadence, Wax & Care",
-  tagline = "A contemplative guide to botanical flame stewardship, clean burning rituals, solventless formulations, and slow sensory transit.",
+  tagline = "A practical guide to burning, wax, vessels, shipping, and gifting.",
   groups,
 }: ConciergeViewProps) {
     const [filter, setFilter] = useState("all");
@@ -69,7 +69,7 @@ export default function ConciergeView({
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 className="w-full bg-transparent font-body-md text-body-md text-on-surface placeholder:text-outline-variant focus:outline-none"
-                                placeholder="Search our knowledge sanctuary..."
+                                placeholder="Search help topics..."
                             />
                         </div>
                     </div>
@@ -162,25 +162,24 @@ export default function ConciergeView({
                             Direct Guidance
                         </span>
                         <h3 className="font-headline-lg text-headline-lg text-surface-bright">
-                            Unanswered Curiosities?
+                            Still stuck?
                         </h3>
                         <p className="font-body-md text-body-md text-surface-variant max-w-lg">
-                            Our studio specialists hold daily dialogues concerning scent
-                            pairings, seasonal vessel care, and bespoke olfactory
-                            installations.
+                            Write to us about orders, candle care, shipping, or
+                            gifting — a real person replies within two working days.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-space-sm pt-space-xs">
                             <Link
                                 href="/contact"
                                 className="pressable h-[52px] px-space-lg rounded-full bg-surface-bright text-ink font-label-lg text-label-lg uppercase tracking-wider hover:bg-surface-container transition-colors inline-flex items-center justify-center"
                             >
-                                Inquire via Studio Desk
+                                Contact the Studio
                             </Link>
                             <Link
-                                href="/contact"
+                                href="/shop"
                                 className="pressable h-[52px] px-space-lg rounded-full bg-transparent text-surface-bright font-label-lg text-label-lg uppercase tracking-wider hover:bg-surface-bright/10 transition-colors inline-flex items-center justify-center"
                             >
-                                Schedule Consultation
+                                Browse Candles
                             </Link>
                         </div>
                     </div>

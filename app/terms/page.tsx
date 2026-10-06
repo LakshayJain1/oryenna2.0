@@ -10,7 +10,7 @@ export const metadata = pageMetadata({
 const SECTIONS = [
   {
     h: "The boutique",
-    p: "ORYENNA Parfums & Bougies offers hand-poured botanical candles and ritual objects through this boutique. By placing an order you agree to these terms, our shipping policy, and our returns policy. Prices are shown in USD and INR, inclusive of applicable taxes where stated at checkout.",
+    p: "ORYENNA Parfums & Bougies offers hand-poured botanical candles and candle tools through this boutique. By placing an order you agree to these terms, our shipping policy, and our returns policy. Prices are shown in USD and INR, inclusive of applicable taxes where stated at checkout.",
   },
   {
     h: "Orders & availability",

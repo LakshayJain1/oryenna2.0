@@ -74,7 +74,7 @@ export function AuthModal() {
                 Oryenna Studio
               </span>
               <p className="font-headline-sm text-[16px] italic leading-snug text-on-primary">
-                &ldquo;The scent fills the room like a quiet mist. It has completely transformed my evening unwind ritual.&rdquo;
+                &ldquo;The scent fills the room like a quiet mist. It has completely transformed my evenings at home.&rdquo;
               </p>
               <div className="mt-4 flex items-center justify-between border-t border-on-primary/20 pt-3 text-[9px] uppercase tracking-[0.2em] text-on-primary/70">
                 <span>Ananya S.</span>
@@ -87,7 +87,7 @@ export function AuthModal() {
           <div className="flex flex-col justify-between p-6 sm:p-8 md:col-span-7 max-h-[90vh] overflow-y-auto">
             <div>
               <span className="text-[10px] uppercase tracking-[0.22em] text-ink font-medium">
-                Sanctuary Member Access
+                Member Sign In
               </span>
               <h2
                 id="auth-modal-title"
@@ -96,7 +96,7 @@ export function AuthModal() {
                 Return to Calm.
               </h2>
               <p className="mt-1 text-[13px] text-on-surface-variant">
-                Access your personalized order archive, rituals, and private releases.
+                Access your personalized order archive, and new releases.
               </p>
 
               {/* Tabs */}
@@ -176,14 +176,14 @@ export function AuthModal() {
             {/* Member Perks Checklist */}
             <div className="mt-6 border-t border-on-surface-variant/20 pt-4">
               <p className="text-[10px] uppercase tracking-[0.18em] font-medium text-on-surface">
-                Sanctuary Member Privileges:
+                Member Benefits:
               </p>
               <ul className="mt-1.5 space-y-1 text-[11px] text-on-surface-variant">
                 <li className="flex items-center gap-2">
-                  <span className="text-ink">✓</span> Curated archive & early private pour access
+                  <span className="text-ink">✓</span> Order archive & early access to new pours
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-ink">✓</span> Complimentary custom 2ml scent vials with every order
+                  <span className="text-ink">✓</span> Complimentary 2ml scent vials with every order
                 </li>
               </ul>
             </div>

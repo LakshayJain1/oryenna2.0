@@ -118,7 +118,7 @@ export default function AboutPage() {
                 href="/faq"
                 className="pressable inline-flex items-center justify-center h-[52px] px-8 rounded-full border border-on-primary/40 text-on-primary font-label-lg text-label-lg uppercase tracking-[0.14em] hover:bg-on-primary/10 transition-colors"
               >
-                Ritual Care
+                Candle Care
               </Link>
             </div>
           </Reveal>

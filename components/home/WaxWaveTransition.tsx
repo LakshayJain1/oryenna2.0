@@ -140,7 +140,7 @@ export default function WaxWaveTransition({
     if (reduceMotion) {
       // Static stacked fallback: hero, then full wax section with content.
       gsap.set(wax, { clearProps: "all" });
-      gsap.set(content, { opacity: 1, y: 0 });
+      gsap.set(content, { opacity: 1, y: 0, pointerEvents: "auto" });
       progressRef.current = 1;
       return;
     }
@@ -151,7 +151,7 @@ export default function WaxWaveTransition({
         transformOrigin: "50% 100%",
       });
       gsap.set(heroInner, { yPercent: 0, opacity: 1 });
-      gsap.set(content, { y: 90, opacity: 0 });
+      gsap.set(content, { y: 90, opacity: 0, pointerEvents: "none" });
 
       const tl = gsap.timeline({
         defaults: { ease: "none" },
@@ -163,6 +163,8 @@ export default function WaxWaveTransition({
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             progressRef.current = self.progress;
+            content.style.pointerEvents =
+              self.progress > contentRevealStart ? "auto" : "none";
           },
         },
       });
@@ -267,7 +269,7 @@ export default function WaxWaveTransition({
 
         {/* LAYER 1 — next section. Wax is its BACKGROUND (z-0),
             content sits above it (z-10). The whole layer rises. */}
-        <section className="next-section absolute inset-0 z-10">
+        <section className="next-section absolute inset-0 z-10 pointer-events-none">
           {/* wax body — ONE liquid mass swelling vertically from the bottom.
               The crest is part of this mass, so the whole section grows
               as a single wave rather than sliding up under a small lip. */}

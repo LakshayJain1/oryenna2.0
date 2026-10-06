@@ -8,27 +8,24 @@ export const NAV_LINKS = [
   { label: "Contact", url: "/contact" },
 ];
 
-export const ANNOUNCEMENT_TEXT =
-  "Complimentary ritual samples with every order — slow sensory transit worldwide";
-
 export const FOOTER_COLUMNS = [
   {
     title: "Collections",
     links: [
       { label: "Scented Vessels", href: "/shop" },
-      { label: "Ritual Objects", href: "/shop" },
+      { label: "Candle Tools", href: "/shop" },
       { label: "Stonework", href: "/shop" },
       { label: "Brass Wick Tools", href: "/shop" },
       { label: "All Vessels", href: "/shop" },
     ],
   },
   {
-    title: "Living Rituals",
+    title: "Good to Know",
     links: [
       { label: "Wax & Wick Care", href: "/faq" },
-      { label: "The Art of the Evening Reset", href: "/journal/the-art-of-the-evening-reset" },
+      { label: "How to Get the Best First Burn", href: "/journal/the-art-of-the-evening-reset" },
       { label: "Vessel Repurposing", href: "/journal" },
-      { label: "Member Sanctuary", href: "/account" },
+      { label: "My Account", href: "/account" },
     ],
   },
   {

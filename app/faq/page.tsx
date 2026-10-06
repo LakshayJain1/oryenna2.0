@@ -7,7 +7,7 @@ export const metadata = pageMetadata({
   path: "/faq",
   title: "Frequently Asked Questions",
   description:
-    "Answers on burn care, botanical wax, vessels, transit, and the Oryenna slow living ritual.",
+    "Answers on burn care, botanical wax, vessels, transit, and candle care at home.",
 });
 
 const QUICK_ANSWERS = [
@@ -22,14 +22,14 @@ const QUICK_ANSWERS = [
       "Unburned vessels may be returned within 30 days for a full refund. If a vessel arrives damaged, send a photograph within 7 days and a replacement leaves the studio immediately — no return shipping needed.",
   },
   {
-    question: "Do you offer gifting and handwritten notes?",
+    question: "Do you offer gift packaging?",
     answer:
-      "Yes — select Slow Living Presentation Packaging at checkout for a linen gift box, wax seal, and herb card. Add an Studio Scribe Note and our archivist will hand-inscribe your dedication in oak gall ink.",
+      "Yes — select Signature Gift Packaging at checkout for a cotton-lined gift box with a wax seal and herb card. It fits every vessel in the collection.",
   },
   {
     question: "How can I reach the studio directly?",
     answer:
-      "Write to care@oryenna.com for orders, atelier@oryenna.com for bespoke work, or use the contact desk — every message is read by a human at the workbench.",
+      "Write to contact@oryenna.in for orders and support, or use the contact desk — every message is read by a human at the workbench.",
   },
 ];
 
@@ -37,9 +37,9 @@ export default function FAQPage() {
   return (
     <div className="flex flex-col w-full">
       <ConciergeView
-        eyebrow="Questions / Ritual Knowledge"
-        title="Wax, Wick & Ritual Care"
-        tagline="A contemplative guide to botanical flame stewardship, clean burning rituals, and slow sensory transit. Search, or wander by discipline."
+        eyebrow="Questions / Candle Knowledge"
+        title="Wax, Wick & Candle Care"
+        tagline="A practical guide to burning, wax, vessels, shipping, and gifting. Search, or wander by discipline."
         groups={FAQ_GROUPS}
       />
 

@@ -95,7 +95,7 @@ export default function RootLayout({
         <body className="bg-surface font-body-md text-body-md text-on-surface antialiased">
           <CurrencyProvider>
             <Header />
-            <main className="w-full pt-20 bg-surface min-h-screen">{children}</main>
+            <main className="w-full bg-surface min-h-screen">{children}</main>
             <Reveal variant="fade">
               <Footer />
             </Reveal>

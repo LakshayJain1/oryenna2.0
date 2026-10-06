@@ -3,7 +3,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   path: "/login",
   title: "Sign In",
-  description: "Sign in to your Oryenna sanctuary member account.",
+  description: "Sign in to your Oryenna member account.",
   noindex: true,
 });
 

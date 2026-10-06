@@ -173,7 +173,7 @@ export default function CheckoutPage() {
                     <div className="w-full max-w-lg border border-on-surface-variant/20 bg-surface p-8 text-center shadow-2xl">
                         <span className="text-[28px]">🌿</span>
                         <h2 className="mt-4 font-headline-md text-[28px] uppercase tracking-wider text-ink">
-                            Your Sanctuary Awaits.
+                            Order Confirmed.
                         </h2>
                         <p className="mt-2 text-[13px] uppercase tracking-[0.16em] text-accent font-medium">
                             Order Confirmed Successfully
@@ -392,7 +392,7 @@ export default function CheckoutPage() {
                                     </div>
                                 )}
                                 <div className="flex items-center justify-between text-on-surface-variant">
-                                        <span>Match Striker & Ritual Guide</span>
+                                        <span>Match Striker & Care Guide</span>
                                         <span className="text-ink">{format(strikerUsd, strikerInr)}</span>
                                 </div>
                                 <div className="flex items-center justify-between text-on-surface-variant">

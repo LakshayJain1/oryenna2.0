@@ -121,8 +121,7 @@ export default function CartDrawer() {
                         </span>
                     </div>
                     <p className="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
-                        Complimentary slow shipping and sensory card on all domestic ritual
-                        orders.
+                        Complimentary slow shipping on all domestic orders.
                     </p>
                     <Link
                         href="/checkout"

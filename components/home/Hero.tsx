@@ -1,87 +1,149 @@
-import Image from "next/image";
-import Link from "next/link";
+"use client";
 
-type HeroProps = {
-    eyebrow?: string;
-    headline?: string;
-    tagline?: string;
-    subtext?: string;
-    imageUrl?: string;
-    imageAlt?: string;
-};
+import { useState, useEffect, useRef } from "react";
 
-// Default hero background (self-hosted).
-const FALLBACK_HERO_IMAGE = "/images/hero-linen.jpg";
+const candles = [
+  {
+    id: "santal",
+    name: "Santal",
+    tagline: "Grounding sandalwood & warm vanilla",
+    image: "/images/hero-santal.jpg",
+    centralImage: "/images/central-candle-santal.jpg",
+  },
+  {
+    id: "ember",
+    name: "Ember",
+    tagline: "Charred birch & deep amber",
+    image: "/images/hero-ember.jpg",
+    centralImage: "/images/central-candle-ember.jpg",
+  },
+  {
+    id: "fig",
+    name: "Fig & Olive",
+    tagline: "Fresh fig & Mediterranean olive",
+    image: "/images/hero-fig-olive.jpg",
+    centralImage: "/images/central-candle-fig.jpg",
+  },
+  {
+    id: "linen",
+    name: "Soft Linen",
+    tagline: "Air cotton & fresh linen",
+    image: "/images/hero-soft-linen.jpg",
+    centralImage: "/images/central-candle-linen.jpg",
+  },
+];
 
-export default function Hero({
-    eyebrow = "Studio de Parfum d'Intérieur",
-    headline = "ORYENNA",
-    tagline = "Light a calmer you.",
-    subtext = "Scents and spaces designed for slower moments. Poured by hand into hand-blown vessels from wild botanicals.",
-    imageUrl,
-    imageAlt,
-}: HeroProps) {
-    return (
-        <section className="relative w-full overflow-hidden bg-surface-container-low min-h-[92vh] flex items-center justify-center">
-            <div className="absolute inset-0 z-0">
-                <Image
-                    alt={
-                        imageAlt ||
-                        "Oryenna signature candle seen from directly above surrounded by rippling raw linen and dry olive botanical leaves"
-                    }
-                    className="object-cover object-center scale-105"
-                    src={imageUrl || FALLBACK_HERO_IMAGE}
-                    fill
-                    priority
-                    fetchPriority="high"
-                    sizes="100vw"
+const CANDLE_POSITIONS = [
+  { x: "-10%", y: "-10%", rotate: "45deg" },
+  { x: "80%", y: "20%", rotate: "45deg" },
+  { x: "120%", y: "80%", rotate: "45deg" },
+  { x: "30%", y: "110%", rotate: "45deg" },
+];
+
+export default function Hero() {
+  const [scrollY, setScrollY] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Set initial viewport height and listen for resize
+    setViewportHeight(window.innerHeight);
+    
+    const handleResize = () => setViewportHeight(window.innerHeight);
+    const handleScroll = () => setScrollY(window.scrollY);
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  return (
+    <section
+      className="relative h-[300vh] w-full bg-white overflow-hidden"
+      ref={containerRef}
+    >
+      {/* Fixed Background: Wax Blobs */}
+      <div
+        className="fixed inset-0 z-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle at 20% 20%, #fffbe8 0%, #fff 50%, #f0e9d2 100%)," +
+            "radial-gradient(circle at 80% 80%, #fff5e6 0%, #fff 50%, #ffe8c5 100%)," +
+            "linear-gradient(135deg, #fff 0%, #f5f0e0 100%)",
+          backgroundAttachment: "fixed",
+        }}
+      />
+
+      {/* The Diagonal Track */}
+      <div 
+        className="fixed inset-0 flex justify-center"
+        style={{ perspective: "1000px" }}
+      >
+        <div 
+          className="relative w-full h-full"
+          style={{ 
+            transform: "rotateZ(-45deg)", 
+            transformOrigin: "center center",
+            transition: "transform 0.1s ease-out"
+          }}
+        >
+          {candles.map((candle, index) => {
+            const SPACING = 400;
+            const positionY = (index * SPACING) - scrollY;
+            
+            // Fix: Use viewportHeight state instead of window.innerHeight to avoid SSR error
+            const distFromCenter = Math.abs(positionY - (viewportHeight / 2));
+            
+            const blurValue = Math.min(12, distFromCenter / 100);
+            const scaleValue = Math.max(0.6, 1 - (distFromCenter / 1500));
+            const opacityValue = Math.max(0.3, 1 - (distFromCenter / 1000));
+            const zIndex = Math.round(100 - distFromCenter / 10);
+
+            return (
+              <div
+                key={candle.id}
+                className="absolute left-1/2 -translate-x-1/2 transition-all duration-300 ease-out"
+                style={{
+                  top: `${positionY}px`,
+                  transform: `translateY(-50%) scale(${scaleValue})`,
+                  filter: `blur(${blurValue}px)`,
+                  opacity: opacityValue,
+                  zIndex: zIndex,
+                  width: "200px",
+                  height: "300px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <img
+                  src={candle.image}
+                  alt={candle.name}
+                  className="w-full h-full object-contain"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-surface/80 via-surface/40 to-surface/90 backdrop-blur-[1px]" />
-            </div>
+                {blurValue < 2 && (
+                  <div className="absolute -bottom-12 text-center w-64 pointer-events-none">
+                    <p className="text-black font-serif italic text-lg">{candle.tagline}</p>
+                    <p className="text-black font-sans uppercase tracking-widest text-xs mt-2">{candle.name}</p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
 
-            <div className="relative z-10 w-full max-w-5xl mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin py-32 text-center flex flex-col items-center">
-                <div className="hero-enter inline-flex items-center gap-space-xs mb-space-md" style={{ animationDelay: "50ms" }}>
-                    <span className="w-8 h-[1px] bg-outline-variant" />
-                    <span className="font-label-sm text-label-sm uppercase tracking-[0.24em] text-accent">
-                        {eyebrow}
-                    </span>
-                    <span className="w-8 h-[1px] bg-outline-variant" />
-                </div>
-
-                <h1 className="hero-enter font-display text-display md:text-[72px] md:leading-[80px] text-ink tracking-[0.14em] uppercase mb-space-sm select-none" style={{ animationDelay: "150ms" }}>
-                    {headline}
-                </h1>
-                <p className="hero-enter font-headline-md text-headline-md italic text-on-surface-variant font-serif max-w-xl mb-space-md" style={{ animationDelay: "260ms" }}>
-                    {tagline}
-                </p>
-                <p className="hero-enter font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-space-xl tracking-wide" style={{ animationDelay: "340ms" }}>
-                    {subtext}
-                </p>
-
-                <div className="hero-enter flex flex-col sm:flex-row items-center justify-center gap-space-md w-full sm:w-auto" style={{ animationDelay: "430ms" }}>
-                    <Link
-                        href="/shop"
-                        className="pressable w-full sm:w-auto h-[52px] px-10 inline-flex items-center justify-center rounded-full bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-[0.16em] hover:bg-primary-container hover:text-surface transition-colors shadow-sm"
-                    >
-                        Shop Candles
-                    </Link>
-                    <Link
-                        href="/about"
-                        className="pressable w-full sm:w-auto h-[52px] px-10 inline-flex items-center justify-center rounded-full bg-surface-container/60 hover:bg-surface-container text-ink font-label-lg text-label-lg uppercase tracking-[0.16em] backdrop-blur-sm transition-colors"
-                    >
-                        Discover Oryenna
-                    </Link>
-                </div>
-
-                <div className="hero-enter mt-space-xl flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity" style={{ animationDelay: "550ms" }}>
-                    <span className="font-label-sm text-label-sm uppercase tracking-[0.2em] text-outline">
-                        Scroll to inhabit
-                    </span>
-                    <span className="material-symbols-outlined text-[18px] text-ink animate-bounce">
-                        south
-                    </span>
-                </div>
-            </div>
-        </section>
-    );
+      {/* Instructions overlay */}
+      <div className="fixed bottom-10 left-1/2 -translate-x-1/2 text-center z-50 pointer-events-none">
+        <p className="text-xs uppercase tracking-[0.3em] text-gray-400 animate-bounce">
+          Scroll to explore
+        </p>
+      </div>
+    </section>
+  );
 }

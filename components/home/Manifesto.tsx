@@ -28,15 +28,15 @@ const FALLBACK_METRICS: ManifestoMetric[] = [
 ];
 
 export default function Manifesto({
-    eyebrow = "01 / Manifeste",
+    eyebrow = "01 / Our Promise",
     headline = "Beauty in a quieter world.",
-    quote = "Oryenna was founded on the belief that scent is an invisible architecture — shaping the energy, stillness, and emotional landscape of the rooms we inhabit. Hand-poured with pure renewable soy wax and wild botanicals, each vessel is an invitation to pause, exhale, and arrive fully in the present.",
+    quote = "Oryenna makes premium scented candles in Jaipur — hand-poured in small batches from clean botanical wax and fine fragrance oils, set in mouth-blown glass vessels made to be kept and refilled.",
     metrics = FALLBACK_METRICS,
 }: ManifestoProps) {
     const stats = metrics && metrics.length > 0 ? metrics : FALLBACK_METRICS;
 
     return (
-        <section className="w-full bg-surface py-space-xl px-margin-mobile md:px-margin-tablet lg:px-margin">
+        <section id="promise" className="w-full bg-surface py-space-xl px-margin-mobile md:px-margin-tablet lg:px-margin">
             <div className="max-w-6xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-space-lg lg:gap-gutter items-start">
                     <div className="lg:col-span-4">

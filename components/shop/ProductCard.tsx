@@ -4,12 +4,13 @@ import Link from "next/link";
 import { Product } from "@/lib/products";
 import { useCurrency } from "@/context/CurrencyContext";
 import AddToBagButton from "./AddToBagButton";
+import WishlistButton from "./WishlistButton";
 
 export default function ProductCard({ product }: { product: Product }) {
     const { format } = useCurrency();
     return (
         <article className="pressable group relative flex flex-col bg-surface-container-lowest rounded-[1.5rem] shadow-[0_2px_12px_-2px_rgba(52,37,26,0.08)] hover:shadow-[0_20px_44px_-12px_rgba(52,37,26,0.22)] hover:-translate-y-1 transition-all duration-500 ease-out overflow-hidden h-full">
-            <div className="relative w-full aspect-[4/5] bg-surface-container-high overflow-hidden rounded-t-[1.5rem]">
+            <div className="relative w-full aspect-square bg-surface-container-high overflow-hidden rounded-t-[1.5rem]">
                 <Link href={`/product/${product.slug}`} aria-label={product.name}>
                     <img
                         alt={product.name}
@@ -28,15 +29,7 @@ export default function ProductCard({ product }: { product: Product }) {
                     </div>
                 )}
 
-                <button
-                    aria-label="Save to curated list"
-                    className="absolute top-3 right-3 w-9 h-9 bg-surface/80 backdrop-blur-md rounded-full flex items-center justify-center text-on-surface-variant hover:text-ink hover:bg-surface transition-colors"
-                    type="button"
-                >
-                    <span className="material-symbols-outlined text-[18px]">
-                        favorite
-                    </span>
-                </button>
+                <WishlistButton id={product.id} name={product.name} />
 
                 <div className="absolute inset-x-3 bottom-3 translate-y-[130%] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out">
                     <AddToBagButton
