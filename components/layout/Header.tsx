@@ -49,9 +49,11 @@ export default function Header() {
         display: "flex",
         alignItems: "center",
         height: 64,
-        width: isMobile ? "calc(100% - 32px)" : "auto",
+        // Dynamic width based on expansion state
+        width: isMobile ? "calc(100% - 32px)" : (isExpanded ? "auto" : "auto"),
+        minWidth: isMobile ? "auto" : (isExpanded ? "600px" : "200px"),
         maxWidth: "1200px",
-        padding: "0 20px",
+        padding: "0 24px",
         background: "rgba(255,255,255,0.8)",
         backdropFilter: "blur(24px) saturate(180%)",
         WebkitBackdropFilter: "blur(24px) saturate(180%)",
@@ -85,7 +87,7 @@ export default function Header() {
         />
       </Link>
 
-      {/* Nav links - Responsive Logic */}
+      {/* Nav links - Fixed Expansion Logic */}
       <nav
         aria-label="Main Navigation"
         style={{ 
@@ -93,13 +95,14 @@ export default function Header() {
           alignItems: "center", 
           gap: isMobile ? 12 : 24,
           overflow: "hidden",
-          width: isExpanded ? "auto" : "0px",
+          // Use max-width for smooth transition instead of width: auto
+          maxWidth: isExpanded ? "800px" : "0px",
           opacity: isExpanded ? 1 : 0,
-          transform: isExpanded ? "translateX(0)" : "translateX(-10px)",
+          transform: isExpanded ? "translateX(0)" : "translateX(-20px)",
           transition: "all 500ms cubic-bezier(0.4, 0, 0.2, 1)",
           pointerEvents: isExpanded ? "auto" : "none",
-          flexWrap: "wrap",
-          justifyContent: "center"
+          whiteSpace: "nowrap",
+          flexShrink: 0
         }}
       >
         {links.map((link) => {
@@ -117,8 +120,9 @@ export default function Header() {
                 color: isActive ? "#000000" : "#888888",
                 textDecoration: "none",
                 position: "relative",
-                whiteSpace: "nowrap",
                 transition: "color 300ms ease",
+                flexShrink: 0,
+                padding: "0 4px"
               }}
             >
               {link.label}
