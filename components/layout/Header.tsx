@@ -20,17 +20,26 @@ export default function Header() {
   const { count, openCart, setIsAuthOpen } = useCartStore();
   const links = NAV_LINKS;
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => { 
     setIsExpanded(false); 
+    
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, [pathname]);
 
   return (
     <header
       id="main-header"
       aria-label="Site navigation"
-      onMouseEnter={() => setIsExpanded(true)}
-      onMouseLeave={() => setIsExpanded(false)}
+      onMouseEnter={() => !isMobile && setIsExpanded(true)}
+      onMouseLeave={() => !isMobile && setIsExpanded(false)}
       style={{
         position: "fixed",
         top: 20,
@@ -40,8 +49,9 @@ export default function Header() {
         display: "flex",
         alignItems: "center",
         height: 64,
-        width: "auto",
-        padding: "0 24px",
+        width: isMobile ? "calc(100% - 32px)" : "auto",
+        maxWidth: "1200px",
+        padding: "0 20px",
         background: "rgba(255,255,255,0.8)",
         backdropFilter: "blur(24px) saturate(180%)",
         WebkitBackdropFilter: "blur(24px) saturate(180%)",
@@ -75,19 +85,21 @@ export default function Header() {
         />
       </Link>
 
-      {/* Nav links - Transitioning from width 0 to auto */}
+      {/* Nav links - Responsive Logic */}
       <nav
         aria-label="Main Navigation"
         style={{ 
           display: "flex", 
           alignItems: "center", 
-          gap: 24,
+          gap: isMobile ? 12 : 24,
           overflow: "hidden",
           width: isExpanded ? "auto" : "0px",
           opacity: isExpanded ? 1 : 0,
           transform: isExpanded ? "translateX(0)" : "translateX(-10px)",
           transition: "all 500ms cubic-bezier(0.4, 0, 0.2, 1)",
           pointerEvents: isExpanded ? "auto" : "none",
+          flexWrap: "wrap",
+          justifyContent: "center"
         }}
       >
         {links.map((link) => {
@@ -98,7 +110,7 @@ export default function Header() {
               href={link.url}
               style={{
                 fontFamily: "var(--font-garamond), serif",
-                fontSize: 13,
+                fontSize: isMobile ? 11 : 13,
                 fontWeight: 500,
                 letterSpacing: "0.15em",
                 textTransform: "uppercase",
@@ -126,7 +138,7 @@ export default function Header() {
         })}
       </nav>
 
-      {/* Cart & Account */}
+      {/* Action Group */}
       <div style={{ 
         display: "flex", 
         alignItems: "center", 
@@ -134,6 +146,29 @@ export default function Header() {
         marginLeft: "auto",
         flexShrink: 0
       }}>
+        {/* Mobile Menu Toggle */}
+        {isMobile && (
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: "50%",
+              border: "none",
+              background: "rgba(0,0,0,0.05)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              transition: "all 200ms ease",
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 20 }}>
+              {isExpanded ? "close" : "menu"}
+            </span>
+          </button>
+        )}
+
         <button
           aria-label="Open shopping bag"
           onClick={openCart}
