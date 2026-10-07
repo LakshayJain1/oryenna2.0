@@ -24,119 +24,111 @@ export type HeroScene = {
 /** Homepage hero candle sections — one candle per scene. */
 export const HERO_CANDLES: HeroCandle[] = [
   {
-    id: "santal",
-    slug: "santal",
-    productName: "Santal",
-    image: "/images/hero-santal.jpg",
-    imageAlt:
-      "Cream wax pouring into a glass Oryenna candle surrounded by lavender, vanilla beans, and sandalwood",
-    centralImage: "/images/central-candle-santal.jpg",
-    centralImageAlt:
-      "Santal candle with smooth wax surface and wooden wick",
+    id: "vanilla",
+    slug: "vanilla",
+    productName: "Vanilla",
+    image: "/images/hero/1.png",
+    imageAlt: "Oryenna Vanilla Candle with vanilla bean pods and orchid flower",
+    centralImage: "/images/hero/1.png",
+    centralImageAlt: "Vanilla candle with glowing flame and vanilla accents",
     notes: [
       {
-        name: "Lavender",
-        qualities: "Calming · Floral · Serene",
+        name: "Vanilla Absolute",
+        qualities: "Calming · Warm · Sweet",
         position: "left",
       },
       {
-        name: "Vanilla",
-        qualities: "Warm · Sweet · Comforting",
+        name: "White Orchid",
+        qualities: "Floral · Luminous · Delicate",
         position: "right-top",
       },
       {
-        name: "Sandalwood",
+        name: "Tonka Bean",
         qualities: "Grounded · Earthy · Relaxing",
         position: "right-mid",
       },
     ],
-    tagline: "Grounding sandalwood & warm vanilla",
+    tagline: "Madagascar vanilla & white orchid",
   },
   {
-    id: "ember",
-    slug: "ember",
-    productName: "Ember",
-    image: "/images/hero-ember.jpg",
-    imageAlt:
-      "Amber wax pouring into a glass candle surrounded by cade wood, birch bark, and resin",
-    centralImage: "/images/central-candle-ember.jpg",
-    centralImageAlt:
-      "Ember candle with glowing amber wax and birch bark accents",
+    id: "lavender",
+    slug: "lavender",
+    productName: "Lavender",
+    image: "/images/hero/2.png",
+    imageAlt: "Oryenna Lavender Candle on travertine stone with fresh lavender",
+    centralImage: "/images/hero/2.png",
+    centralImageAlt: "Lavender candle with glowing flame on stone coaster",
     notes: [
       {
-        name: "Birch Smoke",
-        qualities: "Charred · Warm · Intimate",
+        name: "French Lavender",
+        qualities: "Herbaceous · Soothing · Pure",
         position: "left",
       },
       {
-        name: "Amber",
+        name: "Warm Amber",
         qualities: "Resinous · Honeyed · Deep",
         position: "right-top",
       },
       {
-        name: "Cade Wood",
-        qualities: "Smoked · Forest · Ember",
-        position: "right-mid",
-      },
-    ],
-    tagline: "Charred birch & deep amber",
-  },
-  {
-    id: "fig-olive",
-    slug: "fig-olive",
-    productName: "Fig & Olive",
-    image: "/images/hero-fig-olive.jpg",
-    imageAlt:
-      "Pale wax pouring into a glass candle surrounded by fig leaves, ripe figs, and olive branches",
-    centralImage: "/images/central-candle-fig.jpg",
-    centralImageAlt:
-      "Fig & Olive candle with pale wax and fig leaf details",
-    notes: [
-      {
-        name: "Fig Leaf",
-        qualities: "Green · Sun-warmed · Lush",
-        position: "left",
-      },
-      {
-        name: "Olive Wood",
-        qualities: "Mediterranean · Soft · Dry",
-        position: "right-top",
-      },
-      {
-        name: "Musk",
-        qualities: "Skin-close · Quiet · Lasting",
-        position: "right-mid",
-      },
-    ],
-    tagline: "Fresh fig & Mediterranean olive",
-  },
-  {
-    id: "soft-linen",
-    slug: "soft-linen",
-    productName: "Soft Linen",
-    image: "/images/hero-soft-linen.jpg",
-    imageAlt:
-      "Ivory wax pouring into a glass candle surrounded by cotton, iris blossoms, and sun-dried linen",
-    centralImage: "/images/central-candle-linen.jpg",
-    centralImageAlt:
-      "Soft Linen candle with ivory wax and cotton fiber details",
-    notes: [
-      {
-        name: "Cotton",
-        qualities: "Airy · Clean · Sun-dried",
-        position: "left",
-      },
-      {
-        name: "Iris",
-        qualities: "Powdery · Pale · Tender",
-        position: "right-top",
-      },
-      {
         name: "White Musk",
-        qualities: "Sheer · Soft · Fresh",
+        qualities: "Soft · Clean · Serene",
         position: "right-mid",
       },
     ],
-    tagline: "Air cotton & fresh linen",
+    tagline: "Provençal lavender & warm amber",
+  },
+  {
+    id: "sandalwood",
+    slug: "sandalwood",
+    productName: "Sandalwood",
+    image: "/images/hero/3.png",
+    imageAlt: "Oryenna Sandalwood Candle with aged sandalwood bark pieces",
+    centralImage: "/images/hero/3.png",
+    centralImageAlt: "Sandalwood candle with aromatic wood bark pieces",
+    notes: [
+      {
+        name: "Mysore Sandalwood",
+        qualities: "Creamy · Sacred · Meditative",
+        position: "left",
+      },
+      {
+        name: "Cedarwood Resin",
+        qualities: "Woody · Balsamic · Warm",
+        position: "right-top",
+      },
+      {
+        name: "Cardamom",
+        qualities: "Spicy · Crisp · Grounding",
+        position: "right-mid",
+      },
+    ],
+    tagline: "Mysore sandalwood & warm cedarwood",
+  },
+  {
+    id: "jasmine",
+    slug: "jasmine",
+    productName: "Jasmine",
+    image: "/images/hero/4.png",
+    imageAlt: "Oryenna Jasmine Candle with blooming white jasmine blossoms",
+    centralImage: "/images/hero/4.png",
+    centralImageAlt: "Jasmine candle surrounded by delicate star jasmine flowers",
+    notes: [
+      {
+        name: "Jasmine Sambac",
+        qualities: "Luminous · Floral · Night-blooming",
+        position: "left",
+      },
+      {
+        name: "Green Leaf",
+        qualities: "Fresh · Dewy · Awakening",
+        position: "right-top",
+      },
+      {
+        name: "White Amber",
+        qualities: "Sheer · Radiant · Enveloping",
+        position: "right-mid",
+      },
+    ],
+    tagline: "Jasmine sambac & luminous florals",
   },
 ];

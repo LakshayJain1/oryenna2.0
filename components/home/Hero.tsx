@@ -4,40 +4,33 @@ import { useState, useEffect, useRef } from "react";
 
 const candles = [
   {
-    id: "santal",
-    name: "Santal",
-    tagline: "Grounding sandalwood & warm vanilla",
-    image: "/images/hero-santal.jpg",
-    centralImage: "/images/central-candle-santal.jpg",
+    id: "vanilla",
+    name: "Vanilla",
+    tagline: "Madagascar vanilla & white orchid",
+    image: "/images/hero/1.png",
+    centralImage: "/images/hero/1.png",
   },
   {
-    id: "ember",
-    name: "Ember",
-    tagline: "Charred birch & deep amber",
-    image: "/images/hero-ember.jpg",
-    centralImage: "/images/central-candle-ember.jpg",
+    id: "lavender",
+    name: "Lavender",
+    tagline: "Provençal lavender & warm amber",
+    image: "/images/hero/2.png",
+    centralImage: "/images/hero/2.png",
   },
   {
-    id: "fig",
-    name: "Fig & Olive",
-    tagline: "Fresh fig & Mediterranean olive",
-    image: "/images/hero-fig-olive.jpg",
-    centralImage: "/images/central-candle-fig.jpg",
+    id: "sandalwood",
+    name: "Sandalwood",
+    tagline: "Mysore sandalwood & warm cedarwood",
+    image: "/images/hero/3.png",
+    centralImage: "/images/hero/3.png",
   },
   {
-    id: "linen",
-    name: "Soft Linen",
-    tagline: "Air cotton & fresh linen",
-    image: "/images/hero-soft-linen.jpg",
-    centralImage: "/images/central-candle-linen.jpg",
+    id: "jasmine",
+    name: "Jasmine",
+    tagline: "Jasmine sambac & luminous florals",
+    image: "/images/hero/4.png",
+    centralImage: "/images/hero/4.png",
   },
-];
-
-const CANDLE_POSITIONS = [
-  { x: "-10%", y: "-10%", rotate: "45deg" },
-  { x: "80%", y: "20%", rotate: "45deg" },
-  { x: "120%", y: "80%", rotate: "45deg" },
-  { x: "30%", y: "110%", rotate: "45deg" },
 ];
 
 export default function Hero() {
@@ -109,12 +102,12 @@ export default function Hero() {
                 className="absolute left-1/2 -translate-x-1/2 transition-all duration-300 ease-out"
                 style={{
                   top: `${positionY}px`,
-                  transform: `translateY(-50%) scale(${scaleValue})`,
+                  transform: `translateY(-50%) rotate(45deg) scale(${scaleValue})`,
                   filter: `blur(${blurValue}px)`,
                   opacity: opacityValue,
                   zIndex: zIndex,
-                  width: "200px",
-                  height: "300px",
+                  width: "280px",
+                  height: "280px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -124,12 +117,12 @@ export default function Hero() {
                 <img
                   src={candle.image}
                   alt={candle.name}
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain drop-shadow-[0_22px_36px_rgba(0,0,0,0.14)]"
                 />
                 {blurValue < 2 && (
-                  <div className="absolute -bottom-12 text-center w-64 pointer-events-none">
-                    <p className="text-black font-serif italic text-lg">{candle.tagline}</p>
-                    <p className="text-black font-sans uppercase tracking-widest text-xs mt-2">{candle.name}</p>
+                  <div className="absolute -bottom-16 text-center w-72 pointer-events-none transition-opacity duration-300">
+                    <p className="text-stone-900 font-serif italic text-lg leading-snug">{candle.tagline}</p>
+                    <p className="text-stone-500 font-sans uppercase tracking-[0.25em] text-xs mt-1.5 font-medium">{candle.name}</p>
                   </div>
                 )}
               </div>
